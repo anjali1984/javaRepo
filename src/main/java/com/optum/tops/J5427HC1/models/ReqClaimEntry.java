@@ -1,4 +1,4 @@
-package models;
+package com.optum.tops.J5427HC1.models;
 
 import java.math.BigDecimal;
 

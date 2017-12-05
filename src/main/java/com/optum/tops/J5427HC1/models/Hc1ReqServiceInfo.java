@@ -1,4 +1,4 @@
-package models;
+package com.optum.tops.J5427HC1.models;
 
 public enum Hc1ReqServiceInfo {
 	F5552BEC , //HC1-REQ-SERVICE-CLAIM-CHK-SUM 
