@@ -7,6 +7,7 @@ import java.util.List;
 public class V5427HC1 {
 
 	private String HC1_COB_INVENTORY_CONTROL_DT;
+	private ClaimIndicatorValues my_indicator ; 
 	private String HC1_COB_COB_CLAIM_INDICATOR;    //Cob claim indicator
 	private String HC1_COB_COB_CALC_IND; 
 	private String HC1_COB_COB_835_PROC_IND;
@@ -30,7 +31,7 @@ public class V5427HC1 {
 	private BigDecimal HC1_COB_835_DENY_NC_AMT;
 	
 	private List<HC1_COB_LNE_ENTRY> HC1_COB_LNE_DATA_AREA; //Various Lines for this Claim 
-	private ClaimIndicatorValues my_indicator ; 
+	
 	
 	private List<String> HC1_COB_835_OOB_ERROR;	
 	private int HC1_COB_NBR_LINES;

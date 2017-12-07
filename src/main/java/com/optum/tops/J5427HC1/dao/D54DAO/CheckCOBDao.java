@@ -18,7 +18,7 @@ import com.optum.tops.J5427HC1.models.V5427HC1;
 public class CheckCOBDao {
 
 	@Autowired
-	private DataSource ds; // Must declare this in the Main Application file
+	private DataSource ds; 
 
 	static StringBuffer query = new StringBuffer();
 
@@ -32,7 +32,7 @@ public class CheckCOBDao {
 		query.append(" ,BKE2.ALLW_AMT_DTRM_CD ");
 		query.append(" ,BKE2.DIAG_B_NBR ");
 		query.append(" ,BKE2.SUFX_TOT_CHRG_AMT ");
-		query.append(" ,BKE2.EMC_IND ");
+		query.append(" ,BKE2.EMC_IND "); //Used in conjunction with "BKE2.NEW_COB_LOGC_CD" to determine if this claim qualifies for Penny Process 
 		query.append("FROM ADJD_CLMSF_BLK_E2 BKE2 ");
 		query.append(" ");
 		query.append("INNER JOIN ADJD_CLMSF_LN LNE ");
@@ -97,6 +97,14 @@ public class CheckCOBDao {
 					else
 						System.out.println("Invalid Value in CheckCOBDao for NYSTATE");
 				}
+				
+				//Determine if claim qualifies for Penny Process, To be used later in 2000-Processing 
+				if(rs.getString("BKE2.NEW_COB_LOGC_CD").trim().equalsIgnoreCase("Y") && rs.getString("BKE2.EMC_IND").trim().equalsIgnoreCase("Y")){
+					indicator_object.setPENNY_PROC_INDICATOR("Y");
+				}else{
+					indicator_object.setPENNY_PROC_INDICATOR("N");
+				}
+				
 			}//Not a COB Claim  
 			else {
 				individual_claim_response.setHC1_COB_COB_CLAIM_INDICATOR("N");

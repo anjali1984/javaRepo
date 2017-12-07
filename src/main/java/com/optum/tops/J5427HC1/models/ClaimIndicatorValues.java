@@ -16,6 +16,8 @@ public class ClaimIndicatorValues{
 	private String DBKE2_EMC_IND ;
 	private String NYSTATE_COB_CLAIM ; 
 	private String NYSTATE_COB_CLAIM_PAIDTO ; // Can be paid to State ('S') or Provider ("P") 
+	private String PENNY_PROC_INDICATOR  ; // Claim level field "Y" or "N" 
+	private String OPS_HCFA_INDICATOR ; 
 	
 	public void setDBKE2_ICN_SUFX_CD(String dBKE2_ICN_SUFX_CD) {
 		DBKE2_ICN_SUFX_CD = dBKE2_ICN_SUFX_CD;
@@ -82,6 +84,18 @@ public class ClaimIndicatorValues{
 	}
 	public void setNYSTATE_COB_CLAIM_PAIDTO(String nYSTATE_COB_CLAIM_PAIDTO) {
 		NYSTATE_COB_CLAIM_PAIDTO = nYSTATE_COB_CLAIM_PAIDTO;
+	}
+	public String getPENNY_PROC_INDICATOR() {
+		return PENNY_PROC_INDICATOR;
+	}
+	public void setPENNY_PROC_INDICATOR(String pENNY_PROC_INDICATOR) {
+		PENNY_PROC_INDICATOR = pENNY_PROC_INDICATOR;
+	}
+	public String getOPS_HCFA_INDICATOR() {
+		return OPS_HCFA_INDICATOR;
+	}
+	public void setOPS_HCFA_INDICATOR(String oPS_HCFA_INDICATOR) {
+		OPS_HCFA_INDICATOR = oPS_HCFA_INDICATOR;
 	}
 	
 }
