@@ -3,11 +3,13 @@ package com.optum.tops.J5427HC1.models;
 import java.math.BigDecimal;
 import java.util.List;
 
+//Individual Claim to be appended to the response 
 public class V5427HC1 {
 
 	private String HC1_COB_INVENTORY_CONTROL_DT;
-	private String HC1_COB_NEW_COB_CALC_IND;    
-	private String HC1_COB_NEW_COB_835_PROC_IND;
+	private String HC1_COB_COB_CLAIM_INDICATOR;    //Cob claim indicator
+	private String HC1_COB_COB_CALC_IND; 
+	private String HC1_COB_COB_835_PROC_IND;
 	private String HC1_COB_INST_OR_PROF;        
 	       
 	private String HC1_COB_ALLOW_AMT_IND;       
@@ -27,13 +29,21 @@ public class V5427HC1 {
 	private BigDecimal HC1_COB_835_PRV_NC_AMT;    
 	private BigDecimal HC1_COB_835_DENY_NC_AMT;
 	
-	private List<String> HC1_COB_835_OOB_ERROR;
+	private List<HC1_COB_LNE_ENTRY> HC1_COB_LNE_DATA_AREA; //Various Lines for this Claim 
+	private ClaimIndicatorValues my_indicator ; 
 	
-	private Boolean HC1_COB_CLAIM_IND;
-	
+	private List<String> HC1_COB_835_OOB_ERROR;	
 	private int HC1_COB_NBR_LINES;
 	
-	private List<HC1_COB_LNE_ENTRY> HC1_COB_LNE_DATA_AREA;
+	
+
+	public ClaimIndicatorValues getMy_indicator() {
+		return my_indicator;
+	}
+
+	public void setMy_indicator(ClaimIndicatorValues my_indicator) {
+		this.my_indicator = my_indicator;
+	}
 
 	public String getHC1_COB_INVENTORY_CONTROL_DT() {
 		return HC1_COB_INVENTORY_CONTROL_DT;
@@ -43,20 +53,20 @@ public class V5427HC1 {
 		HC1_COB_INVENTORY_CONTROL_DT = hC1_COB_INVENTORY_CONTROL_DT;
 	}
 
-	public String getHC1_COB_NEW_COB_CALC_IND() {
-		return HC1_COB_NEW_COB_CALC_IND;
+	public String getHC1_COB_COB_CALC_INDICATOR() {
+		return HC1_COB_COB_CLAIM_INDICATOR;
 	}
 
-	public void setHC1_COB_NEW_COB_CALC_IND(String hC1_COB_NEW_COB_CALC_IND) {
-		HC1_COB_NEW_COB_CALC_IND = hC1_COB_NEW_COB_CALC_IND;
+	public void setHC1_COB_COB_CALC_IND(String hC1_COB_COB_CLAIM_IND) {
+		HC1_COB_COB_CLAIM_INDICATOR = hC1_COB_COB_CLAIM_IND;
 	}
 
-	public String getHC1_COB_NEW_COB_835_PROC_IND() {
-		return HC1_COB_NEW_COB_835_PROC_IND;
+	public String getHC1_COB_COB_835_PROC_IND() {
+		return HC1_COB_COB_835_PROC_IND;
 	}
 
-	public void setHC1_COB_NEW_COB_835_PROC_IND(String hC1_COB_NEW_COB_835_PROC_IND) {
-		HC1_COB_NEW_COB_835_PROC_IND = hC1_COB_NEW_COB_835_PROC_IND;
+	public void setHC1_COB_COB_835_PROC_IND(String hC1_COB_COB_835_PROC_IND) {
+		HC1_COB_COB_835_PROC_IND = hC1_COB_COB_835_PROC_IND;
 	}
 
 	public String getHC1_COB_INST_OR_PROF() {
@@ -195,14 +205,6 @@ public class V5427HC1 {
 		HC1_COB_835_OOB_ERROR = hC1_COB_835_OOB_ERROR;
 	}
 
-	public Boolean getHC1_COB_CLAIM_IND() {
-		return HC1_COB_CLAIM_IND;
-	}
-
-	public void setHC1_COB_CLAIM_IND(Boolean hC1_COB_CLAIM_IND) {
-		HC1_COB_CLAIM_IND = hC1_COB_CLAIM_IND;
-	}
-
 	public int getHC1_COB_NBR_LINES() {
 		return HC1_COB_NBR_LINES;
 	}
@@ -219,7 +221,16 @@ public class V5427HC1 {
 		HC1_COB_LNE_DATA_AREA = hC1_COB_LNE_DATA_AREA;
 	}
 
+	public String getHC1_COB_COB_CALC_IND() {
+		return HC1_COB_COB_CALC_IND;
+	}
 
+	public String getHC1_COB_COB_CLAIM_INDICATOR() {
+		return HC1_COB_COB_CLAIM_INDICATOR;
+	}
 
+	public void setHC1_COB_COB_CLAIM_INDICATOR(String hC1_COB_COB_CLAIM_INDICATOR) {
+		HC1_COB_COB_CLAIM_INDICATOR = hC1_COB_COB_CLAIM_INDICATOR;
+	}
 
 }
