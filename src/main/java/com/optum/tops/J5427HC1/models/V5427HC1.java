@@ -32,7 +32,6 @@ public class V5427HC1 {
 	
 	private List<HC1_COB_LNE_ENTRY> HC1_COB_LNE_DATA_AREA; //Various Lines for this Claim 
 	
-	
 	private List<String> HC1_COB_835_OOB_ERROR;	
 	private int HC1_COB_NBR_LINES;
 	
