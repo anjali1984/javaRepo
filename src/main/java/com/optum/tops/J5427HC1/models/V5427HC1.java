@@ -1,6 +1,7 @@
 package com.optum.tops.J5427HC1.models;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 //Individual Claim to be appended to the response 
@@ -30,9 +31,9 @@ public class V5427HC1 {
 	private BigDecimal HC1_COB_835_PRV_NC_AMT;    
 	private BigDecimal HC1_COB_835_DENY_NC_AMT;
 	
-	private List<HC1_COB_LNE_ENTRY> HC1_COB_LNE_DATA_AREA; //Various Lines for this Claim 
+	private List<HC1_COB_LINE_ENTRY> HC1_COB_LINE_DATA_AREA = new ArrayList<HC1_COB_LINE_ENTRY>(); //Various Lines for this Claim 
+	private List<String> HC1_COB_835_OOB_ERROR = new ArrayList<String>();	
 	
-	private List<String> HC1_COB_835_OOB_ERROR;	
 	private int HC1_COB_NBR_LINES;
 	
 	
@@ -213,12 +214,12 @@ public class V5427HC1 {
 		HC1_COB_NBR_LINES = hC1_COB_NBR_LINES;
 	}
 
-	public List<HC1_COB_LNE_ENTRY> getHC1_COB_LNE_DATA_AREA() {
-		return HC1_COB_LNE_DATA_AREA;
+	public List<HC1_COB_LINE_ENTRY> getHC1_COB_LNE_DATA_AREA() {
+		return HC1_COB_LINE_DATA_AREA;
 	}
 
-	public void setHC1_COB_LNE_DATA_AREA(List<HC1_COB_LNE_ENTRY> hC1_COB_LNE_DATA_AREA) {
-		HC1_COB_LNE_DATA_AREA = hC1_COB_LNE_DATA_AREA;
+	public void setHC1_COB_LNE_DATA_AREA(List<HC1_COB_LINE_ENTRY> hC1_COB_LNE_DATA_AREA) {
+		HC1_COB_LINE_DATA_AREA = hC1_COB_LNE_DATA_AREA;
 	}
 
 	public String getHC1_COB_COB_CALC_IND() {

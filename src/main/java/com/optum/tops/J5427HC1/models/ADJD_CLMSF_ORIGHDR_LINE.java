@@ -19,6 +19,8 @@ public class ADJD_CLMSF_ORIGHDR_LINE {
 	private String UB92_OVR_CD ; 
 	private String UB92_RMK_CD;
 	private String ORIG_UB92_RMRK_CD ;
+	private String REV_LINE_PENNY_INDICATOR ; 
+	
 	public String getRVNU_CD() {
 		return RVNU_CD;
 	}
@@ -102,6 +104,12 @@ public class ADJD_CLMSF_ORIGHDR_LINE {
 	}
 	public void setORIG_UB92_RMRK_CD(String oRIG_UB92_RMRK_CD) {
 		ORIG_UB92_RMRK_CD = oRIG_UB92_RMRK_CD;
+	}
+	public String getREV_LINE_PENNY_INDICATOR() {
+		return REV_LINE_PENNY_INDICATOR;
+	}
+	public void setREV_LINE_PENNY_INDICATOR(String rEV_LINE_PENNY_INDICATOR) {
+		REV_LINE_PENNY_INDICATOR = rEV_LINE_PENNY_INDICATOR;
 	} 
 	
 	

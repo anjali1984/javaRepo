@@ -2,7 +2,7 @@ package com.optum.tops.J5427HC1.models;
 
 import java.math.BigDecimal;
 
-public class HC1_COB_LNE_ENTRY {
+public class HC1_COB_LINE_ENTRY {
 	
 	private String HC1_COB_LN_SRV_ID;             
 	private String HC1_COB_LN_ALLOW_AMT_IND;      
@@ -28,8 +28,6 @@ public class HC1_COB_LNE_ENTRY {
 	private String HC1_COB_LINE_FST_DT;      
 	private String HC1_COB_LINE_LST_SRVC_DT; 
 	private BigDecimal HC1_COB_LINE_CHRG_AMT;
-	
-	
 	
 	public String getHC1_COB_LN_SRV_ID() {
 		return HC1_COB_LN_SRV_ID;

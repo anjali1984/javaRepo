@@ -1,5 +1,6 @@
 package com.optum.tops.J5427HC1.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 //Class for keeping track of the extra indicator fields which decide what processing path will the claim go through in 
@@ -17,12 +18,14 @@ public class ClaimIndicatorValues{
 	private String DBKE2_SUFX_TOT_CHRG_AMT ; 
 	private String DBKE2_EMC_IND ;
 	private String NYSTATE_COB_CLAIM ; 
+	private boolean NY_COB_PARENT_CLM ; //Corresponds to WS-NY-COB-PARENT-CLM-SW, NY-COB-PARENT-CLM
 	private String NYSTATE_COB_CLAIM_PAIDTO ; // Can be paid to State ('S') or Provider ("P") 
 	private String PENNY_PROC_INDICATOR  ; // Claim level field "Y" or "N" 
 	private String OPS_HCFA_INDICATOR ; 
 	private String CALL_OIMC_TBL_INDICATOR ; // "Y" or "N" , corresponds to WS-CALL-OIMC-TBL-SW 
+	private String CXINT_CLAIM_INDICATOR = "N"; // "Y"or "N" 
 	
-	private List<ADJD_CLMSF_ORIGHDR_LINE> HC1_ADJD_CLMSF_ORIGHDR_DATAAREA ; //ADJD_CLMSF_ORIGHDR Lines for the claim IF ANY, Max SIZE can be 150  
+	private List<ADJD_CLMSF_ORIGHDR_LINE> HC1_ADJD_CLMSF_ORIGHDR_DATAAREA = new ArrayList<ADJD_CLMSF_ORIGHDR_LINE>(); //ADJD_CLMSF_ORIGHDR Lines for the claim IF ANY, Max SIZE can be 150  
 	
 	public void setDBKE2_ICN_SUFX_CD(String dBKE2_ICN_SUFX_CD) {
 		DBKE2_ICN_SUFX_CD = dBKE2_ICN_SUFX_CD;
@@ -113,6 +116,18 @@ public class ClaimIndicatorValues{
 	}
 	public void setCALL_OIMC_TBL_INDICATOR(String cALL_OIMC_TBL_INDICATOR) {
 		CALL_OIMC_TBL_INDICATOR = cALL_OIMC_TBL_INDICATOR;
+	}
+	public String getCXINT_CLAIM_INDICATOR() {
+		return CXINT_CLAIM_INDICATOR;
+	}
+	public void setCXINT_CLAIM_INDICATOR(String cXINT_CLAIM_INDICATOR) {
+		CXINT_CLAIM_INDICATOR = cXINT_CLAIM_INDICATOR;
+	}
+	public boolean isNY_COB_PARENT_CLM() {
+		return NY_COB_PARENT_CLM;
+	}
+	public void setNY_COB_PARENT_CLM(boolean nY_COB_PARENT_CLM) {
+		NY_COB_PARENT_CLM = nY_COB_PARENT_CLM;
 	}
 	
 }

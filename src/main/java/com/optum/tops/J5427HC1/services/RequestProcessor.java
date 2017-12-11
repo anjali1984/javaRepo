@@ -20,6 +20,9 @@ public class RequestProcessor {
 	@Autowired
 	Ops_Hcfa opshcfacheck ; //Service for checking OPS_HCFA
 	
+	@Autowired
+	COBLN2121Service cobln2121 ; 
+	
 	public HC1Response process (Hc1Request request){
 		HC1Response response = new HC1Response() ; //to be sent back to the HC1Controller
 		List<ReqClaimEntry> claims_to_be_serviced = request.getClaimEntries() ; 
