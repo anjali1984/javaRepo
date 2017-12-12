@@ -60,12 +60,12 @@ public class FetchCoblnAmtsDao {
 		query.append("AND  LN.DFT_NBR           = ? ");
 		query.append("AND  LN.PROC_TM           = ? ");
 		query.append("AND  LN.PROC_DT           = ? ");
-		query.append("AND  CB.INVN_CTL_NBR      = LN.INVN_CTL_NBR ");
-		query.append("AND  CB.ICN_SUFX_CD       = LN.ICN_SUFX_CD ");
-		query.append("AND  CB.PROC_DT           = LN.PROC_DT ");
-		query.append("AND  CB.PROC_TM           = LN.PROC_TM ");
-		query.append("AND  CB.ICN_SUFX_VERS_NBR = LN.ICN_SUFX_VERS_NBR ");
-		query.append("AND  CB.LN_ID             = LN.LN_ID ");
+		//query.append("AND  CB.INVN_CTL_NBR      = LN.INVN_CTL_NBR ");
+		//query.append("AND  CB.ICN_SUFX_CD       = LN.ICN_SUFX_CD ");
+		//query.append("AND  CB.PROC_DT           = LN.PROC_DT ");
+		//query.append("AND  CB.PROC_TM           = LN.PROC_TM ");
+		//query.append("AND  CB.ICN_SUFX_VERS_NBR = LN.ICN_SUFX_VERS_NBR ");
+		//query.append("AND  CB.LN_ID             = LN.LN_ID ");
 		query.append("FOR FETCH ONLY ");
 		
 		Connection con = null;

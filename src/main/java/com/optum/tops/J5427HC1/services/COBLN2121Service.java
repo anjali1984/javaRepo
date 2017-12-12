@@ -11,6 +11,8 @@ import com.optum.tops.J5427HC1.dao.D54DAO.FetchCoblnAmtsDao;
 import com.optum.tops.J5427HC1.models.ADJD_CLMSF_ORIGHDR_LINE;
 import com.optum.tops.J5427HC1.models.COBLN_LINE_FLDS;
 import com.optum.tops.J5427HC1.models.ClaimIndicatorValues;
+import com.optum.tops.J5427HC1.models.LineHold;
+import com.optum.tops.J5427HC1.models.LineReductionHold;
 import com.optum.tops.J5427HC1.models.ReqClaimEntry;
 import com.optum.tops.J5427HC1.models.V5427HC1;
 import com.optum.tops.VYCKSERV.enums.ACN_NO_SURCHRG_SERV;
@@ -29,6 +31,8 @@ public class COBLN2121Service {
 		List<COBLN_LINE_FLDS> results = CoblnAmtsDao.getCoblnFlds(requestedClaim, outboundClaim.getMy_indicator().getDBKE2_ICN_SUFX_CD()) ; // result of query in COBLN-LINE-FLDS cursor
 		//All business logic in 2121-FETCH_COBLN-LINE-AMTS 
 		
+		BigDecimal WS_TEMP_RPT_ALLOW_AMT = new BigDecimal(0); // Corresponds to  WS-TEMP-RPT-ALLOW-AMT working Storage variable
+		
 		for(COBLN_LINE_FLDS line: results){
 			
 			ClaimIndicatorValues indicatorObject = outboundClaim.getMy_indicator();
@@ -43,47 +47,135 @@ public class COBLN2121Service {
 			if( (line.getLN_PMT_SVC_CD().contains("OI") || line.getLN_PMT_SVC_CD().contains("OIM") || line.getLN_PMT_SVC_CD().contains("OIMEDI")) 
 					|| (requestedClaim.getHC1_REQ_CLM_TRANS_CD().contains("69") && !line.getLN_RMRK_CD().contains("69"))){
 				continue; 
-			}else{
-				String line_pmt_svc_cd = line.getLN_PMT_SVC_CD() ; //MOVE DCLNE-PMT-SVC-CD TO CK-SERV-CLS //WRK-NY-SERV-CD 
-																							
-				 
-				
-				List<COB_835_INFO> enumValues = Arrays.asList(COB_835_INFO.values()); //Gets all possible values of COB_835_INFO as a list of ENUMS 
-				
-				if(enumValues.contains("COB_835_INFO."+line_pmt_svc_cd)){
-					continue ;
-				}else{
-					if(line_pmt_svc_cd.trim().equals("CXINT")){
-						indicatorObject.setCXINT_CLAIM_INDICATOR("Y"); 
-					}
-					//NYSTATE COB CLAIM 
-					if(indicatorObject.getNYSTATE_COB_CLAIM().equals("Y")){
-						if( line_pmt_svc_cd.charAt(0) == 'C' && (line_pmt_svc_cd.substring(3).equalsIgnoreCase("NYS")  || line_pmt_svc_cd.substring(3).equalsIgnoreCase("NYA")) ) {
-							line.setNYS_SERV_LINE(true);
-						}else{
-							line.setNYS_SERV_LINE(false);
-						}
-						if (indicatorObject.getCXINT_CLAIM_INDICATOR().equals("Y")){
-							//Nothing 
-							
-						}else{
-							if(indicatorObject.getNYSTATE_COB_CLAIM_PAIDTO().equals("S") && (line.isNYS_SERV_LINE())){
-								//MOVE 'N' TO WS-NY-COB-PARENT-CLM-SW, set in the claim indicator 
-								indicatorObject.setNY_COB_PARENT_CLM(false);
-							}else if(indicatorObject.getNYSTATE_COB_CLAIM_PAIDTO().equals("S") && !(line.isNYS_SERV_LINE()) ){
-								indicatorObject.setNY_COB_PARENT_CLM(true);
-							}	
-						}
-					}
-					
-					//Move DCLNE-LN-ID to WS-SUB index into the 2 Line tables 
-					
-					
-				}
-				
 			}
 			
+			String line_pmt_svc_cd = line.getLN_PMT_SVC_CD(); // MOVE DCLNE-PMT-SVC-CD to DCLNE-PMT-SVC-CD TO CK-SERV-CLS, WRK-NY-SERV-CD																
+			List<COB_835_INFO> enumValues = Arrays.asList(COB_835_INFO.values()); // Gets all 
+																				
+			if (enumValues.contains("COB_835_INFO." + line_pmt_svc_cd)) {
+				continue;
+			} else {
+				if (line_pmt_svc_cd.trim().equals("CXINT")) {
+					indicatorObject.setCXINT_CLAIM_INDICATOR("Y");
+				}
+
+				// NYSTATE COB CLAIM
+				if (indicatorObject.getNYSTATE_COB_CLAIM().equals("Y")) {
+					if (line_pmt_svc_cd.charAt(0) == 'C' && (line_pmt_svc_cd.substring(3).equalsIgnoreCase("NYS")
+							|| line_pmt_svc_cd.substring(3).equalsIgnoreCase("NYA"))) {
+						line.setNYS_SERV_LINE(true);
+					} else {
+						line.setNYS_SERV_LINE(false);
+					}
+					if (indicatorObject.getCXINT_CLAIM_INDICATOR().equals("Y")) {
+						continue;
+					} else {
+						if (indicatorObject.getNYSTATE_COB_CLAIM_PAIDTO().equals("S") && (line.isNYS_SERV_LINE())) {
+							// MOVE 'N' TO WS-NY-COB-PARENT-CLM-SW, set in the
+							// claim indicator
+							indicatorObject.setNY_COB_PARENT_CLM(false);
+						} else if (indicatorObject.getNYSTATE_COB_CLAIM_PAIDTO().equals("S")
+								&& !(line.isNYS_SERV_LINE())) {
+							indicatorObject.setNY_COB_PARENT_CLM(true);
+						}
+					}
+				}
+
+				// Move DCLNE-LN-ID to WS-SUB index into the 2 Line tables/ArrayLists in the ClaimIndicatorValues 
+				int index = line.getLN_ID() - 1; // 1 to 7  
+				LineHold line_data = new LineHold();
+				LineReductionHold line_reduction_data = new LineReductionHold() ; 
+				
+				if(indicatorObject.getNYSTATE_COB_CLAIM_PAIDTO().equals("S")){
+					if(indicatorObject.isNY_COB_PARENT_CLM()){ 
+						line_data.setLN_NY_DED_MM_AMT(line.getLN_NYSCHG_DED_MM_AMT());
+						indicatorObject.getWS_LINE_DATA_AREA_TABLE().add(index, line_data);
+					}else{
+						line_data.setLN_MM_DED_AMT(line.getLN_MM_DED_AMT());
+						indicatorObject.getWS_LINE_DATA_AREA_TABLE().add(index, line_data);
+					}
+				}
+				
+				//Checks if the RPTG_LN_ALLW_AMT == -1 
+				if(line.getRPTG_LN_ALLW_AMT().compareTo( new BigDecimal(-1)) == 0 ){
+					line.setRPTG_LN_ALLW_AMT(BigDecimal.ZERO);
+				}
+				line_reduction_data.setLN_RPT_ALLOW_AMT(line.getRPTG_LN_ALLW_AMT());
+				indicatorObject.getWS_LINE_REDUCTION_TABLE().add(index, line_reduction_data);
+				
+				if(requestedClaim.getHC1_REQ_CLM_TRANS_CD().equals("00")){
+					indicatorObject.setLN_TOT_RPT_ALL_AMT( indicatorObject.getLN_TOT_RPT_ALL_AMT().add(line_reduction_data.getLN_RPT_ALLOW_AMT()));
+				}
+				
+				List<NYTAX_SERV> nyTax_serve_values = Arrays.asList(NYTAX_SERV.values());
+				if(indicatorObject.getNYSTATE_COB_CLAIM().equals("Y") &&
+						indicatorObject.getNYSTATE_COB_CLAIM_PAIDTO().equals("P") && 
+						indicatorObject.getDBKE2_FACL_OR_PROF_CD().equals("P") && 
+						nyTax_serve_values.contains("NYTAX_SERV."+line_pmt_svc_cd)
+						){
+					//POSSIBLE INDEX OUT OF BOUNDS FOR 1st LINE ID **************** 
+					BigDecimal temp = indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index - 1).getLN_RPT_ALLOW_AMT().subtract(indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).getLN_RPT_ALLOW_AMT()); 
+					indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index - 1).setLN_RPT_ALLOW_AMT(temp);
+				}
+				
+				indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).setLN_ALLW_AMT_IND(line.getLN_ALLW_AMT_DTRM_CD());
+				
+				if(line.getLN_OI_PD_LN_AMT().compareTo(new BigDecimal(-1)) == 0 ){
+					line.setLN_OI_PD_LN_AMT(BigDecimal.ZERO);
+				}
+				indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).setLN_OI_PAID_AMT(line.getLN_OI_PD_LN_AMT());
+				
+				if(line.getLN_MEDC_L04_AMT().compareTo(new BigDecimal(-1)) == -1){
+					line.setLN_MEDC_L04_AMT(BigDecimal.ZERO);
+				}
+				indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).setLN_MEDC_PAID_AMT(line.getLN_MEDC_L04_AMT());
+				
+				if(line.getLN_PMT_SVC_CD().trim().equals("CXINT")){
+					indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).setLN_PRV_WRT_OFF(BigDecimal.ZERO);
+				}else{
+					if(indicatorObject.getNYSTATE_COB_CLAIM().equals("Y")){
+						if(nyTax_serve_values.contains("NYTAX_SERV."+line_pmt_svc_cd)){
+							indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).setLN_PRV_WRT_OFF(BigDecimal.ZERO);
+						}else{
+							BigDecimal temp = line.getLN_CHRG_AMT().subtract(indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).getLN_RPT_ALLOW_AMT()); 
+							indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).setLN_PRV_WRT_OFF(temp);
+						}
+					}else{
+						BigDecimal temp ; 
+						BigDecimal temp2 ;
+						if(requestedClaim.getHC1_REQ_CLM_TRANS_CD().trim().equals("69")){
+							temp = line.getLN_CHRG_AMT().subtract(WS_TEMP_RPT_ALLOW_AMT);
+							indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).setLN_PRV_WRT_OFF(temp);
+							WS_TEMP_RPT_ALLOW_AMT = indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).getLN_RPT_ALLOW_AMT().multiply
+													(temp); 
+						}else{
+							temp2 = indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).getLN_RPT_ALLOW_AMT();
+							indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).setLN_PRV_WRT_OFF(line.getLN_CHRG_AMT().subtract(temp2));
+						}
+					}
+					
+					if(requestedClaim.getHC1_REQ_CLM_TRANS_CD().trim().equals("00") && 
+						(line.getLN_OVR_CD().trim().equals("20") || line.getLN_OVR_CD().trim().equals("30") || line.getLN_OVR_CD().trim().equals("X0") || line.getLN_OVR_CD().trim().equals("Y0") )	){
+						indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).setLN_PRV_WRT_OFF(BigDecimal.ZERO);
+					}
+				}
+				
+				LineReductionHold lrh = indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index) ; 
+				lrh.setLN_ID(index + 1);
+				lrh.setLINE_SRVC_CD(line.getLN_SRVC_CD());
+				lrh.setLINE_PMT_SVC_CD(line.getLN_PMT_SVC_CD());
+				lrh.setLINE_AUTH_PROC_CD(line.getLN_AUTH_PROC_CD());
+				lrh.setLINE_FST_DT(line.getLN_FST_DT());
+				lrh.setLINE_LST_SRVC_DT(line.getLN_LST_SRVC_DT());
+				lrh.setLINE_CHRG_AMT(line.getLN_CHRG_AMT());
+				lrh.setLINE_NC_AMT(line.getLN_NC_AMT());
+				if(line.getLN_CHRG_AMT().compareTo(line.getLN_NC_AMT()) == 0 && line.getLN_CHRG_AMT().compareTo(BigDecimal.ZERO) > 0 ){
+					indicatorObject.setCALL_OIMC_TBL_INDICATOR("Y"); // This will determine that the claim should go through 2130-GET-COB-SERV-CALC-DATA
+				}
+			}
+
 		}
+		
 		return outboundClaim;
 		
 	}

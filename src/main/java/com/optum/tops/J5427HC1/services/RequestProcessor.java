@@ -41,7 +41,7 @@ public class RequestProcessor {
 			temp = opshcfacheck.Ops_Hcfa_claim_check(individual_claim, temp) ; //At this point PENNY_PROCESS_IND and OPS_HCFA_IND must be set
 			temp = opshcfacheck.get_CSR_ORIGHDR_DATA(individual_claim, temp) ; //ORIGHDR details retrieved if it meets the condition in Ops_Hcfa Service 
 			
-			
+			temp= cobln2121.getResultsCobln_Line_Flds(individual_claim, temp);  //2121-FETCH-COBLN-LINE-AMTS and all business logic for this claim 
 			
 			
 		}

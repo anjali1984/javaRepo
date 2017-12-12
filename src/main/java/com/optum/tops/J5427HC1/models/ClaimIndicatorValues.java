@@ -1,5 +1,6 @@
 package com.optum.tops.J5427HC1.models;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,11 @@ public class ClaimIndicatorValues{
 	private String CALL_OIMC_TBL_INDICATOR ; // "Y" or "N" , corresponds to WS-CALL-OIMC-TBL-SW 
 	private String CXINT_CLAIM_INDICATOR = "N"; // "Y"or "N" 
 	
+	private BigDecimal LN_TOT_RPT_ALL_AMT ; //Corresponds to the WS-LN-TOT-RPT-ALL-AMT filed used as an sum variable for all lines when requested TransCd == "00" 
+	
 	private List<ADJD_CLMSF_ORIGHDR_LINE> HC1_ADJD_CLMSF_ORIGHDR_DATAAREA = new ArrayList<ADJD_CLMSF_ORIGHDR_LINE>(); //ADJD_CLMSF_ORIGHDR Lines for the claim IF ANY, Max SIZE can be 150  
+	private List<LineReductionHold> WS_LINE_REDUCTION_TABLE = new ArrayList<LineReductionHold>(7); //Indices 0 through 6 will be for each reduction line of this claim, i.e. from ln_id 1 to 7 
+	private List<LineHold> WS_LINE_DATA_AREA_TABLE = new ArrayList<LineHold>(7); 
 	
 	public void setDBKE2_ICN_SUFX_CD(String dBKE2_ICN_SUFX_CD) {
 		DBKE2_ICN_SUFX_CD = dBKE2_ICN_SUFX_CD;
@@ -128,6 +133,24 @@ public class ClaimIndicatorValues{
 	}
 	public void setNY_COB_PARENT_CLM(boolean nY_COB_PARENT_CLM) {
 		NY_COB_PARENT_CLM = nY_COB_PARENT_CLM;
+	}
+	public List<LineReductionHold> getWS_LINE_REDUCTION_TABLE() {
+		return WS_LINE_REDUCTION_TABLE;
+	}
+	public void setWS_LINE_REDUCTION_TABLE(List<LineReductionHold> wS_LINE_REDUCTION_TABLE) {
+		WS_LINE_REDUCTION_TABLE = wS_LINE_REDUCTION_TABLE;
+	}
+	public List<LineHold> getWS_LINE_DATA_AREA_TABLE() {
+		return WS_LINE_DATA_AREA_TABLE;
+	}
+	public void setWS_LINE_DATA_AREA_TABLE(List<LineHold> wS_LINE_DATA_AREA_TABLE) {
+		WS_LINE_DATA_AREA_TABLE = wS_LINE_DATA_AREA_TABLE;
+	}
+	public BigDecimal getLN_TOT_RPT_ALL_AMT() {
+		return LN_TOT_RPT_ALL_AMT;
+	}
+	public void setLN_TOT_RPT_ALL_AMT(BigDecimal lN_TOT_RPT_ALL_AMT) {
+		LN_TOT_RPT_ALL_AMT = lN_TOT_RPT_ALL_AMT;
 	}
 	
 }
