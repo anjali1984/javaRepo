@@ -28,7 +28,7 @@ public class FetchCoblnAmtsDao {
 		query.setLength(0); // To ensure its cleared of previous query
 		query.append("SELECT LN.LN_ID ");
 		query.append(" ,CB.RPTG_LN_ALLW_AMT ");
-		query.append(" ,IFNULL(CB.RPTG_LN_ALLW_AMT,0) ");
+		//query.append(" ,IFNULL(CB.RPTG_LN_ALLW_AMT,0) ");
 		query.append(" ,LN.SRVC_CD ");
 		query.append(" ,LN.PMT_SVC_CD ");
 		query.append(" ,LN.RMRK_CD ");
@@ -46,10 +46,10 @@ public class FetchCoblnAmtsDao {
 		query.append(" ,LN.NYSCHG_DED_MM_AMT");
 		query.append(" ,LN.ORIG_LN_CORR_ID  ");
 		query.append(" ,LN.ORIG_LN_CHRG_AMT  ");
-		query.append(" FROM  D5406TOP.ADJD_CLMSFLN_COB   	CB ");
-		query.append(" ,ADJD_CLMSF_LN    		  	LN ");
-		query.append(" FROM  D5406TOP.ADJD_CLMSF_LN          LN ") ;
-		query.append(" LEFT OUTER JOIN D5406TOP.ADJD_CLMSFLN_COB   CB") ;
+//		query.append(" FROM  T5410DTA.ADJD_CLMSFLN_COB   	CB ");
+//		query.append(" ,ADJD_CLMSF_LN    		  	LN ");
+		query.append(" FROM  T5410DTA.ADJD_CLMSF_LN          LN ") ;
+		query.append(" LEFT OUTER JOIN T5410DTA.ADJD_CLMSFLN_COB   CB ") ;
 		query.append("ON  CB.INVN_CTL_NBR      = LN.INVN_CTL_NBR ") ;
 		query.append("AND  CB.ICN_SUFX_CD       = LN.ICN_SUFX_CD  ") ;
 		query.append("AND  CB.PROC_DT           = LN.PROC_DT ") ;
@@ -61,12 +61,7 @@ public class FetchCoblnAmtsDao {
 		query.append("AND  LN.DFT_NBR           = ? ");
 		query.append("AND  LN.PROC_TM           = ? ");
 		query.append("AND  LN.PROC_DT           = ? ");
-		//query.append("AND  CB.INVN_CTL_NBR      = LN.INVN_CTL_NBR ");
-		//query.append("AND  CB.ICN_SUFX_CD       = LN.ICN_SUFX_CD ");
-		//query.append("AND  CB.PROC_DT           = LN.PROC_DT ");
-		//query.append("AND  CB.PROC_TM           = LN.PROC_TM ");
-		//query.append("AND  CB.ICN_SUFX_VERS_NBR = LN.ICN_SUFX_VERS_NBR ");
-		//query.append("AND  CB.LN_ID             = LN.LN_ID ");
+		query.append(" ORDER BY LN.LN_ID ASC "); // ADDED so that the index out of bounds is solved for arraylist
 		query.append("FOR FETCH ONLY ");
 		
 		Connection con = null;
@@ -83,27 +78,29 @@ public class FetchCoblnAmtsDao {
 			ps.setString(5, incoming_Claim.getHc1_REQ_CLM_PROC_DT());
 			ResultSet rs = ps.executeQuery();
 			
+			System.out.println("RESULT SET LINE IDS ORDER");
 			while(rs.next()){
 				COBLN_LINE_FLDS returned_record = new COBLN_LINE_FLDS(); 
-				returned_record.setLN_ID(rs.getInt("LN.LN_ID"));
-				returned_record.setRPTG_LN_ALLW_AMT(rs.getBigDecimal("CB.RPTG_LN_ALLW_AMT"));
-				returned_record.setLN_SRVC_CD(rs.getString("LN.SRVC_CD"));
-				returned_record.setLN_PMT_SVC_CD(rs.getString("LN.PMT_SVC_CD"));
-				returned_record.setLN_RMRK_CD(rs.getString("LN.RMRK_CD"));
-				returned_record.setLN_OVR_CD(rs.getString("LN.OVR_CD"));
-				returned_record.setLN_AUTH_PROC_CD(rs.getString("LN.AUTH_PROC_CD"));
-				returned_record.setLN_CHRG_AMT(rs.getBigDecimal("LN.CHRG_AMT"));
-				returned_record.setLN_NC_AMT(rs.getBigDecimal("LN.NC_AMT"));
-				returned_record.setLN_FST_DT(rs.getString("LN.FST_DT"));
-				returned_record.setLN_LST_SRVC_DT(rs.getString("LN.LST_SRVC_DT"));
-				returned_record.setLN_OI_PD_LN_AMT(rs.getBigDecimal("LN.OI_PD_LN_AMT"));
-				returned_record.setLN_MEDC_L04_AMT(rs.getBigDecimal("LN.MEDC_L04_AMT"));
-				returned_record.setLN_ALLW_AMT_DTRM_CD(rs.getString("LN.ALLW_AMT_DTRM_CD"));
-				returned_record.setLN_LN_PROV_WRITE_OFF(rs.getBigDecimal("LN.LN_PROV_WRITE_OFF"));
-				returned_record.setLN_MM_DED_AMT(rs.getBigDecimal("LN.MM_DED_AMT"));
-				returned_record.setLN_NYSCHG_DED_MM_AMT(rs.getBigDecimal("LN.NYSCHG_DED_MM_AMT"));
-				returned_record.setLN_ORIG_LN_CORR_ID(rs.getInt("LN.ORIG_LN_CORR_ID"));
-				returned_record.setLN_ORIG_LN_CHRG_AMT(rs.getBigDecimal("LN.ORIG_LN_CHRG_AMT"));
+				returned_record.setLN_ID(rs.getInt("LN_ID"));
+				System.out.println(rs.getInt("LN_ID"));
+				returned_record.setRPTG_LN_ALLW_AMT(rs.getBigDecimal("RPTG_LN_ALLW_AMT"));
+				returned_record.setLN_SRVC_CD(rs.getString("SRVC_CD"));
+				returned_record.setLN_PMT_SVC_CD(rs.getString("PMT_SVC_CD"));
+				returned_record.setLN_RMRK_CD(rs.getString("RMRK_CD"));
+				returned_record.setLN_OVR_CD(rs.getString("OVR_CD"));
+				returned_record.setLN_AUTH_PROC_CD(rs.getString("AUTH_PROC_CD"));
+				returned_record.setLN_CHRG_AMT(rs.getBigDecimal("CHRG_AMT"));
+				returned_record.setLN_NC_AMT(rs.getBigDecimal("NC_AMT"));
+				returned_record.setLN_FST_DT(rs.getString("FST_DT"));
+				returned_record.setLN_LST_SRVC_DT(rs.getString("LST_SRVC_DT"));
+				returned_record.setLN_OI_PD_LN_AMT(rs.getBigDecimal("OI_PD_LN_AMT"));
+				returned_record.setLN_MEDC_L04_AMT(rs.getBigDecimal("MEDC_L04_AMT"));
+				returned_record.setLN_ALLW_AMT_DTRM_CD(rs.getString("ALLW_AMT_DTRM_CD"));
+				returned_record.setLN_LN_PROV_WRITE_OFF(rs.getBigDecimal("LN_PROV_WRITE_OFF"));
+				returned_record.setLN_MM_DED_AMT(rs.getBigDecimal("MM_DED_AMT"));
+				returned_record.setLN_NYSCHG_DED_MM_AMT(rs.getBigDecimal("NYSCHG_DED_MM_AMT"));
+				returned_record.setLN_ORIG_LN_CORR_ID(rs.getInt("ORIG_LN_CORR_ID"));
+				returned_record.setLN_ORIG_LN_CHRG_AMT(rs.getBigDecimal("ORIG_LN_CHRG_AMT"));
 				
 				query_results.add(returned_record); 
 				

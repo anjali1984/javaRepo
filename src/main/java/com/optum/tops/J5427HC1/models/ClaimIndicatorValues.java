@@ -9,21 +9,21 @@ import java.util.List;
 //Sits inside the claim object that's returned back. 
 public class ClaimIndicatorValues{
 
-	private String DBKE2_ICN_SUFX_CD ;
-	private String DBKE2_ICN_SUFX_VERS_NBR ;
-	private String DBKE2_COB_LOGC_CD ;
-	private String DBKE2_835_COB_PROC_IND; 
-	private String DBKE2_FACL_OR_PROF_CD ;
-	private String DBKE2_ALLW_AMT_DTRM_CD ; 
-	private String DBKE2_DIAG_B_NBR ; 
+	private String DBKE2_ICN_SUFX_CD = "" ;
+	private String DBKE2_ICN_SUFX_VERS_NBR = "" ;
+	private String DBKE2_COB_LOGC_CD = "" ;
+	private String DBKE2_835_COB_PROC_IND = "" ; 
+	private String DBKE2_FACL_OR_PROF_CD = "" ;
+	private String DBKE2_ALLW_AMT_DTRM_CD = "" ; 
+	private String DBKE2_DIAG_B_NBR = "" ; 
 	private String DBKE2_SUFX_TOT_CHRG_AMT ; 
-	private String DBKE2_EMC_IND ;
-	private String NYSTATE_COB_CLAIM ; 
+	private String DBKE2_EMC_IND = "";
+	private String NYSTATE_COB_CLAIM = "" ; 
 	private boolean NY_COB_PARENT_CLM ; //Corresponds to WS-NY-COB-PARENT-CLM-SW, NY-COB-PARENT-CLM
-	private String NYSTATE_COB_CLAIM_PAIDTO ; // Can be paid to State ('S') or Provider ("P") 
-	private String PENNY_PROC_INDICATOR  ; // Claim level field "Y" or "N" 
-	private String OPS_HCFA_INDICATOR ; 
-	private String CALL_OIMC_TBL_INDICATOR ; // "Y" or "N" , corresponds to WS-CALL-OIMC-TBL-SW 
+	private String NYSTATE_COB_CLAIM_PAIDTO = "" ; // Can be paid to State ('S') or Provider ("P") 
+	private String PENNY_PROC_INDICATOR  = "N" ; // Claim level field "Y" or "N" 
+	private String OPS_HCFA_INDICATOR = "N" ; 
+	private String CALL_OIMC_TBL_INDICATOR = "N"; // "Y" or "N" , corresponds to WS-CALL-OIMC-TBL-SW 
 	private String CXINT_CLAIM_INDICATOR = "N"; // "Y"or "N" 
 	
 	private BigDecimal LN_TOT_RPT_ALL_AMT ; //Corresponds to the WS-LN-TOT-RPT-ALL-AMT filed used as an sum variable for all lines when requested TransCd == "00" 

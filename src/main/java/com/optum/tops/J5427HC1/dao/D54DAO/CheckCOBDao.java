@@ -34,9 +34,9 @@ public class CheckCOBDao {
 		query.append(" ,BKE2.DIAG_B_NBR ");
 		query.append(" ,BKE2.SUFX_TOT_CHRG_AMT ");
 		query.append(" ,BKE2.EMC_IND "); //Used in conjunction with "BKE2.NEW_COB_LOGC_CD" to determine if this claim qualifies for Penny Process 
-		query.append("FROM D5406TOP.ADJD_CLMSF_BLK_E2 BKE2 ");
+		query.append("FROM T5410DTA.ADJD_CLMSF_BLK_E2 BKE2 ");
 		query.append(" ");
-		query.append("INNER JOIN D5406TOP.ADJD_CLMSF_LN LNE ");
+		query.append("INNER JOIN T5410DTA.ADJD_CLMSF_LN LNE ");
 		query.append(" ON LNE.INVN_CTL_NBR = BKE2.INVN_CTL_NBR ");
 		query.append(" AND LNE.ICN_SUFX_CD = BKE2.ICN_SUFX_CD ");
 		query.append(" AND LNE.PROC_DT = BKE2.PROC_DT ");
@@ -47,7 +47,7 @@ public class CheckCOBDao {
 		query.append(" AND BKE2.PROC_TM = ? ");
 		query.append(" AND BKE2.ICN_SUFX_VERS_NBR = ");
 		query.append(" ( SELECT MAX( BKE2A.ICN_SUFX_VERS_NBR) ");
-		query.append(" FROM D5406TOP.ADJD_CLMSF_BLK_E2 BKE2A ");
+		query.append(" FROM T5410DTA.ADJD_CLMSF_BLK_E2 BKE2A ");
 		query.append(" WHERE BKE2A.INVN_CTL_NBR = BKE2.INVN_CTL_NBR ");
 		query.append(" AND BKE2A.ICN_SUFX_CD = BKE2.ICN_SUFX_CD ");
 		query.append(" AND BKE2A.PROC_DT = BKE2.PROC_DT ");
@@ -71,36 +71,43 @@ public class CheckCOBDao {
 			ps.setString(3, claim.getHc1_REQ_CLM_PROC_TM());
 			ps.setString(4, claim.getHc1_REQ_CLM_DRFT_NBR());
 			ResultSet rs = ps.executeQuery();
-			rs.next(); //Query returns only 1 row, so to get to the 1st row 
-		
-			// Set the indicator values in the indicator_object of V5427HC1 (Claim object)
-			indicator_object.setDBKE2_ICN_SUFX_CD(rs.getString("BKE2.ICN_SUFX_CD"));
-			indicator_object.setDBKE2_ICN_SUFX_VERS_NBR(rs.getString("BKE2.ICN_SUFX_VERS_NBR"));
-			indicator_object.setDBKE2_COB_LOGC_CD(rs.getString("BKE2.NEW_COB_LOGC_CD"));
-			indicator_object.setDBKE2_835_COB_PROC_IND(rs.getString("BKE2.NEW_835_COB_PROC_IND"));
-
+			
+			
+			//rs.next();//Query returns only 1 row, so to get to the 1st row 
+			if(!rs.next()){
+				System.out.println("No data returned by query in CheckCOBDao");
+			}else{
+				// Set the indicator values in the indicator_object of V5427HC1
+				// (Claim object)
+				indicator_object.setDBKE2_ICN_SUFX_CD(rs.getString("ICN_SUFX_CD"));
+				indicator_object.setDBKE2_ICN_SUFX_VERS_NBR(rs.getString("ICN_SUFX_VERS_NBR"));
+				indicator_object.setDBKE2_COB_LOGC_CD(rs.getString("NEW_COB_LOGC_CD"));
+				indicator_object.setDBKE2_835_COB_PROC_IND(rs.getString("NEW_835_COB_PROC_IND"));
+			}
+			
+			System.out.println("PASSED ");
 			if (indicator_object.getDBKE2_COB_LOGC_CD().trim().equals("Y")
 					&& (indicator_object.getDBKE2_835_COB_PROC_IND().trim().equals("Y")
 							|| indicator_object.getDBKE2_835_COB_PROC_IND().trim().equals("M"))) {
 				
 				individual_claim_response.setHC1_COB_COB_CLAIM_INDICATOR("Y"); 
-				individual_claim_response.setHC1_COB_COB_CALC_IND(rs.getString("BKE2.NEW_COB_LOGC_CD"));
-				individual_claim_response.setHC1_COB_COB_835_PROC_IND(rs.getString("BKE2.NEW_835_COB_PROC_IND"));
-				individual_claim_response.setHC1_COB_INST_OR_PROF(rs.getString("BKE2.FACL_OR_PROF_CD"));
-				individual_claim_response.setHC1_COB_ALLOW_AMT_IND(rs.getString("BKE2.ALLW_AMT_DTRM_CD"));
+				individual_claim_response.setHC1_COB_COB_CALC_IND(rs.getString("NEW_COB_LOGC_CD"));
+				individual_claim_response.setHC1_COB_COB_835_PROC_IND(rs.getString("NEW_835_COB_PROC_IND"));
+				individual_claim_response.setHC1_COB_INST_OR_PROF(rs.getString("FACL_OR_PROF_CD"));
+				individual_claim_response.setHC1_COB_ALLOW_AMT_IND(rs.getString("ALLW_AMT_DTRM_CD"));
 				
-				if(rs.getString("BKE2.DIAG_B_NBR").trim().contains("S") || rs.getString("BKE2.DIAG_B_NBR").trim().contains("P")){
+				if(rs.getString("DIAG_B_NBR").trim().contains("S") || rs.getString("DIAG_B_NBR").trim().contains("P")){
 					indicator_object.setNYSTATE_COB_CLAIM("Y");
-					if(rs.getString("BKE2.DIAG_B_NBR").trim().contains("S"))
+					if(rs.getString("DIAG_B_NBR").trim().contains("S"))
 						indicator_object.setNYSTATE_COB_CLAIM_PAIDTO("S");
-					else if(rs.getString("BKE2.DIAG_B_NBR").trim().contains("P"))
+					else if(rs.getString("DIAG_B_NBR").trim().contains("P"))
 						indicator_object.setNYSTATE_COB_CLAIM_PAIDTO("P");
 					else
 						System.out.println("Invalid Value in CheckCOBDao for NYSTATE");
 				}
 				
 				//Determine if claim qualifies for Penny Process, To be used later in 2000-Processing 
-				if(rs.getString("BKE2.NEW_COB_LOGC_CD").trim().equalsIgnoreCase("Y") && rs.getString("BKE2.EMC_IND").trim().equalsIgnoreCase("Y")){
+				if(rs.getString("NEW_COB_LOGC_CD").trim().equalsIgnoreCase("Y") && rs.getString("EMC_IND").trim().equalsIgnoreCase("Y")){
 					indicator_object.setPENNY_PROC_INDICATOR("Y");
 				}else{
 					indicator_object.setPENNY_PROC_INDICATOR("N");
@@ -110,9 +117,9 @@ public class CheckCOBDao {
 			else {
 				individual_claim_response.setHC1_COB_COB_CLAIM_INDICATOR("N");
 				individual_claim_response.setHC1_COB_NBR_LINES(0);
-				individual_claim_response.setHC1_COB_COB_CALC_IND(rs.getString("BKE2.NEW_COB_LOGC_CD"));
-				individual_claim_response.setHC1_COB_COB_835_PROC_IND(rs.getString("BKE2.NEW_835_COB_PROC_IND"));
-				individual_claim_response.setHC1_COB_INST_OR_PROF(rs.getString("BKE2.FACL_OR_PROF_CD"));
+				individual_claim_response.setHC1_COB_COB_CALC_IND(rs.getString("NEW_COB_LOGC_CD"));
+				individual_claim_response.setHC1_COB_COB_835_PROC_IND(rs.getString("NEW_835_COB_PROC_IND"));
+				individual_claim_response.setHC1_COB_INST_OR_PROF(rs.getString("FACL_OR_PROF_CD"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

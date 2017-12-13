@@ -32,12 +32,12 @@ public class OIMC_CoblnAmtsDao {
 		query.append("THEN 0 ELSE SRVC.MEDCR_PD_AMT   END )  ");
 		query.append(",(CASE WHEN (SRVC.OI_PD_LN_AMT = -1 ) ");
 		query.append("THEN 0 ELSE SRVC.OI_PD_LN_AMT  END ) ");
-		query.append("FROM  D5406TOP.COB_SRVC_CALC_DATA SRVC ");
+		query.append("FROM  T5410DTA.COB_SRVC_CALC_DATA SRVC ");
 		query.append("WHERE SRVC.INVN_CTL_NBR  =  ? ");
 		query.append("AND SRVC.ICN_SUFX_CD   = ? ");
 		query.append("AND SRVC.LST_UPDT_DTTM = ");
 		query.append("(SELECT MAX(SRVC2.LST_UPDT_DTTM) ");
-		query.append("FROM  D5406TOP.COB_SRVC_CALC_DATA    SRVC2  ");
+		query.append("FROM  T5410DTA.COB_SRVC_CALC_DATA    SRVC2  ");
 		query.append("WHERE SRVC2.INVN_CTL_NBR    = SRVC.INVN_CTL_NBR ");
 		query.append("AND SRVC2.ICN_SUFX_CD     = SRVC.ICN_SUFX_CD ");
 		query.append("AND SRVC2.ORIG_LN_CORR_ID = SRVC.ORIG_LN_CORR_ID) ");
@@ -54,11 +54,11 @@ public class OIMC_CoblnAmtsDao {
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
 				COBLN_2131 record = new COBLN_2131(); 
-				record.setInvn_Ctl_Nbr(rs.getString("SRVC.INVN_CTL_NB"));
-				record.setIcn_Sufx_Cd(rs.getString("SRVC.ICN_SUFX_CD"));
-				record.setOrig_Ln_Corr_Id(rs.getInt("SRVC.ORIG_LN_CORR_I"));
-				record.setMedcr_Pd_Amt(rs.getBigDecimal("SRVC.MEDCR_PD_AMT"));
-				record.setOi_Pd_Ln_Amt(rs.getBigDecimal("SRVC.OI_PD_LN_AMT"));
+				record.setInvn_Ctl_Nbr(rs.getString("INVN_CTL_NB"));
+				record.setIcn_Sufx_Cd(rs.getString("ICN_SUFX_CD"));
+				record.setOrig_Ln_Corr_Id(rs.getInt("ORIG_LN_CORR_I"));
+				record.setMedcr_Pd_Amt(rs.getBigDecimal("MEDCR_PD_AMT"));
+				record.setOi_Pd_Ln_Amt(rs.getBigDecimal("OI_PD_LN_AMT"));
 				return_data.add(record);
 			}
 			

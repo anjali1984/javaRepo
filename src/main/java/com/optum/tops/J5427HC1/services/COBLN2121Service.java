@@ -83,6 +83,7 @@ public class COBLN2121Service {
 
 				// Move DCLNE-LN-ID to WS-SUB index into the 2 Line tables/ArrayLists in the ClaimIndicatorValues 
 				int index = line.getLN_ID() - 1; // 1 to 7  
+
 				LineHold line_data = new LineHold();
 				LineReductionHold line_reduction_data = new LineReductionHold() ; 
 				
