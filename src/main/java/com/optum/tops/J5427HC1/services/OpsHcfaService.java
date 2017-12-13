@@ -11,7 +11,7 @@ import com.optum.tops.J5427HC1.models.V5427HC1;
 //then For Institutional OR OPS_HCFA_IND="Y" PERFORM 2002-GET-ORIGHDR-DETAILS-SECT 
 //
 @Service
-public class Ops_Hcfa {
+public class OpsHcfaService {
 	
 	@Autowired 
 	CheckOPS_HCFADAO OPSHCFA_claim_checker ; 
