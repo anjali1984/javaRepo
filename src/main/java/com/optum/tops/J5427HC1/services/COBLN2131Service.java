@@ -21,7 +21,7 @@ public class COBLN2131Service {
 	List<COBLN_2131> results ; 
 	
 	public V5427HC1 do2131Logic(ReqClaimEntry incoming_claim, V5427HC1 outbound_claim){
-		results = OimcCobAmtsDao.getData(incoming_claim.getHC1_REQ_CLM_INVN_CTL_NBR(), outbound_claim.getMy_indicator().getDBKE2_ICN_SUFX_CD()); 
+		results = OimcCobAmtsDao.getData(incoming_claim.getHc1_REQ_CLM_INVN_CTL_NBR(), outbound_claim.getMy_indicator().getDBKE2_ICN_SUFX_CD()); 
 		BigDecimal ln_chrg_amt, ln_nc_amt , ln_medc_paid_amt;
 		List<LineReductionHold> lineRedDataTable = outbound_claim.getMy_indicator().getWS_LINE_REDUCTION_TABLE(); //On a claim level
 

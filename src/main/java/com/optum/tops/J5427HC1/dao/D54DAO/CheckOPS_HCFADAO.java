@@ -24,10 +24,11 @@ public class CheckOPS_HCFADAO {
 	static StringBuffer query = new StringBuffer();
 
 	public V5427HC1 am_i_OPS_HCFA(ReqClaimEntry incoming_claim, V5427HC1 claim) {
+		System.out.println("In CheckOPS_HCFADAO ");
 		query.setLength(0); // To ensure its cleared of previous query
 		query.append("SELECT ");
 		query.append("* ");
-		query.append("FROM ADJD_CLMSF_LN LNE ");
+		query.append("FROM D5406TOP.ADJD_CLMSF_LN LNE ");
 		query.append("WHERE LNE.INVN_CTL_NBR = ? ");
 		query.append("AND LNE.ICN_SUFX_CD = ? ");
 		query.append("AND LNE.PROC_DT = ? ");
@@ -42,10 +43,10 @@ public class CheckOPS_HCFADAO {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(query.toString());
-			ps.setString(1, incoming_claim.getHC1_REQ_CLM_INVN_CTL_NBR());
+			ps.setString(1, incoming_claim.getHc1_REQ_CLM_INVN_CTL_NBR());
 			ps.setString(2, claim.getMy_indicator().getDBKE2_ICN_SUFX_CD());
-			ps.setString(3, incoming_claim.getHC1_REQ_CLM_PROC_DT());
-			ps.setString(4, incoming_claim.getHC1_REQ_CLM_PROC_TM());
+			ps.setString(3, incoming_claim.getHc1_REQ_CLM_PROC_DT());
+			ps.setString(4, incoming_claim.getHc1_REQ_CLM_PROC_TM());
 			ps.setString(5, claim.getMy_indicator().getDBKE2_ICN_SUFX_VERS_NBR());
 
 			ResultSet rs = ps.executeQuery();
@@ -95,7 +96,7 @@ public class CheckOPS_HCFADAO {
 		query.append(", HDR.UB92_OVR_CD ");
 		query.append(", HDR.UB92_RMK_CD ");
 		query.append(", HDR.ORIG_UB92_RMRK_CD ");
-		query.append("FROM  ADJD_CLMSF_ORIGHDR   	HDR");
+		query.append("FROM  D5406TOP.ADJD_CLMSF_ORIGHDR   	HDR");
 		query.append("WHERE  HDR.INVN_CTL_NBR     	= ? ");
 		query.append("AND  HDR.ICN_SUFX_CD        = ? ");
 		query.append("AND  HDR.PROC_DT            = ? ");
@@ -111,10 +112,10 @@ public class CheckOPS_HCFADAO {
 		try{
 			con = ds.getConnection();
 			ps = con.prepareStatement(query.toString());
-			ps.setString(1, incoming_claim.getHC1_REQ_CLM_INVN_CTL_NBR());
+			ps.setString(1, incoming_claim.getHc1_REQ_CLM_INVN_CTL_NBR());
 			ps.setString(2, claim.getMy_indicator().getDBKE2_ICN_SUFX_CD());
-			ps.setString(3, incoming_claim.getHC1_REQ_CLM_PROC_DT());
-			ps.setString(4, incoming_claim.getHC1_REQ_CLM_PROC_TM());
+			ps.setString(3, incoming_claim.getHc1_REQ_CLM_PROC_DT());
+			ps.setString(4, incoming_claim.getHc1_REQ_CLM_PROC_TM());
 			ps.setString(5, claim.getMy_indicator().getDBKE2_ICN_SUFX_VERS_NBR()); 
 			
 			ResultSet rs = ps.executeQuery(); 

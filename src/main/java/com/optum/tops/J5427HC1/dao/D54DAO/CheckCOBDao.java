@@ -23,6 +23,7 @@ public class CheckCOBDao {
 	static StringBuffer query = new StringBuffer();
 
 	public V5427HC1 am_i_COB_claim(ReqClaimEntry claim) {
+		System.out.println("IN CHECKCOBDao ");
 		query.setLength(0); // To ensure its cleared of previous query
 		query.append("SELECT BKE2.ICN_SUFX_CD ");
 		query.append(" ,BKE2.ICN_SUFX_VERS_NBR ");
@@ -33,9 +34,9 @@ public class CheckCOBDao {
 		query.append(" ,BKE2.DIAG_B_NBR ");
 		query.append(" ,BKE2.SUFX_TOT_CHRG_AMT ");
 		query.append(" ,BKE2.EMC_IND "); //Used in conjunction with "BKE2.NEW_COB_LOGC_CD" to determine if this claim qualifies for Penny Process 
-		query.append("FROM ADJD_CLMSF_BLK_E2 BKE2 ");
+		query.append("FROM D5406TOP.ADJD_CLMSF_BLK_E2 BKE2 ");
 		query.append(" ");
-		query.append("INNER JOIN ADJD_CLMSF_LN LNE ");
+		query.append("INNER JOIN D5406TOP.ADJD_CLMSF_LN LNE ");
 		query.append(" ON LNE.INVN_CTL_NBR = BKE2.INVN_CTL_NBR ");
 		query.append(" AND LNE.ICN_SUFX_CD = BKE2.ICN_SUFX_CD ");
 		query.append(" AND LNE.PROC_DT = BKE2.PROC_DT ");
@@ -46,7 +47,7 @@ public class CheckCOBDao {
 		query.append(" AND BKE2.PROC_TM = ? ");
 		query.append(" AND BKE2.ICN_SUFX_VERS_NBR = ");
 		query.append(" ( SELECT MAX( BKE2A.ICN_SUFX_VERS_NBR) ");
-		query.append(" FROM ADJD_CLMSF_BLK_E2 BKE2A ");
+		query.append(" FROM D5406TOP.ADJD_CLMSF_BLK_E2 BKE2A ");
 		query.append(" WHERE BKE2A.INVN_CTL_NBR = BKE2.INVN_CTL_NBR ");
 		query.append(" AND BKE2A.ICN_SUFX_CD = BKE2.ICN_SUFX_CD ");
 		query.append(" AND BKE2A.PROC_DT = BKE2.PROC_DT ");
@@ -65,10 +66,10 @@ public class CheckCOBDao {
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(query.toString());
-			ps.setString(1, claim.getHC1_REQ_CLM_INVN_CTL_NBR()); // Sets the icn variable in the query
-			ps.setString(2, claim.getHC1_REQ_CLM_PROC_DT());
-			ps.setString(3, claim.getHC1_REQ_CLM_PROC_TM());
-			ps.setString(4, claim.getHC1_REQ_CLM_DRFT_NBR());
+			ps.setString(1, claim.getHc1_REQ_CLM_INVN_CTL_NBR()); // Sets the icn variable in the query
+			ps.setString(2, claim.getHc1_REQ_CLM_PROC_DT());
+			ps.setString(3, claim.getHc1_REQ_CLM_PROC_TM());
+			ps.setString(4, claim.getHc1_REQ_CLM_DRFT_NBR());
 			ResultSet rs = ps.executeQuery();
 			rs.next(); //Query returns only 1 row, so to get to the 1st row 
 		

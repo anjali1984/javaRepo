@@ -45,7 +45,7 @@ public class COBLN2121Service {
 			}
 			
 			if( (line.getLN_PMT_SVC_CD().contains("OI") || line.getLN_PMT_SVC_CD().contains("OIM") || line.getLN_PMT_SVC_CD().contains("OIMEDI")) 
-					|| (requestedClaim.getHC1_REQ_CLM_TRANS_CD().contains("69") && !line.getLN_RMRK_CD().contains("69"))){
+					|| (requestedClaim.getHc1_REQ_CLM_TRANS_CD().contains("69") && !line.getLN_RMRK_CD().contains("69"))){
 				continue; 
 			}
 			
@@ -103,7 +103,7 @@ public class COBLN2121Service {
 				line_reduction_data.setLN_RPT_ALLOW_AMT(line.getRPTG_LN_ALLW_AMT());
 				indicatorObject.getWS_LINE_REDUCTION_TABLE().add(index, line_reduction_data);
 				
-				if(requestedClaim.getHC1_REQ_CLM_TRANS_CD().equals("00")){
+				if(requestedClaim.getHc1_REQ_CLM_TRANS_CD().equals("00")){
 					indicatorObject.setLN_TOT_RPT_ALL_AMT( indicatorObject.getLN_TOT_RPT_ALL_AMT().add(line_reduction_data.getLN_RPT_ALLOW_AMT()));
 				}
 				
@@ -143,7 +143,7 @@ public class COBLN2121Service {
 					}else{
 						BigDecimal temp ; 
 						BigDecimal temp2 ;
-						if(requestedClaim.getHC1_REQ_CLM_TRANS_CD().trim().equals("69")){
+						if(requestedClaim.getHc1_REQ_CLM_TRANS_CD().trim().equals("69")){
 							temp = line.getLN_CHRG_AMT().subtract(WS_TEMP_RPT_ALLOW_AMT);
 							indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).setLN_PRV_WRT_OFF(temp);
 							WS_TEMP_RPT_ALLOW_AMT = indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).getLN_RPT_ALLOW_AMT().multiply
@@ -154,7 +154,7 @@ public class COBLN2121Service {
 						}
 					}
 					
-					if(requestedClaim.getHC1_REQ_CLM_TRANS_CD().trim().equals("00") && 
+					if(requestedClaim.getHc1_REQ_CLM_TRANS_CD().trim().equals("00") && 
 						(line.getLN_OVR_CD().trim().equals("20") || line.getLN_OVR_CD().trim().equals("30") || line.getLN_OVR_CD().trim().equals("X0") || line.getLN_OVR_CD().trim().equals("Y0") )	){
 						indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).setLN_PRV_WRT_OFF(BigDecimal.ZERO);
 					}

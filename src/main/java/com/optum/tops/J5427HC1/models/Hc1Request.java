@@ -1,30 +1,29 @@
 package com.optum.tops.J5427HC1.models;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 //Mimics the incoming request in accordance with Q5427HC1 Copybook
 public class Hc1Request {
 
-	private BigDecimal HC1_REQ_NBR_CLAIMS ; 
+	private int hc1_REQ_NBR_CLAIMS ; 
 	
 	//Variable Area
-	private List<ReqClaimEntry> ClaimEntries ; //Size of this can be 100 at max, depends on HC1_REQ_NBR_CLAIMS
-	
-	public BigDecimal getHC1_REQ_NBR_CLAIMS() {
-		return HC1_REQ_NBR_CLAIMS;
+	private List<ReqClaimEntry> claimEntries ; //Size of this can be 100 at max, depends on HC1_REQ_NBR_CLAIMS
+
+	public int getHc1_REQ_NBR_CLAIMS() {
+		return hc1_REQ_NBR_CLAIMS;
 	}
 
-	public void setHC1_REQ_NBR_CLAIMS(BigDecimal hC1_REQ_NBR_CLAIMS) {
-		HC1_REQ_NBR_CLAIMS = hC1_REQ_NBR_CLAIMS;
+	public void setHc1_REQ_NBR_CLAIMS(int hc1_REQ_NBR_CLAIMS) {
+		this.hc1_REQ_NBR_CLAIMS = hc1_REQ_NBR_CLAIMS;
 	}
 
 	public List<ReqClaimEntry> getClaimEntries() {
-		return ClaimEntries;
+		return claimEntries;
 	}
 
 	public void setClaimEntries(List<ReqClaimEntry> claimEntries) {
-		ClaimEntries = claimEntries;
+		this.claimEntries = claimEntries;
 	}
 	
 	

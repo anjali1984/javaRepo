@@ -24,6 +24,7 @@ public class FetchCoblnAmtsDao {
 	static StringBuffer query = new StringBuffer();
 	
 	public List<COBLN_LINE_FLDS> getCoblnFlds(ReqClaimEntry incoming_Claim, String suffix_cd){
+		System.out.println("In FetchCoblnAmtsDao ");
 		query.setLength(0); // To ensure its cleared of previous query
 		query.append("SELECT LN.LN_ID ");
 		query.append(" ,CB.RPTG_LN_ALLW_AMT ");
@@ -45,10 +46,10 @@ public class FetchCoblnAmtsDao {
 		query.append(" ,LN.NYSCHG_DED_MM_AMT");
 		query.append(" ,LN.ORIG_LN_CORR_ID  ");
 		query.append(" ,LN.ORIG_LN_CHRG_AMT  ");
-		query.append(" FROM  ADJD_CLMSFLN_COB   	CB ");
+		query.append(" FROM  D5406TOP.ADJD_CLMSFLN_COB   	CB ");
 		query.append(" ,ADJD_CLMSF_LN    		  	LN ");
-		query.append(" FROM  ADJD_CLMSF_LN          LN ") ;
-		query.append(" LEFT OUTER JOIN ADJD_CLMSFLN_COB   CB") ;
+		query.append(" FROM  D5406TOP.ADJD_CLMSF_LN          LN ") ;
+		query.append(" LEFT OUTER JOIN D5406TOP.ADJD_CLMSFLN_COB   CB") ;
 		query.append("ON  CB.INVN_CTL_NBR      = LN.INVN_CTL_NBR ") ;
 		query.append("AND  CB.ICN_SUFX_CD       = LN.ICN_SUFX_CD  ") ;
 		query.append("AND  CB.PROC_DT           = LN.PROC_DT ") ;
@@ -75,11 +76,11 @@ public class FetchCoblnAmtsDao {
 		try{
 			con = ds.getConnection();
 			ps = con.prepareStatement(query.toString());
-			ps.setString(1, incoming_Claim.getHC1_REQ_CLM_INVN_CTL_NBR()); // Sets the icn variable in the query
+			ps.setString(1, incoming_Claim.getHc1_REQ_CLM_INVN_CTL_NBR()); // Sets the icn variable in the query
 			ps.setString(2, suffix_cd);
-			ps.setString(3, incoming_Claim.getHC1_REQ_CLM_DRFT_NBR());
-			ps.setString(4, incoming_Claim.getHC1_REQ_CLM_PROC_TM());
-			ps.setString(5, incoming_Claim.getHC1_REQ_CLM_PROC_DT());
+			ps.setString(3, incoming_Claim.getHc1_REQ_CLM_DRFT_NBR());
+			ps.setString(4, incoming_Claim.getHc1_REQ_CLM_PROC_TM());
+			ps.setString(5, incoming_Claim.getHc1_REQ_CLM_PROC_DT());
 			ResultSet rs = ps.executeQuery();
 			
 			while(rs.next()){

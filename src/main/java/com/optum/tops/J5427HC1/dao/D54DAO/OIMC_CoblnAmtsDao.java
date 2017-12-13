@@ -22,6 +22,7 @@ public class OIMC_CoblnAmtsDao {
 	static StringBuffer query = new StringBuffer();
 	
 	public List<COBLN_2131> getData(String ICN, String Icn_Sufx_Cd){
+		System.out.println("In OIMC_CoblnAmtsDao ");
 		List<COBLN_2131> return_data = new ArrayList<COBLN_2131>() ;
 		query.setLength(0); // To ensure its cleared of previous query
 		query.append("SELECT SRVC.INVN_CTL_NBR "); 
@@ -31,12 +32,12 @@ public class OIMC_CoblnAmtsDao {
 		query.append("THEN 0 ELSE SRVC.MEDCR_PD_AMT   END )  ");
 		query.append(",(CASE WHEN (SRVC.OI_PD_LN_AMT = -1 ) ");
 		query.append("THEN 0 ELSE SRVC.OI_PD_LN_AMT  END ) ");
-		query.append("FROM  COB_SRVC_CALC_DATA SRVC ");
+		query.append("FROM  D5406TOP.COB_SRVC_CALC_DATA SRVC ");
 		query.append("WHERE SRVC.INVN_CTL_NBR  =  ? ");
 		query.append("AND SRVC.ICN_SUFX_CD   = ? ");
 		query.append("AND SRVC.LST_UPDT_DTTM = ");
 		query.append("(SELECT MAX(SRVC2.LST_UPDT_DTTM) ");
-		query.append("FROM  COB_SRVC_CALC_DATA    SRVC2  ");
+		query.append("FROM  D5406TOP.COB_SRVC_CALC_DATA    SRVC2  ");
 		query.append("WHERE SRVC2.INVN_CTL_NBR    = SRVC.INVN_CTL_NBR ");
 		query.append("AND SRVC2.ICN_SUFX_CD     = SRVC.ICN_SUFX_CD ");
 		query.append("AND SRVC2.ORIG_LN_CORR_ID = SRVC.ORIG_LN_CORR_ID) ");

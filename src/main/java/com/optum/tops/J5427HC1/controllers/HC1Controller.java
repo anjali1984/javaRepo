@@ -23,6 +23,7 @@ public class HC1Controller {
 	@RequestMapping(value = "/COB" , method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<HC1Response> get_COB_details(@RequestBody Hc1Request request){
+		System.out.println("Hit HC1 Controller for a HTTP POST method");
 		HC1Response response = request_processor_service.process(request) ; //to be sent back to the calling program as a ResponseEntity
 		return new ResponseEntity<HC1Response>(response, HttpStatus.OK);
 	}

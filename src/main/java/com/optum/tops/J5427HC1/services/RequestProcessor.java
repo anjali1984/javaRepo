@@ -31,6 +31,7 @@ public class RequestProcessor {
 		HC1Response response = new HC1Response() ; //to be sent back to the HC1Controller
 		List<ReqClaimEntry> claims_to_be_serviced = request.getClaimEntries() ; 
 		
+		System.out.println("REQUEST with " + claims_to_be_serviced.size() + " Recieved");
 		//For Each ReqClaimEntry service it by creating a V5427HC1 instance, put it in the response_list_all_claims field of HC1Response
 		for(ReqClaimEntry individual_claim : claims_to_be_serviced){
 			V5427HC1 temp ; //Claim instance to be put in the return object 
