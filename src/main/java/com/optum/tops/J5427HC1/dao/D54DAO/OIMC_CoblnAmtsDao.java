@@ -1,5 +1,6 @@
 package com.optum.tops.J5427HC1.dao.D54DAO;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,10 +29,12 @@ public class OIMC_CoblnAmtsDao {
 		query.append("SELECT SRVC.INVN_CTL_NBR "); 
 		query.append(",SRVC.ICN_SUFX_CD ");
 		query.append(",SRVC.ORIG_LN_CORR_ID ");
-		query.append(",(CASE WHEN (SRVC.MEDCR_PD_AMT = -1 ) ");
-		query.append("THEN 0 ELSE SRVC.MEDCR_PD_AMT   END )  ");
-		query.append(",(CASE WHEN (SRVC.OI_PD_LN_AMT = -1 ) ");
-		query.append("THEN 0 ELSE SRVC.OI_PD_LN_AMT  END ) ");
+		query.append(",SRVC.MEDCR_PD_AMT ");
+		query.append(",SRVC.OI_PD_LN_AMT ");
+		//query.append(",(CASE WHEN (SRVC.MEDCR_PD_AMT = -1 ) ");
+		//query.append("THEN 0 ELSE SRVC.MEDCR_PD_AMT   END )  ");
+		//query.append(",(CASE WHEN (SRVC.OI_PD_LN_AMT = -1 ) ");
+		//query.append("THEN 0 ELSE SRVC.OI_PD_LN_AMT  END ) ");
 		query.append("FROM  T5410DTA.COB_SRVC_CALC_DATA SRVC ");
 		query.append("WHERE SRVC.INVN_CTL_NBR  =  ? ");
 		query.append("AND SRVC.ICN_SUFX_CD   = ? ");
@@ -54,11 +57,20 @@ public class OIMC_CoblnAmtsDao {
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
 				COBLN_2131 record = new COBLN_2131(); 
-				record.setInvn_Ctl_Nbr(rs.getString("INVN_CTL_NB"));
+				record.setInvn_Ctl_Nbr(rs.getString("INVN_CTL_NBR"));
 				record.setIcn_Sufx_Cd(rs.getString("ICN_SUFX_CD"));
-				record.setOrig_Ln_Corr_Id(rs.getInt("ORIG_LN_CORR_I"));
-				record.setMedcr_Pd_Amt(rs.getBigDecimal("MEDCR_PD_AMT"));
-				record.setOi_Pd_Ln_Amt(rs.getBigDecimal("OI_PD_LN_AMT"));
+				record.setOrig_Ln_Corr_Id(rs.getInt("ORIG_LN_CORR_ID"));
+				if(rs.getBigDecimal("MEDCR_PD_AMT").compareTo(new BigDecimal(-1)) == 0) // if it is -1 then set the amount to 0 
+					record.setMedcr_Pd_Amt(new BigDecimal(0));
+				else{
+					record.setMedcr_Pd_Amt(rs.getBigDecimal("MEDCR_PD_AMT"));
+				}
+				if(rs.getBigDecimal("OI_PD_LN_AMT").compareTo(new BigDecimal(-1)) == 0) // if it is -1 then set the amount to 0 
+					record.setOi_Pd_Ln_Amt(new BigDecimal(0));
+				else{
+					record.setOi_Pd_Ln_Amt(rs.getBigDecimal("OI_PD_LN_AMT"));
+				}
+				
 				return_data.add(record);
 			}
 			

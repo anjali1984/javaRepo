@@ -7,24 +7,24 @@ import java.math.BigDecimal;
 
 public class LineReductionHold {
 	
-	private BigDecimal CAT_ID ;
-	private BigDecimal SVC_LN_ID;
-	private BigDecimal COB_PRIM_IMPAC;
-	private BigDecimal PR_OVERC;
-	private BigDecimal PR_DEDUC;
-	private BigDecimal PR_COPAY;
-	private BigDecimal PR_COINS;
-	private BigDecimal PR_NTCOV;
-	private BigDecimal PR_MEDC_EST_AMT;
-	private BigDecimal PR_TOTAL;
-	private BigDecimal PRV_NC_AMT;
-	private BigDecimal PR_DENY_AMT; 
+	private BigDecimal CAT_ID = new BigDecimal(0) ;
+	private BigDecimal SVC_LN_ID = new BigDecimal(0) ;
+	private BigDecimal COB_PRIM_IMPAC = new BigDecimal(0);
+	private BigDecimal PR_OVERC = new BigDecimal(0);
+	private BigDecimal PR_DEDUC = new BigDecimal(0);
+	private BigDecimal PR_COPAY = new BigDecimal(0);
+	private BigDecimal PR_COINS = new BigDecimal(0);
+	private BigDecimal PR_NTCOV = new BigDecimal(0);
+	private BigDecimal PR_MEDC_EST_AMT = new BigDecimal(0);
+	private BigDecimal PR_TOTAL= new BigDecimal(0);
+	private BigDecimal PRV_NC_AMT= new BigDecimal(0);
+	private BigDecimal PR_DENY_AMT= new BigDecimal(0); 
 	
-	private String LN_ALLW_AMT_IND; 
-	private BigDecimal LN_RPT_ALLOW_AMT ; 
-	private BigDecimal LN_OI_PAID_AMT;
-	private BigDecimal LN_MEDC_PAID_AMT;
-	private BigDecimal LN_PRV_WRT_OFF;
+	private String LN_ALLW_AMT_IND = "" ; 
+	private BigDecimal LN_RPT_ALLOW_AMT = new BigDecimal(0); 
+	private BigDecimal LN_OI_PAID_AMT = new BigDecimal(0);
+	private BigDecimal LN_MEDC_PAID_AMT = new BigDecimal(0);
+	private BigDecimal LN_PRV_WRT_OFF = new BigDecimal(0);
 	
 	private int LN_ID ; 
 	private String LINE_SRVC_CD ; 
@@ -33,8 +33,8 @@ public class LineReductionHold {
 	private String LINE_FST_DT; 
 	private String LINE_LST_SRVC_DT;
 	
-	private BigDecimal LINE_CHRG_AMT; 
-	private BigDecimal LINE_NC_AMT;
+	private BigDecimal LINE_CHRG_AMT = new BigDecimal(0); 
+	private BigDecimal LINE_NC_AMT = new BigDecimal(0);
 	
 	public BigDecimal getCAT_ID() {
 		return CAT_ID;

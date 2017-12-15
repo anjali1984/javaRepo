@@ -9,7 +9,6 @@ public class V5427HC1 {
 
 	private String HC1_COB_INVENTORY_CONTROL_DT;
 	private String HC1_COB_COB_CLAIM_INDICATOR;    //Cob claim indicator
-	private String HC1_COB_COB_CALC_IND; 
 	private String HC1_COB_COB_835_PROC_IND;
 	private String HC1_COB_INST_OR_PROF;        
 	       
@@ -220,10 +219,6 @@ public class V5427HC1 {
 
 	public void setHC1_COB_LNE_DATA_AREA(List<HC1_COB_LINE_ENTRY> hC1_COB_LNE_DATA_AREA) {
 		HC1_COB_LINE_DATA_AREA = hC1_COB_LNE_DATA_AREA;
-	}
-
-	public String getHC1_COB_COB_CALC_IND() {
-		return HC1_COB_COB_CALC_IND;
 	}
 
 	public String getHC1_COB_COB_CLAIM_INDICATOR() {

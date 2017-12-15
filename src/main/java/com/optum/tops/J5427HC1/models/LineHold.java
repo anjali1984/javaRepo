@@ -8,8 +8,8 @@ import java.math.BigDecimal;
 //An array/list of size 7 of these fields should be in the IndicatorObject of the Claim 
 public class LineHold {
 	
-	private BigDecimal LN_NY_DED_MM_AMT; 
-	private BigDecimal LN_MM_DED_AMT;
+	private BigDecimal LN_NY_DED_MM_AMT = new BigDecimal(0); 
+	private BigDecimal LN_MM_DED_AMT = new BigDecimal(0);
 	
 	public BigDecimal getLN_NY_DED_MM_AMT() {
 		return LN_NY_DED_MM_AMT;

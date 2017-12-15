@@ -31,28 +31,40 @@ public class COBLN2121Service {
 		List<COBLN_LINE_FLDS> results = CoblnAmtsDao.getCoblnFlds(requestedClaim, outboundClaim.getMy_indicator().getDBKE2_ICN_SUFX_CD()) ; // result of query in COBLN-LINE-FLDS cursor
 		//All business logic in 2121-FETCH_COBLN-LINE-AMTS 
 		
+		ClaimIndicatorValues indicatorObject = outboundClaim.getMy_indicator();
 		BigDecimal WS_TEMP_RPT_ALLOW_AMT = new BigDecimal(0); // Corresponds to  WS-TEMP-RPT-ALLOW-AMT working Storage variable
 		
 		for(COBLN_LINE_FLDS line: results){
+			String line_pmt_svc_cd = line.getLN_PMT_SVC_CD(); // MOVE DCLNE-PMT-SVC-CD to DCLNE-PMT-SVC-CD TO CK-SERV-CLS, WRK-NY-SERV-CD
 			
-			ClaimIndicatorValues indicatorObject = outboundClaim.getMy_indicator();
+			
+			// Move DCLNE-LN-ID to WS-SUB index into the 2 Line tables/ArrayLists in the ClaimIndicatorValues 
+			int index = line.getLN_ID() - 1; // 1 to 7  
+
+			LineHold line_data = new LineHold(); //One of the lines that goes into Arraylist representing WS-LINE-HOLD-TBL.
+			LineReductionHold line_reduction_data = new LineReductionHold() ; //One of the lines that goes into ArrayList representing WS-LINE-REDUCTION-HOLD-TBL
 			
 			//If Penny Process perform 2122-PENNY-PROCESS-ADJUST-SECT
-			if(outboundClaim.getMy_indicator().getPENNY_PROC_INDICATOR().equals("Y")){
+			if(indicatorObject.getPENNY_PROC_INDICATOR().equals("Y")){
 				//TODO : Complete the implementation 
 				penny_process_adjustment (line, outboundClaim); 
 				
 			}
 			
-			if( (line.getLN_PMT_SVC_CD().contains("OI") || line.getLN_PMT_SVC_CD().contains("OIM") || line.getLN_PMT_SVC_CD().contains("OIMEDI")) 
+			if( (line_pmt_svc_cd.contains("OI") || line_pmt_svc_cd.contains("OIM") || line_pmt_svc_cd.contains("OIMEDI")) 
 					|| (requestedClaim.getHc1_REQ_CLM_TRANS_CD().contains("69") && !line.getLN_RMRK_CD().contains("69"))){
+				System.out.println("Line " + line.getLN_ID() + " will be added to arraylist of redcution table. OI,OM, OIMEDI COBLN2121Service ");
+				indicatorObject.getWS_LINE_DATA_AREA_TABLE().add(index, line_data);
+				indicatorObject.getWS_LINE_REDUCTION_TABLE().add(index, line_reduction_data);
 				continue; 
 			}
 			
-			String line_pmt_svc_cd = line.getLN_PMT_SVC_CD(); // MOVE DCLNE-PMT-SVC-CD to DCLNE-PMT-SVC-CD TO CK-SERV-CLS, WRK-NY-SERV-CD																
+																			
 			List<COB_835_INFO> enumValues = Arrays.asList(COB_835_INFO.values()); // Gets all 
-																				
 			if (enumValues.contains("COB_835_INFO." + line_pmt_svc_cd)) {
+				System.out.println("Line " + line.getLN_ID() + " will not be added to arraylist of redcution table. COB_835_INFO COBLN2121Service ");
+				indicatorObject.getWS_LINE_DATA_AREA_TABLE().add(index, line_data);
+				indicatorObject.getWS_LINE_REDUCTION_TABLE().add(index, line_reduction_data);
 				continue;
 			} else {
 				if (line_pmt_svc_cd.trim().equals("CXINT")) {
@@ -68,6 +80,9 @@ public class COBLN2121Service {
 						line.setNYS_SERV_LINE(false);
 					}
 					if (indicatorObject.getCXINT_CLAIM_INDICATOR().equals("Y")) {
+						System.out.println("Line " + line.getLN_ID() + " will not be added to arraylist of redcution table. CXINT_CLAIM_INDICATOR Y COBLN2121Service ");
+						indicatorObject.getWS_LINE_DATA_AREA_TABLE().add(index, line_data);
+						indicatorObject.getWS_LINE_REDUCTION_TABLE().add(index, line_reduction_data);
 						continue;
 					} else {
 						if (indicatorObject.getNYSTATE_COB_CLAIM_PAIDTO().equals("S") && (line.isNYS_SERV_LINE())) {
@@ -81,11 +96,7 @@ public class COBLN2121Service {
 					}
 				}
 
-				// Move DCLNE-LN-ID to WS-SUB index into the 2 Line tables/ArrayLists in the ClaimIndicatorValues 
-				int index = line.getLN_ID() - 1; // 1 to 7  
-
-				LineHold line_data = new LineHold();
-				LineReductionHold line_reduction_data = new LineReductionHold() ; 
+				 
 				
 				if(indicatorObject.getNYSTATE_COB_CLAIM_PAIDTO().equals("S")){
 					if(indicatorObject.isNY_COB_PARENT_CLM()){ 
@@ -161,15 +172,15 @@ public class COBLN2121Service {
 					}
 				}
 				
-				LineReductionHold lrh = indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index) ; 
-				lrh.setLN_ID(index + 1);
-				lrh.setLINE_SRVC_CD(line.getLN_SRVC_CD());
-				lrh.setLINE_PMT_SVC_CD(line.getLN_PMT_SVC_CD());
-				lrh.setLINE_AUTH_PROC_CD(line.getLN_AUTH_PROC_CD());
-				lrh.setLINE_FST_DT(line.getLN_FST_DT());
-				lrh.setLINE_LST_SRVC_DT(line.getLN_LST_SRVC_DT());
-				lrh.setLINE_CHRG_AMT(line.getLN_CHRG_AMT());
-				lrh.setLINE_NC_AMT(line.getLN_NC_AMT());
+				line_reduction_data = indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index) ; 
+				line_reduction_data.setLN_ID(line.getLN_ID());
+				line_reduction_data.setLINE_SRVC_CD(line.getLN_SRVC_CD());
+				line_reduction_data.setLINE_PMT_SVC_CD(line.getLN_PMT_SVC_CD());
+				line_reduction_data.setLINE_AUTH_PROC_CD(line.getLN_AUTH_PROC_CD());
+				line_reduction_data.setLINE_FST_DT(line.getLN_FST_DT());
+				line_reduction_data.setLINE_LST_SRVC_DT(line.getLN_LST_SRVC_DT());
+				line_reduction_data.setLINE_CHRG_AMT(line.getLN_CHRG_AMT());
+				line_reduction_data.setLINE_NC_AMT(line.getLN_NC_AMT());
 				if(line.getLN_CHRG_AMT().compareTo(line.getLN_NC_AMT()) == 0 && line.getLN_CHRG_AMT().compareTo(BigDecimal.ZERO) > 0 ){
 					indicatorObject.setCALL_OIMC_TBL_INDICATOR("Y"); // This will determine that the claim should go through 2130-GET-COB-SERV-CALC-DATA
 				}

@@ -26,11 +26,11 @@ public class ClaimIndicatorValues{
 	private String CALL_OIMC_TBL_INDICATOR = "N"; // "Y" or "N" , corresponds to WS-CALL-OIMC-TBL-SW 
 	private String CXINT_CLAIM_INDICATOR = "N"; // "Y"or "N" 
 	
-	private BigDecimal LN_TOT_RPT_ALL_AMT ; //Corresponds to the WS-LN-TOT-RPT-ALL-AMT filed used as an sum variable for all lines when requested TransCd == "00" 
+	private BigDecimal LN_TOT_RPT_ALL_AMT = new BigDecimal(0); //Corresponds to the WS-LN-TOT-RPT-ALL-AMT filed used as an sum variable for all lines when requested TransCd == "00" 
 	
 	private List<ADJD_CLMSF_ORIGHDR_LINE> HC1_ADJD_CLMSF_ORIGHDR_DATAAREA = new ArrayList<ADJD_CLMSF_ORIGHDR_LINE>(); //ADJD_CLMSF_ORIGHDR Lines for the claim IF ANY, Max SIZE can be 150  
 	private List<LineReductionHold> WS_LINE_REDUCTION_TABLE = new ArrayList<LineReductionHold>(7); //Indices 0 through 6 will be for each reduction line of this claim, i.e. from ln_id 1 to 7 
-	private List<LineHold> WS_LINE_DATA_AREA_TABLE = new ArrayList<LineHold>(7); 
+	private List<LineHold> WS_LINE_DATA_AREA_TABLE = new ArrayList<LineHold>(7); //This structure is used in case of NY-COB-Claims for all other COB-Claim WS_LINE_REDUCTION_TABLE is used. 
 	
 	public void setDBKE2_ICN_SUFX_CD(String dBKE2_ICN_SUFX_CD) {
 		DBKE2_ICN_SUFX_CD = dBKE2_ICN_SUFX_CD;
