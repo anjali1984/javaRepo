@@ -17,14 +17,14 @@ import com.optum.tops.J5427HC1.services.RequestProcessor;
 public class HC1Controller {
 
 	@Autowired
-	RequestProcessor request_processor_service ; 
+	RequestProcessor requestProcessorService ; 
 	
 	
 	@RequestMapping(value = "/COB" , method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<HC1Response> get_COB_details(@RequestBody Hc1Request request){
+	public ResponseEntity<HC1Response> getCOBDetails(@RequestBody Hc1Request request){
 		System.out.println("Hit HC1 Controller for a HTTP POST method");
-		HC1Response response = request_processor_service.process(request) ; //to be sent back to the calling program as a ResponseEntity
+		HC1Response response = requestProcessorService.process(request) ; //to be sent back to the calling program as a ResponseEntity
 		return new ResponseEntity<HC1Response>(response, HttpStatus.OK);
 	}
 }

@@ -34,38 +34,40 @@ public class RequestProcessor {
 		System.out.println("REQUEST with " + claims_to_be_serviced.size() + " Recieved");
 		//For Each ReqClaimEntry service it by creating a V5427HC1 instance, put it in the response_list_all_claims field of HC1Response
 		for(ReqClaimEntry individual_claim : claims_to_be_serviced){
-			V5427HC1 temp ; //Claim instance to be put in the return object 
+			V5427HC1 currentClaim ; //Claim instance to be put in the return object 
 			
-			temp = cobclaimcheck.COB_claim_check(individual_claim) ; //Sets the field in the indicator object [corresponds to 1100-GET-SuFX-CD] 
+			currentClaim = cobclaimcheck.COB_claim_check(individual_claim) ; //Sets the field in the indicator object [corresponds to 1100-GET-SuFX-CD] 
 			
-			if(temp.getHC1_COB_COB_CLAIM_INDICATOR().equals("N")){
-				response.getResponse_list_all_claims().add(temp) ;
+			if(currentClaim.getHC1_COB_COB_CLAIM_INDICATOR().equals("N")){
+				response.getResponse_list_all_claims().add(currentClaim) ;
 				continue ; //Move onto the next claim
 			}
 			
-			temp = opshcfacheck.Ops_Hcfa_claim_check(individual_claim, temp) ; //At this point PENNY_PROCESS_IND and OPS_HCFA_IND must be set
-			temp = opshcfacheck.get_CSR_ORIGHDR_DATA(individual_claim, temp) ; //ORIGHDR details retrieved if it meets the condition in Ops_Hcfa Service 
-			temp= cobln2121.getResultsCobln_Line_Flds(individual_claim, temp);  //2121-FETCH-COBLN-LINE-AMTS and all business logic for this claim, CALL_OIMC_TBL_INDICATOR must be set
+			currentClaim = opshcfacheck.Ops_Hcfa_claim_check(individual_claim, currentClaim) ; //At this point PENNY_PROCESS_IND and OPS_HCFA_IND must be set
+			currentClaim = opshcfacheck.get_CSR_ORIGHDR_DATA(individual_claim, currentClaim) ; //ORIGHDR details retrieved if it meets the condition in Ops_Hcfa Service 
+			currentClaim= cobln2121.getResultsCobln_Line_Flds(individual_claim, currentClaim);  //2121-FETCH-COBLN-LINE-AMTS and all business logic for this claim, CALL_OIMC_TBL_INDICATOR must be set
 			
-			if(temp.getMy_indicator().getCALL_OIMC_TBL_INDICATOR().equals("Y")){
+			if(currentClaim.getMy_indicator().getCALL_OIMC_TBL_INDICATOR().equals("Y")){
 				//PERFORM 2130-GET-COB-SERV-CALC-DATA  (2131-FETCH-COB-SERV-CALCS) 
-				temp = cobln2131.do2131Logic(individual_claim, temp);	
+				currentClaim = cobln2131.do2131Logic(individual_claim, currentClaim);	
 			}
 			
-			if(temp.getHC1_COB_INST_OR_PROF().equals("I") && temp.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("Y")){
-				//Perform 2140-GET-Instl-Reductions
+			if(currentClaim.getHC1_COB_INST_OR_PROF().equals("I") && currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("Y")){
+				//Perform 2140-GET-Instl-Reductions [i.e. Call DP835RED with func cd = 1] 
 				
 				
 			}else{
-				if( (temp.getHC1_COB_INST_OR_PROF().equals("P") || temp.getHC1_COB_INST_OR_PROF().trim().equals("") && (temp.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("Y") || temp.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("M"))) 
-						|| (temp.getHC1_COB_INST_OR_PROF().equals("I") && temp.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("M")) 
+				if( (currentClaim.getHC1_COB_INST_OR_PROF().equals("P") || currentClaim.getHC1_COB_INST_OR_PROF().trim().equals("") && (currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("Y") || currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("M"))) 
+						|| (currentClaim.getHC1_COB_INST_OR_PROF().equals("I") && currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("M")) 
 				){
-					//Perform 2160 , 2170 
+					//Perform 2160 , 2170  [i.e. Call DP835RED with func cd = 2] 
 				}
 			}
 			
-			//Make Sure the indicator object is wiped off!!!!!!!!!!!!!
-			response.getResponse_list_all_claims().add(temp) ; 
+			
+			//Doing this because these working storage fields are not required by the request
+			currentClaim.setMy_indicator(null);
+			response.getResponse_list_all_claims().add(currentClaim) ; 
 			
 		}
 		

@@ -57,10 +57,6 @@ public class CheckOPS_HCFADAO {
 				System.out.println("No data returned by query in CheckOPS_HCFADAO ");
 				claim.getMy_indicator().setOPS_HCFA_INDICATOR("N");
 			}
-			/*if (!rs.isBeforeFirst()) {
-				System.out.println("No data returned by CheckOPS_HCFA DAO");
-				claim.getMy_indicator().setOPS_HCFA_INDICATOR("N");
-			}*/
 			else{
 				//If the query returned at least 1 record mark it as a OS_HCFA Claim 
 				claim.getMy_indicator().setOPS_HCFA_INDICATOR("Y");
