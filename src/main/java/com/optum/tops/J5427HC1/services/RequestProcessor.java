@@ -39,6 +39,8 @@ public class RequestProcessor {
 			currentClaim = cobclaimcheck.COB_claim_check(individual_claim) ; //Sets the field in the indicator object [corresponds to 1100-GET-SuFX-CD] 
 			
 			if(currentClaim.getHC1_COB_COB_CLAIM_INDICATOR().equals("N")){
+				//Doing this because these working storage fields are not required by the request
+				currentClaim.setMy_indicator(null);
 				response.getResponse_list_all_claims().add(currentClaim) ;
 				continue ; //Move onto the next claim
 			}
@@ -52,11 +54,13 @@ public class RequestProcessor {
 				currentClaim = cobln2131.do2131Logic(individual_claim, currentClaim);	
 			}
 			
+			//Institutional Claims
 			if(currentClaim.getHC1_COB_INST_OR_PROF().equals("I") && currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("Y")){
 				//Perform 2140-GET-Instl-Reductions [i.e. Call DP835RED with func cd = 1] 
 				
 				
 			}else{
+				//Professional Claims
 				if( (currentClaim.getHC1_COB_INST_OR_PROF().equals("P") || currentClaim.getHC1_COB_INST_OR_PROF().trim().equals("") && (currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("Y") || currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("M"))) 
 						|| (currentClaim.getHC1_COB_INST_OR_PROF().equals("I") && currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("M")) 
 				){

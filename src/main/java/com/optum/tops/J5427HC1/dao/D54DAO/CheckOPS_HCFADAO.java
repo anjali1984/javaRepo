@@ -118,7 +118,9 @@ public class CheckOPS_HCFADAO {
 			ps.setString(3, incoming_claim.getHc1_REQ_CLM_PROC_DT());
 			ps.setString(4, incoming_claim.getHc1_REQ_CLM_PROC_TM());
 			ps.setString(5, claim.getMy_indicator().getDBKE2_ICN_SUFX_VERS_NBR()); 
-			
+			System.out.println("IN ORIGHDR DAO ");
+			System.out.println(incoming_claim.getHc1_REQ_CLM_INVN_CTL_NBR() + "  " + claim.getMy_indicator().getDBKE2_ICN_SUFX_CD() + "  " + incoming_claim.getHc1_REQ_CLM_PROC_DT());
+			System.out.println(incoming_claim.getHc1_REQ_CLM_PROC_TM() + "   " + claim.getMy_indicator().getDBKE2_ICN_SUFX_VERS_NBR());
 			ResultSet rs = ps.executeQuery(); 
 			int i = 0 ; 
 			ADJD_CLMSF_ORIGHDR_LINE hdr_line ; 

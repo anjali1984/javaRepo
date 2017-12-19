@@ -53,7 +53,7 @@ public class COBLN2121Service {
 			
 			if( (line_pmt_svc_cd.contains("OI") || line_pmt_svc_cd.contains("OIM") || line_pmt_svc_cd.contains("OIMEDI")) 
 					|| (requestedClaim.getHc1_REQ_CLM_TRANS_CD().contains("69") && !line.getLN_RMRK_CD().contains("69"))){
-				System.out.println("Line " + line.getLN_ID() + " will be added to arraylist of redcution table. OI,OM, OIMEDI COBLN2121Service ");
+				System.out.println("Line " + line.getLN_ID() + " will NOT be added to arraylist of redcution table. OI,OM, OIMEDI COBLN2121Service ");
 				indicatorObject.getWS_LINE_DATA_AREA_TABLE().add(index, line_data);
 				indicatorObject.getWS_LINE_REDUCTION_TABLE().add(index, line_reduction_data);
 				continue; 
@@ -171,6 +171,7 @@ public class COBLN2121Service {
 						indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).setLN_PRV_WRT_OFF(BigDecimal.ZERO);
 					}
 				}
+				
 				
 				line_reduction_data = indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index) ; 
 				line_reduction_data.setLN_ID(line.getLN_ID());

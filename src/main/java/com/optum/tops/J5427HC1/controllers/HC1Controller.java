@@ -24,6 +24,7 @@ public class HC1Controller {
 	@ResponseBody
 	public ResponseEntity<HC1Response> getCOBDetails(@RequestBody Hc1Request request){
 		System.out.println("Hit HC1 Controller for a HTTP POST method");
+		System.out.println(request.toString());
 		HC1Response response = requestProcessorService.process(request) ; //to be sent back to the calling program as a ResponseEntity
 		return new ResponseEntity<HC1Response>(response, HttpStatus.OK);
 	}

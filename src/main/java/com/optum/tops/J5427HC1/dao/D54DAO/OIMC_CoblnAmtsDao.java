@@ -54,6 +54,10 @@ public class OIMC_CoblnAmtsDao {
 			ps = con.prepareStatement(query.toString());
 			ps.setString(1, ICN);
 			ps.setString(2, Icn_Sufx_Cd);
+			
+			System.out.println(ICN);
+			System.out.println(Icn_Sufx_Cd);
+			
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
 				COBLN_2131 record = new COBLN_2131(); 

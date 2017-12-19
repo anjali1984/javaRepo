@@ -25,6 +25,11 @@ public class Hc1Request {
 	public void setClaimEntries(List<ReqClaimEntry> claimEntries) {
 		this.claimEntries = claimEntries;
 	}
+
+	@Override
+	public String toString() {
+		return "Hc1Request [hc1_REQ_NBR_CLAIMS=" + hc1_REQ_NBR_CLAIMS + ", claimEntries=" + claimEntries + "]";
+	}
 	
 	
 	
