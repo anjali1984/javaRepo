@@ -9,16 +9,23 @@ public class FuncCodeProcessing {
 	 */
 	
 	public void initialize(){
-		//do DAO stuff and initialize stuff
+		/* do DAO stuff and initialize stuff
+		 * 
+		 * have if statement to decide if the function code is 1 or 2 
+		 * 
+		 * if its 1 then u go to 2100 
+		 * if its 2 then u go to 2200
+		 */
+		
 	}
 	
 	public void InstClaim2100(){
 	     /*read data from adjudicated tables for Institutional Claims 
-		
-		
-		It then calls the following programs:
-		 7701, 7702, 7703, 7708 (and IF program = d5427MID, then it calls 7712) 
-		 */
+		  *
+		  *
+		  *  It then calls the following programs:
+		  *  7701, 7702, 7703, 7708 (and IF program = d5427MID, then it calls 7712) 
+		  */
 		
 	}
 	
