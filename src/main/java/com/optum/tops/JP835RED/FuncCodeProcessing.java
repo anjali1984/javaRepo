@@ -7,4 +7,26 @@ public class FuncCodeProcessing {
 	 *  functions up
 	 *  
 	 */
+	
+	public void initialize(){
+		//do DAO stuff and initialize stuff
+	}
+	
+	public void InstClaim2100(){
+	     /*read data from adjudicated tables for Institutional Claims 
+		
+		
+		It then calls the following programs:
+		 7701, 7702, 7703, 7708 (and IF program = d5427MID, then it calls 7712) 
+		 */
+		
+	}
+	
+	public void ProClaim2200(){
+		/*read data from adjudicated tables for a professional claim
+		 * 
+		 * This calls: 
+		 * 7704, 7705, 7706, 7702, 7703, 7708 and then if its d5427MID call 7716)
+		 */
+	}
 }
