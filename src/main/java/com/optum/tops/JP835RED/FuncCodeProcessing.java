@@ -1,5 +1,7 @@
 package com.optum.tops.JP835RED;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 public class FuncCodeProcessing {
 	/* evaluate the DSM-Function Code then pass it to either 2100 or 2200 based on that 
 	 * error out if there isn't a proper function code (1-7)
@@ -16,16 +18,27 @@ public class FuncCodeProcessing {
 		 * if its 1 then u go to 2100 
 		 * if its 2 then u go to 2200
 		 */
+		JP54RedRequest request = new JP54RedRequest() ;
+		
+		// if block reading function code then decide
 		
 	}
 	
+	@Autowired
+	com.optum.tops.JP835RED.processing7700 processing7700;
 	public void InstClaim2100(){
 	     /*read data from adjudicated tables for Institutional Claims 
 		  *
 		  *
 		  *  It then calls the following programs:
-		  *  7701, 7702, 7703, 7708 (and IF program = d5427MID, then it calls 7712) 
+		  *  7701, 7702, 7703, 7708 
+		  *  did not add logic for the following: program = d5427MID, then it calls 7712) 
 		  */
+		processing7700.do7701();
+		processing7700.do7702();
+		processing7700.do7703();
+		processing7700.do7708();
+
 		
 	}
 	
@@ -33,7 +46,16 @@ public class FuncCodeProcessing {
 		/*read data from adjudicated tables for a professional claim
 		 * 
 		 * This calls: 
-		 * 7704, 7705, 7706, 7702, 7703, 7708 and then if its d5427MID call 7716)
+		 * 7704, 7705, 7706, 7702, 7703, 7708  
+		 * 
+		 * did not add logic for the following: d5427MID call 7716)
 		 */
+		processing7700.do7704();
+		processing7700.do7705();
+		processing7700.do7706();
+		processing7700.do7702();
+		processing7700.do7703();
+		processing7700.do7708();
+
 	}
 }
