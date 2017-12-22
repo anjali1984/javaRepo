@@ -1,0 +1,546 @@
+package com.optum.comet.mctmcf.converter.impl;
+
+import org.apache.commons.lang3.StringUtils;
+import com.optum.comet.mctmcf.constants.CometConstants;
+import com.optum.comet.mctmcf.converter.Converter;
+import com.optum.comet.mctmcf.converter.ConverterActions;
+import com.optum.comet.mctmcf.daos.dbos.CometBaseDBO;
+import com.optum.comet.mctmcf.daos.dbos.LookupResults;
+import com.optum.comet.mctmcf.daos.dbos.StagedClmSfxMessage;
+import com.optum.comet.mctmcf.exception.CometException;
+import com.optum.comet.mctmcf.vo.CometBaseVO;
+import com.optum.comet.mctmcf.vo.InboundClaimMessage;
+import com.optum.comet.mctmcf.vo.InboundClaimMessage.LOAD_CLAIM_STATUS;
+
+public class CometMCFConverters extends Converter<CometBaseVO, CometBaseDBO> {
+
+	public CometBaseDBO getDBO(CometBaseVO voArg, CometBaseDBO dboArg, ConverterActions action, String logCorrelationId)
+			throws CometException {
+
+		String METHOD_NAME = "CometMCFConverters.getDBO";
+
+		if (voArg == null)
+			this.getInvalidArgsException(METHOD_NAME);
+
+		// declare local variables
+		InboundClaimMessage icm;
+		StagedClmSfxMessage scm;
+		String rlsMsg;
+		int sts;
+
+		boolean multiSfx;
+		String msg;
+		String icn;
+		String currSfxStr;
+		String totalSfxStr;
+
+		int currSfx;
+		int totalSfx;
+
+		String orgid;
+		String pendcode;
+		String engine;
+		String queue;
+		String icoType;
+
+		switch (action) {
+		case PrepareReleaseMessage:
+
+			if (!(voArg instanceof InboundClaimMessage))
+				this.getInvalidArgsException(METHOD_NAME);
+
+			if (dboArg == null)
+				dboArg = new CometBaseDBO();
+
+			icm = (InboundClaimMessage) voArg;
+
+			rlsMsg = prepareReleaseMessage(icm.getIcn(), icm.getEngId(), icm.getCorrId());
+			dboArg.getParamMap().put(CometConstants.RELEASE_MSG, rlsMsg);
+
+			break;
+
+		case LoadStageClaimSfxMessage:
+
+			if (!(voArg instanceof InboundClaimMessage))
+				this.getInvalidArgsException(METHOD_NAME);
+
+			if (dboArg == null)
+				dboArg = new StagedClmSfxMessage();
+
+			scm = (StagedClmSfxMessage) dboArg;
+			icm = (InboundClaimMessage) voArg;
+
+			msg = icm.getMsg();
+
+			// Making icn as 10 digit in ld_clm by changing substring begin
+			// index to 32 from 31
+			icn = msg.substring(32, 42);
+			
+			this.logger.info("ICN received from claim message: ".concat(icn));
+			currSfx = "".equals((currSfxStr = msg.substring(43, 46).trim())) ? 0 : Integer.valueOf(currSfxStr);
+			orgid = msg.substring(354, 359);
+			pendcode = msg.substring(200, 203);
+			engine = msg.substring(62, 63);
+			queue = icm.getQueue();
+			icoType = msg.substring(79, 80);
+			sts = icm.getLoadClaimSts().getValue();
+
+			scm.setCompleteMesage(icm.getMsg());
+			scm.setCurrSfx(currSfx);
+			scm.setIcn(icn);
+			scm.setOrgid(orgid);
+			scm.setPendcd(pendcode);
+			scm.setQueue(queue);
+			scm.setStatus(sts);
+			scm.setEngine(engine);
+			scm.setIcoType(icoType == null ? " " : icoType.trim());
+			totalSfx = "".equals((totalSfxStr = msg.substring(978, 981).trim())) ? 0 : Integer.valueOf(totalSfxStr);
+
+			multiSfx = (Integer.valueOf(totalSfx) > 1);
+
+			scm.setTotSfx(totalSfx);
+			scm.setMultiSfx(multiSfx);
+
+			break;
+
+		case LoadStageClaimSfxStsUpdtMsg:
+			if (!(voArg instanceof InboundClaimMessage))
+				this.getInvalidArgsException(METHOD_NAME);
+
+			if (dboArg == null)
+				dboArg = new StagedClmSfxMessage();
+
+			scm = (StagedClmSfxMessage) dboArg;
+			icm = (InboundClaimMessage) voArg;
+
+			msg = icm.getMsg();
+
+			// Making icn as 10 digit in ld_clm by changing substring begin
+			// index to 32 from 31
+			icn = msg.substring(32, 42);
+
+			currSfx = "".equals((currSfxStr = msg.substring(43, 46).trim())) ? 0 : Integer.valueOf(currSfxStr);
+
+			pendcode = msg.substring(200, 203);
+			engine = msg.substring(62, 63);
+			queue = icm.getQueue();
+			icoType = msg.substring(79, 80);
+			sts = icm.getLoadClaimSts().getValue();
+
+			scm.setCompleteMesage(icm.getMsg());
+			scm.setCurrSfx(currSfx);
+			scm.setIcn(icn);
+			scm.setOrgid(CometConstants.BLANK_VALUE);
+			scm.setPendcd(pendcode);
+			scm.setQueue(queue);
+			scm.setStatus(sts);
+			scm.setEngine(engine);
+			scm.setIcoType(icoType == null ? " " : icoType.trim());
+			break;
+
+		case UpdateClaim:
+			if (!(voArg instanceof InboundClaimMessage))
+				this.getInvalidArgsException(METHOD_NAME);
+
+			if (dboArg == null)
+				dboArg = new StagedClmSfxMessage();
+
+			scm = (StagedClmSfxMessage) dboArg;
+			icm = (InboundClaimMessage) voArg;
+
+			scm.setIcn(icm.getIcn());
+			scm.setLid(icm.getLoadId());
+			scm.setQueue(icm.getQueue());
+
+			scm.setTotSfx(icm.getTotalSfx());
+
+			// Saveitm and update-itm to insert/update icn-suffix map
+			scm.setSfxPendcd(icm.getAssociatedSfxs());
+			scm.setCurrSfx(icm.getCurrSfx());
+
+			scm.setMultiSfx((Integer.valueOf(icm.getTotalSfx()) > 1));
+
+			scm.setPendcd(icm.getPendCode());
+
+			scm.setCurStat(icm.getCurStat());
+			scm.setCurOper(icm.getCurOper());
+
+			// notify pega-itm stage to set updatemsgind
+			scm.setClaimAlreadyExists(icm.isClaimAlreadyExists());
+			scm.setClaimAlreadyResolved(icm.isClaimAlreadyResolved());
+
+			if (icm.isClaimAlreadyResolved())
+				scm.setStatus(LOAD_CLAIM_STATUS.MCF_RESOLVED_CLAIM_EXCEPTION.getValue());
+
+			break;
+
+		case GetClaimTransDetails:
+			if (!(voArg instanceof InboundClaimMessage))
+				this.getInvalidArgsException(METHOD_NAME);
+
+			if (dboArg == null)
+				dboArg = new StagedClmSfxMessage();
+
+			scm = (StagedClmSfxMessage) dboArg;
+			icm = (InboundClaimMessage) voArg;
+
+			scm.setIcn(icm.getIcn());
+
+			break;
+
+			// clean up service DBO converter
+
+		case UpdateLoadClaimRec:
+			if (!(voArg instanceof InboundClaimMessage))
+				this.getInvalidArgsException(METHOD_NAME);
+
+			if (dboArg == null)
+				dboArg = new StagedClmSfxMessage();
+
+			scm = (StagedClmSfxMessage) dboArg;
+			icm = (InboundClaimMessage) voArg;
+
+			// clean up service DBO converter
+			scm.setIcn(icm.getIcn());
+
+			scm.setLid(icm.getLoadId());
+			scm.setQueue(icm.getQueue());
+			scm.setLdLckExists(icm.isLdLckExists());
+
+			scm.setMultiSfx((Integer.valueOf(icm.getTotalSfx()) > 1));
+			
+			if (icm.isClaimAlreadyResolved())
+				scm.setStatus(LOAD_CLAIM_STATUS.MCF_RESOLVED_CLAIM_EXCEPTION.getValue());
+			else if (!icm.isLoadEligible() && icm.getQueue().equals(CometConstants.MANUALMSG))
+				scm.setStatus(LOAD_CLAIM_STATUS.MCT_FAILED_EXCEPTION.getValue());
+			else if ((icm.isMultiSfxWait() && !icm.isPickedUpByBatch()) && icm.getQueue().equals(CometConstants.MANUALMSG))
+				scm.setStatus(LOAD_CLAIM_STATUS.WAITING_MLTSFX.getValue());
+			else
+				scm.setStatus(LOAD_CLAIM_STATUS.COMPLETE.getValue());
+
+			break;
+		case InboundClaimMesasgetoClaimItem:
+			break;
+		default:
+			throw this.getUnsupportedActionException(METHOD_NAME.concat(action.name()));
+		}
+		return dboArg;
+	}
+
+	public CometBaseVO getVO(CometBaseDBO dboArg, CometBaseVO voArg, ConverterActions action, String logCorrelationId)
+			throws CometException {
+
+		String METHOD_NAME = "CometMCFConverters.getVO";
+
+		boolean multiSfx;
+
+		if (dboArg == null)
+			this.getInvalidArgsException(METHOD_NAME);
+
+		// declare local variables
+		InboundClaimMessage icm;
+		StagedClmSfxMessage scm;
+		LookupResults lookupRes;
+
+		String curstat;
+		String curoper;
+		String claimInd;
+
+		switch (action) {
+		case LoadStageClaimSfxMessage:
+
+			if (!(dboArg instanceof StagedClmSfxMessage))
+				this.getInvalidArgsException(METHOD_NAME);
+
+			if (voArg == null)
+				voArg = new InboundClaimMessage();
+
+			icm = (InboundClaimMessage) voArg;
+			scm = (StagedClmSfxMessage) dboArg;
+
+			icm.setOrgId(scm.getOrgid());
+			icm.setLoadId(scm.getLid());
+
+			icm.setCurrSfx(Integer.valueOf(scm.getCurrSfx()));
+			icm.setIcn(scm.getIcn());
+			icm.setEngId(scm.getEngine());
+			icm.setOrgIdClaimIcoTypeMCTKEY(
+					scm.getOrgid().concat(",").concat(scm.getIcoType() == null ? "" : scm.getIcoType()));
+			icm.setTotalSfx(scm.getTotSfx());
+			icm.setIcoType(scm.getIcoType());
+
+			// for queue
+			icm.setQueue(scm.getQueue());
+			multiSfx = (Integer.valueOf(Integer.valueOf(scm.getTotSfx())) > 1);// To
+			// be
+			// removed
+			// later-
+			// Shivanjali
+			// TODO:review later
+			// icm.setTotSfx(totalSfx);
+			icm.setMultiSfx(multiSfx);
+			this.logger.info(METHOD_NAME.concat("Multi Suffix in convert ").concat(Boolean.toString(icm.isMultiSfx()))
+					.concat(" :: ").concat(String.valueOf(scm.getCurrSfx())));
+			// TODO : Review logic later
+
+			icm.setPendCode(scm.getPendcd());
+			break;
+
+		case LoadStageClaimSfxStsUpdtMsg:
+
+			if (!(dboArg instanceof StagedClmSfxMessage))
+				this.getInvalidArgsException(METHOD_NAME);
+
+			if (voArg == null)
+				voArg = new InboundClaimMessage();
+
+			icm = (InboundClaimMessage) voArg;
+			scm = (StagedClmSfxMessage) dboArg;
+
+			icm.setOrgId(scm.getOrgid());
+			icm.setLoadId(scm.getLid());
+
+			icm.setCurrSfx(Integer.valueOf(scm.getCurrSfx()));
+			icm.setIcn(scm.getIcn());
+			// for queue
+			icm.setQueue(scm.getQueue());
+			icm.setEngId(scm.getEngine());
+			icm.setOrgIdClaimIcoTypeMCTKEY(
+					scm.getOrgid().concat(",").concat(scm.getIcoType() == null ? "" : scm.getIcoType()));
+			icm.setIcoType(scm.getIcoType());
+
+			icm.setPendCode(scm.getPendcd());
+			break;
+
+		case InboundClaimMesasgetoClaimItem:
+			break;
+		case LookupResultsCMTClmCounts:
+			if (!(dboArg instanceof LookupResults))
+				this.getInvalidArgsException(METHOD_NAME);
+
+			if (voArg == null)
+				voArg = new InboundClaimMessage();
+
+			icm = (InboundClaimMessage) voArg;
+			lookupRes = (LookupResults) dboArg;
+
+			icm.setOpenClaims(lookupRes.getOpenClmCount());
+			icm.setOpenClaimsForOrgId(lookupRes.getOpenClmCountForOrgId());
+			icm.setOpenClaimsForOrgIdClmFrmTyp(lookupRes.getOpenClmCountForOrgIdClmFrmTyp());
+
+			break;
+		case UpdateClaim:
+
+			if (!(dboArg instanceof StagedClmSfxMessage))
+				this.getInvalidArgsException(METHOD_NAME);
+
+			if (voArg == null)
+				voArg = new InboundClaimMessage();
+
+			icm = (InboundClaimMessage) voArg;
+			scm = (StagedClmSfxMessage) dboArg;
+			icm.setLoadId(scm.getLid());
+			icm.setIcn(scm.getIcn());
+			icm.setAssociatedSfxs(scm.getSfxPendcd());
+
+			icm.setMultiSfxWait(!((scm.getSfxPendcd() == null) || (scm.getSfxPendcd().size() == icm.getTotalSfx())
+					|| (scm.getSfxPendcd().size() > icm.getTotalSfx())));
+
+			icm.setCurStat(scm.getCurStat());
+			icm.setCurOper(scm.getCurOper());
+
+			// if load lock added for current message
+			icm.setAddedLock(!scm.isLdLckExists());
+
+			// adding for icn_sfx
+			icm.setPendCode(scm.getPendcd());
+
+			break;
+
+		case InsertItmStage:
+			if (!(dboArg instanceof StagedClmSfxMessage))
+				this.getInvalidArgsException(METHOD_NAME);
+
+			if (voArg == null)
+				voArg = new InboundClaimMessage();
+
+			icm = (InboundClaimMessage) voArg;
+			scm = (StagedClmSfxMessage) dboArg;
+
+			// icm.setQueue(scm.getQueue());
+			// notify pega-itm stage
+			icm.setItmStgNotProcessedVo(scm.isItmStgNotProcessed());
+
+			break;
+
+		case SfxPendcd:
+			if (!(dboArg instanceof StagedClmSfxMessage))
+				this.getInvalidArgsException(METHOD_NAME);
+
+			if (voArg == null)
+				voArg = new InboundClaimMessage();
+			icm = (InboundClaimMessage) voArg;
+			scm = (StagedClmSfxMessage) dboArg;
+
+			icm = (InboundClaimMessage) voArg;
+			icm.setAssociatedSfxs(scm.getSfxPendcd());
+			// icm.setQueue(scm.getQueue());
+
+			break;
+		case GetClaimTransDetails:
+
+			if (!(dboArg instanceof StagedClmSfxMessage))
+				this.getInvalidArgsException(METHOD_NAME);
+
+			if (voArg == null)
+				voArg = new InboundClaimMessage();
+
+			icm = (InboundClaimMessage) voArg;
+			scm = (StagedClmSfxMessage) dboArg;
+
+			curstat = scm.getCurStat();
+			curoper = scm.getCurOper();
+			claimInd = scm.getClmInd();
+
+			icm.setCurOper(curoper);
+			icm.setCurStat(curstat == null ? CometConstants.NULL_CUR_STAT : curstat);
+			icm.setClaimAlreadyExists(CometConstants.UPDATE_CLAIM_IND.equals(claimInd));
+			icm.setClaimAlreadyResolved(
+					icm.getCurStat().charAt(0) == 'R' && !CometConstants.CLM_RELOCATED_STATUS.equals(icm.getCurStat()));
+
+			break;
+		default:
+			throw this.getUnsupportedActionException(METHOD_NAME.concat(action.name()));
+		}
+		return voArg;
+	}
+
+	/**
+	 * Prepare release message
+	 * 
+	 * @param claimICN
+	 * @param claimEngine
+	 * @param logCorrelation
+	 * @return
+	 */
+	private String prepareReleaseMessage(String claimICN, String claimEngine, String logCorrelation) {
+
+		StringBuilder rlsMsgBuilder = new StringBuilder();
+
+		// Create the release message according to the below offsets and lengths
+
+		/* offset length tag */
+		/* Header info */
+		/* 0 11 HIDENTI */ rlsMsgBuilder.append(this.rpad("COMET", 11));
+		/* 11 8 HLENPAYLD */ rlsMsgBuilder.append(this.rpad(" ", 8));
+		/* 19 8 HPUTPGM */ rlsMsgBuilder.append(this.rpad("N/A", 8));
+		/* 27 5 HLENREC */ rlsMsgBuilder.append(this.rpad("00968", 5));
+		// rlsMsgBuilder.append(mcfMsgStrLen);
+		/* 32 1 HTYPREC */ rlsMsgBuilder.append("H");
+		/* 33 1 HPRSPATH */ rlsMsgBuilder.append("S");
+		/* 34 1 HENGIND */ rlsMsgBuilder.append(this.rpad(claimEngine.trim(), 1));
+		/* 35 15 HFILLER */ rlsMsgBuilder.append(this.rpad(" ", 15));
+		/* */
+		/* section VARIABLE */
+		/* 50 5 LENGTH */ rlsMsgBuilder.append(this.rpad("00354", 5));
+		// rlsMsgBuilder.append(this.rpad(mcfMessage.getCqrcmLength(),5));
+		/* 55 3 PAYLOC */ rlsMsgBuilder.append(this.rpad(" ", 3));
+		/* 58 1 FLNFILLER */ rlsMsgBuilder.append(" ");
+		/* 59 5 RCPDT */ rlsMsgBuilder.append(this.rpad(" ", 5));
+		/* 64 5 FLNSERNO */ rlsMsgBuilder.append(this.rpad(" ", 5));
+		/* 58 11 FLNNO - not used */ // rlsMsgBuilder.append(this.rpad(mcfMessage.getCqrcmFixed().getCqrcmFileFlnAltKey().getCompositeCqrcmFln(),11));
+		/* 69 1 FLNTYPEA */ rlsMsgBuilder.append(this.rpad(" ", 1));
+		/* 70 10 EMPID */ rlsMsgBuilder.append(this.rpad(" ", 10));
+		/* 80 1 RECTYPE */ rlsMsgBuilder.append(this.rpad(" ", 1));
+		/* 81 11 ICN */ rlsMsgBuilder.append(this.rpad("0" + claimICN.trim(), 11));
+		/* 92 1 RECTYPE */ rlsMsgBuilder.append(this.rpad(" ", 1));
+		/* 93 3 ICNSFX */ rlsMsgBuilder.append(this.rpad(" ", 3));
+		/* 96 7 DTSTMP */ rlsMsgBuilder.append(this.rpad(" ", 7));
+		/* 103 9 TMSTMP */ rlsMsgBuilder.append(this.rpad(" ", 9));
+		/* 112 1 ENGINE */ rlsMsgBuilder.append(this.rpad(" ", 1));
+		/* 113 5 NUMTYP1 */ rlsMsgBuilder.append(this.rpad(" ", 5));
+		/* 118 5 NUMTYP2 */ rlsMsgBuilder.append(this.rpad(" ", 5));
+		/* 123 5 NUMTYP3 */ rlsMsgBuilder.append(this.rpad(" ", 5));
+		/* */
+		/* 128 1 OTYPE */ rlsMsgBuilder.append(this.rpad(" ", 1));
+		/* 129 1 SENDTO */ rlsMsgBuilder.append(this.rpad(" ", 1));
+		/* 130 1 SENDCNT */ rlsMsgBuilder.append(this.rpad(" ", 1));
+
+		/* */
+		/* NONSELECT */
+
+		/* 131 1 ERRLIT1 */
+		/* 132 4 NONSELCD1 */
+		/* 136 1 ERRLIT2 */
+		/* 137 4 NONSELCD2 */
+		/* 141 1 ERRLIT3 */
+		/* 142 4 NONSELCD3 */
+		/* 146 1 ERRLIT4 */
+		/* 147 4 NONSELCD4 */
+		/* 151 1 ERRLIT5 */
+		/* 152 4 NONSELCD5 */
+		/* 156 1 ERRLIT6 */
+		/* 157 4 NONSELCD6 */
+		/* 161 1 ERRLIT7 */
+		/* 162 4 NONSELCD7 */
+		/* 166 1 ERRLIT8 */
+		/* 167 4 NONSELCD8 */
+		/* 171 1 ERRLIT9 */
+		/* 172 4 NONSELCD9 */
+		/* 176 1 ERRLIT10 */
+		/* 177 4 NONSELCD10 */
+		/* 181 1 ERRLIT11 */
+		/* 182 4 NONSELCD11 */
+		/* 186 1 ERRLIT12 */
+		/* 187 4 NONSELCD12 */
+		/* 191 1 ERRLIT13 */
+		/* 192 4 NONSELCD13 */
+		/* 196 1 ERRLIT14 */
+		/* 197 4 NONSELCD14 */
+		/* 201 1 ERRLIT15 */
+		/* 202 4 NONSELCD15 */
+		/* 206 1 ERRLIT16 */
+		/* 207 4 NONSELCD16 */
+		/* 211 1 ERRLIT17 */
+		/* 212 4 NONSELCD17 */
+		/* 216 1 ERRLIT18 */
+		/* 217 4 NONSELCD18 */
+		/* 221 1 ERRLIT19 */
+		/* 222 4 NONSELCD19 */
+		/* 226 1 ERRLIT20 */
+		/* 227 4 NONSELCD20 */
+		rlsMsgBuilder.append(this.rpad(" ", 100));
+		/* */
+		/* 231 9 ERRFILL */ rlsMsgBuilder.append(this.rpad(" ", 9));
+		/* 240 10 TYPE */ rlsMsgBuilder.append(this.rpad(" ", 10));
+		/* 250 3 PENDCD */ rlsMsgBuilder.append(this.rpad(" ", 3));
+		/* 253 68 KEYCMNT */ rlsMsgBuilder.append(this.rpad(" ", 68));
+		/* 321 2 STATUS */ rlsMsgBuilder.append(this.rpad("R", 2));
+		// rlsMsgBuilder.append(this.rpad(mcfMessage.getCqrcmVariable().getCqrcmMsgReturnFields().getCqrcsqStatus().getChoiceValue(),2));
+		/* 323 4 RETSYS */ rlsMsgBuilder.append(this.rpad(" ", 4));
+		/* 327 8 RETDATE */ rlsMsgBuilder.append(this.rpad(" ", 8));
+		/* VARIABLE-2-IN */
+		/* 335 15 TINSFX */ rlsMsgBuilder.append(this.rpad(" ", 15));
+		/* 350 10 NEWEMPID */ rlsMsgBuilder.append(this.rpad(" ", 10));
+		/* 360 6 NEWEMPPOLNO */ rlsMsgBuilder.append(this.rpad(" ", 6));
+		/* 366 10 NEWPATFNM */ rlsMsgBuilder.append(this.rpad(" ", 10));
+		/* 376 2 NEWPATREL */ rlsMsgBuilder.append(this.rpad(" ", 2));
+		/* 378 1 NEWENG */ rlsMsgBuilder.append(this.rpad(" ", 1));
+		/* 379 3 NEWOFC */ rlsMsgBuilder.append(this.rpad(" ", 3));
+		/* 382 1 NEWPLTFRM */ rlsMsgBuilder.append(this.rpad(" ", 1));
+		/* 383 1 PENDTYP */ rlsMsgBuilder.append(this.rpad(" ", 1));
+		/* 384 2 TRREASCD */ rlsMsgBuilder.append(this.rpad(" ", 2));
+		/* 386 6 ALTID */ rlsMsgBuilder.append(this.rpad(" ", 6));
+		/* 392 2 MGROFC */ rlsMsgBuilder.append(this.rpad(" ", 2));
+		/* 394 4 SYSIND */ rlsMsgBuilder.append(this.rpad(" ", 4));
+		/* 398 6 V2FILLER */ rlsMsgBuilder.append(this.rpad(" ", 6));
+
+		// get the final RELEASE message string
+		return rlsMsgBuilder.toString();
+	}
+
+	private Object rpad(String string, int i) {
+		return StringUtils.rightPad(string, i);
+	}
+
+}

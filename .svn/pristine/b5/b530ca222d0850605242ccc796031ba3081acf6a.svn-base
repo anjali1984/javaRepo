@@ -1,0 +1,233 @@
+package com.optum.comet.mctmcf.converter;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Set;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
+import com.optum.comet.mctmcf.constants.CometConstants;
+import com.optum.comet.mctmcf.daos.dbos.CometBaseDBO;
+import com.optum.comet.mctmcf.exception.CometException;
+import com.optum.comet.mctmcf.exception.CometExceptionConstants;
+import com.optum.comet.mctmcf.exception.vo.CometExceptionBean;
+import com.optum.comet.mctmcf.vo.CometBaseVO;
+
+/**
+ * This class primarily helps us to determine the conversion between the 2 set of model objects used in ISA Set of page bound
+ * Value objects and a set of Hibernate VOs (DTOs) to facilitate ORM. 2 methods to set the population logic apart are used. the
+ * getVO converts the data set of the DTOs(referred to as DBOs in the CWF project scope) to VOs the getDBO is the reverse
+ * operation to getVO.
+ * 
+ * @author cmishr1
+ * @param <T>
+ * @param <R>
+ */
+public abstract class Converter<T extends com.optum.comet.mctmcf.vo.CometBaseVO, R extends CometBaseDBO> {
+
+    protected  Logger logger = LogManager.getLogger(this.getClass());
+    
+    /**
+     * Abstract method. Implement to convert the data set of the VO to DBO
+     * @param voArg
+     * @param dboArg
+     * @param action
+     * @param logCorrelationId
+     * @return
+     * @throws CometException
+     */
+    public abstract R getDBO(T voArg, R dboArg, ConverterActions action, String logCorrelationId) throws CometException;
+
+    /**
+     * Abstract method. Implement to convert the data set of the DVO to VO
+     * 
+     * @param dboArg
+     * @param voArg
+     * @param action
+     * @param logCorrelationId
+     * @return DBO
+     * @throws CometException
+     */
+    public abstract T getVO(R dboArg, T voArg, ConverterActions action, String logCorrelationId) throws CometException;
+    
+    /**
+     * Set of DBO for vo
+     * 
+     * @param voArg
+     * @param key
+     * @param action
+     * @param logCorrelationId
+     * @return
+     * @throws CometException
+     */
+    public Set<R> getDBOSet(T voArg, Object key, ConverterActions action, String logCorrelationId) throws CometException {
+        throw new IllegalArgumentException("Not yet implemented for this converter");
+    }
+    
+    /**
+     * BaseDBO from varargs of string
+     * 
+     * @param action
+     * @param logCorrelationId
+     * @param params
+     * @return
+     */
+    public CometBaseDBO getBaseDBOForParamSet(ConverterActions action, String logCorrelationId, Object... params) {
+        throw new IllegalArgumentException("Not yet implemented for this converter");
+    }
+    
+    /**
+     * Wrapper for Standard action
+     * @param logCorrelationId
+     * @param params
+     * @return
+     */
+    final public CometBaseDBO getBaseDBOForParamSet(String logCorrelationId, Object... params) {
+        return getBaseDBOForParamSet(ConverterActions.Standard, logCorrelationId, params);
+    }
+    
+    /**
+     * Wrapper for Standard action
+     * @param voArg
+     * @param dboArg
+     * @param logCorrelationId
+     * @return
+     * @throws CometException
+     */
+    final public R getDBO(T voArg, R dboArg, String logCorrelationId) throws CometException {
+        return this.getDBO(voArg, dboArg, ConverterActions.Standard, logCorrelationId);
+    }
+    
+    /**
+     * Wrapper for Standard action
+     * @param dboArg
+     * @param voArg
+     * @param logCorrelationId
+     * @return
+     * @throws CometException
+     */
+    final public T getVO(R dboArg, T voArg, String logCorrelationId) throws CometException {
+        return this.getVO(dboArg, voArg, ConverterActions.Standard, logCorrelationId);
+    }
+
+   /**
+    * Utility method for converting java.sql.Date to java.util.Date, done for avoiding the serialization exception incurred in
+    * the JSON serializer.
+    * @param dt
+    * @return
+    */
+    protected Date getUtilDate(Date dt) {
+        if (dt != null && dt instanceof java.sql.Date) {
+            dt = new Date(dt.getTime());
+        }
+        return dt;
+    }
+
+   /**
+    * Utility method to get a UnsupportedOperationException Message
+    * @param location
+    * @return
+    */
+    protected UnsupportedOperationException getInvalidArgsException(String location) {
+        CometConstants.ACTORS actor = CometConstants.ACTORS.SERVICE;
+        CometExceptionBean exceptionBean = new CometExceptionBean(CometExceptionConstants.POSSIBLE_REASONS.INVLD_VO_DBO_PARAM_CONVERTER
+                .getDescription(), null, Calendar.getInstance(), actor, location);
+        CometException ex = new CometException(exceptionBean);
+        
+        return new UnsupportedOperationException(ex);
+    }
+
+   /**
+    * Return a unsupported action UnsupportedOperationException Message
+    * @param location
+    * @return
+    */
+    protected UnsupportedOperationException getUnsupportedActionException(String location) {
+        CometConstants.ACTORS actor = CometConstants.ACTORS.SERVICE;
+        CometExceptionBean exceptionBean = new CometExceptionBean(CometExceptionConstants.POSSIBLE_REASONS.INVLD_CONVERTER_ACTION
+                .getDescription(), null, Calendar.getInstance(), actor, location);
+        return new UnsupportedOperationException(new CometException(exceptionBean));
+    }
+    
+    /**
+     * Utility method to get a UnsupportedOperationException Message
+     * @param location
+     * @return
+     */
+     protected UnsupportedOperationException getInvalidMsgLengthException(String location) {
+         CometConstants.ACTORS actor = CometConstants.ACTORS.SERVICE;
+         CometExceptionBean exceptionBean = new CometExceptionBean(CometExceptionConstants.POSSIBLE_REASONS.INVLD_MESSAGE_LENGTH
+                 .getDescription(), null, Calendar.getInstance(), actor, location);
+         CometException ex = new CometException(exceptionBean);
+         
+         return new UnsupportedOperationException(ex);
+     }
+
+    /*
+    protected UnsupportedOperationException getInvalidManulMsgException(String location) {
+        CometConstants.ACTORS actor = CometConstants.ACTORS.SERVICE;
+        CometExceptionBean exceptionBean = new CometExceptionBean(CometExceptionConstants.POSSIBLE_REASONS.INVLD_CONVERTER_ACTION
+                .getDescription(), null, Calendar.getInstance(), actor, location);
+        return new UnsupportedOperationException(new CometException(exceptionBean));
+    }
+*/
+    
+    
+    /**
+     * Populate the audit fields for the DBOS / VOS
+     * 
+     * @param <MOD>
+     * @param base
+     * @param creatByUserId
+     * @param creatDttm
+     * @param lstUpdtByUserId
+     * @param lstUpdtDttm
+     * @param modType
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public <MOD> MOD setAuditFields(MOD base, String creatByUserId, Date creatDttm, String lstUpdtByUserId, Date lstUpdtDttm,
+            ModType modType) {
+        if (base == null && (!(base instanceof CometBaseVO) || !(base instanceof CometBaseDBO))) {
+            this.logger.info("The cwf base dbo is invalid therefore, returning the same without performing any exceptions");
+        } else {
+
+            switch (modType) {
+                case VO: {
+
+                    CometBaseVO cwfbaseVo = (CometBaseVO) base;
+
+                    cwfbaseVo.setCreatedBy(creatByUserId);
+                    cwfbaseVo.setModifiedBy(lstUpdtByUserId);
+                    cwfbaseVo.setCreatedDate(creatDttm);
+                    cwfbaseVo.setModifiedDate(lstUpdtDttm);
+
+                    base = (MOD) cwfbaseVo;
+
+                    break;
+                }
+                case DBO: {
+
+                    CometBaseDBO cwfbase = (CometBaseDBO) base;
+
+                    cwfbase.setCreatByUserId(creatByUserId);
+                    cwfbase.setLstUpdtByUserId(lstUpdtByUserId);
+                    cwfbase.setCreatDttm(creatDttm);
+                    cwfbase.setLstUpdtDttm(lstUpdtDttm);
+
+                    base = (MOD) cwfbase;
+
+                    break;
+                }
+            }
+
+        }
+        return base;
+    }
+
+    public static enum ModType{
+        DBO, VO
+    }
+
+}

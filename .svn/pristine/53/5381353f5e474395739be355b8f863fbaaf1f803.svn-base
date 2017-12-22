@@ -1,0 +1,108 @@
+package com.optum.comet.mctmcf.generated.vol04042017;
+
+public class CqrcmV2InsuredInfo extends com.optum.comet.mctmcf.generator.predefbeans.Definition implements java.io.Serializable {
+
+    public CqrcmV2InsuredInfo() {
+    }
+
+    private static final long serialVersionUID = 1L;
+    private String cqrcmV2InsDob;
+    private String cqrcmV2InsFirstName;
+    private String cqrcmV2InsMidInit;
+    private String cqrcmV2InsLastName;
+    private String cqrcmV2InsAdr1;
+    private String cqrcmV2InsAdr2;
+    private String cqrcmV2InsCity;
+    private String cqrcmV2InsState;
+    private String cqrcmV2InsZip;
+    private String cqrcmV2EnteredInsId;
+    private String cqrcmV2EnteredPolNo;
+    private String cqrcmV2EmpPolNo;
+    private String cqrcmV2MbrMarket;
+    private String cqrcmV2CcmProduct;
+
+    public void setCqrcmV2InsDob(String cqrcmV2InsDob) { 
+        this.cqrcmV2InsDob = cqrcmV2InsDob;
+    }
+    public String getCqrcmV2InsDob() { 
+        return this.cqrcmV2InsDob;
+    }
+    public void setCqrcmV2InsFirstName(String cqrcmV2InsFirstName) { 
+        this.cqrcmV2InsFirstName = cqrcmV2InsFirstName;
+    }
+    public String getCqrcmV2InsFirstName() { 
+        return this.cqrcmV2InsFirstName;
+    }
+    public void setCqrcmV2InsMidInit(String cqrcmV2InsMidInit) { 
+        this.cqrcmV2InsMidInit = cqrcmV2InsMidInit;
+    }
+    public String getCqrcmV2InsMidInit() { 
+        return this.cqrcmV2InsMidInit;
+    }
+    public void setCqrcmV2InsLastName(String cqrcmV2InsLastName) { 
+        this.cqrcmV2InsLastName = cqrcmV2InsLastName;
+    }
+    public String getCqrcmV2InsLastName() { 
+        return this.cqrcmV2InsLastName;
+    }
+    public void setCqrcmV2InsAdr1(String cqrcmV2InsAdr1) { 
+        this.cqrcmV2InsAdr1 = cqrcmV2InsAdr1;
+    }
+    public String getCqrcmV2InsAdr1() { 
+        return this.cqrcmV2InsAdr1;
+    }
+    public void setCqrcmV2InsAdr2(String cqrcmV2InsAdr2) { 
+        this.cqrcmV2InsAdr2 = cqrcmV2InsAdr2;
+    }
+    public String getCqrcmV2InsAdr2() { 
+        return this.cqrcmV2InsAdr2;
+    }
+    public void setCqrcmV2InsCity(String cqrcmV2InsCity) { 
+        this.cqrcmV2InsCity = cqrcmV2InsCity;
+    }
+    public String getCqrcmV2InsCity() { 
+        return this.cqrcmV2InsCity;
+    }
+    public void setCqrcmV2InsState(String cqrcmV2InsState) { 
+        this.cqrcmV2InsState = cqrcmV2InsState;
+    }
+    public String getCqrcmV2InsState() { 
+        return this.cqrcmV2InsState;
+    }
+    public void setCqrcmV2InsZip(String cqrcmV2InsZip) { 
+        this.cqrcmV2InsZip = cqrcmV2InsZip;
+    }
+    public String getCqrcmV2InsZip() { 
+        return this.cqrcmV2InsZip;
+    }
+    public void setCqrcmV2EnteredInsId(String cqrcmV2EnteredInsId) { 
+        this.cqrcmV2EnteredInsId = cqrcmV2EnteredInsId;
+    }
+    public String getCqrcmV2EnteredInsId() { 
+        return this.cqrcmV2EnteredInsId;
+    }
+    public void setCqrcmV2EnteredPolNo(String cqrcmV2EnteredPolNo) { 
+        this.cqrcmV2EnteredPolNo = cqrcmV2EnteredPolNo;
+    }
+    public String getCqrcmV2EnteredPolNo() { 
+        return this.cqrcmV2EnteredPolNo;
+    }
+    public void setCqrcmV2EmpPolNo(String cqrcmV2EmpPolNo) { 
+        this.cqrcmV2EmpPolNo = cqrcmV2EmpPolNo;
+    }
+    public String getCqrcmV2EmpPolNo() { 
+        return this.cqrcmV2EmpPolNo;
+    }
+    public void setCqrcmV2MbrMarket(String cqrcmV2MbrMarket) { 
+        this.cqrcmV2MbrMarket = cqrcmV2MbrMarket;
+    }
+    public String getCqrcmV2MbrMarket() { 
+        return this.cqrcmV2MbrMarket;
+    }
+    public void setCqrcmV2CcmProduct(String cqrcmV2CcmProduct) { 
+        this.cqrcmV2CcmProduct = cqrcmV2CcmProduct;
+    }
+    public String getCqrcmV2CcmProduct() { 
+        return this.cqrcmV2CcmProduct;
+    }
+}

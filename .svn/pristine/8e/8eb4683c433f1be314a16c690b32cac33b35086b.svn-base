@@ -1,0 +1,84 @@
+package com.optum.comet.mctmcf.daos;
+
+import java.util.List;
+
+import com.optum.comet.mctmcf.daos.dbos.StagedClmSfxMessage;
+import com.optum.comet.mctmcf.exception.CometException;
+
+/**
+ * Purpose: 
+ * Change log: 
+ * @author cmishr4
+ *
+ */
+public interface ILoadClaimDAO extends ICometDAO {
+
+	/**
+	 * Purpose:saves the claim message to ld_clm table
+	 * Change log: 5/2/2017 : Anjali Yadav : added method saveClmMsg
+	 * @param dbo
+	 * @param logCorrId
+	 * @throws CometException
+	 */
+	public StagedClmSfxMessage saveClmMsg(StagedClmSfxMessage dbo, String logCorrId) throws CometException;
+
+		
+	/**
+	 * Purpose:updates the suffix status in Load claim table
+	 * Change log: 5/2/2017 : Anjali Yadav : added method updateLdClmSts 
+	 * @param dbo
+	 * @param logCorrId
+	 * @return 
+	 * @throws CometException
+	 */
+	public StagedClmSfxMessage updateLdClmSts(StagedClmSfxMessage dbo, String logCorrId) throws CometException;
+	/**
+	 * Purpose:gets the count of claims from Load claim table to check if multisufx claims need to be put to wait
+	 * Change log: 5/22/2017 : Anjali Yadav : added method multiSfxWaitCheck 
+	 * @param dbo
+	 * @param logCorrId
+	 * @return 
+	 * @throws CometException
+	 */
+	
+	public StagedClmSfxMessage multiSfxWaitCheck(StagedClmSfxMessage dbo, String logCorrId) throws CometException;
+	
+	
+	
+	/**
+	 * Purpose:retrieve claim suffixes from  Load claim table to re-process
+	 * Change log: 5/10/2017 : Chandan Mishra : added method 
+	 * @param dbo
+	 * @param logCorrId
+	 * @throws CometException
+	 */
+	public List<com.optum.comet.mctmcf.daos.dbos.StagedClmSfxMessage> retrieveClaimsForReprocessing(String logCorrId)
+			throws CometException;
+
+	
+	/**
+	 * Purpose:insert in Ld_lck
+	 * Change log: 5/26/2017 : Anjali Yadav : added method insertIntoLdLck
+	 * @param dbo
+	 * @param logCorrId
+	 * @return 
+	 * @throws CometException
+	 */
+
+	public StagedClmSfxMessage insertIntoLdLck(StagedClmSfxMessage clmSfxMessage, String corrId) throws CometException;
+	
+	/**
+	 * Purpose:delete from Ld_lck
+	 * Change log: 5/26/2017 : Anjali Yadav : added method deleteFromLdLck
+	 * @param dbo
+	 * @param logCorrId
+	 * @return 
+	 * @throws CometException
+	 */
+
+
+	public StagedClmSfxMessage saveICNSfx(StagedClmSfxMessage dbo, String logCorrId) throws CometException;
+
+	public void updateLdClmExceptionSts( Long lid,String icn);
+	
+}

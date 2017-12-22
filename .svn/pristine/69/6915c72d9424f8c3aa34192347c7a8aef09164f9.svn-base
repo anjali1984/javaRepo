@@ -1,0 +1,65 @@
+package com.optum.comet.mctmcf.generated.vol04042017;
+
+public class ClaimSuffixMessage extends com.optum.comet.mctmcf.generator.predefbeans.Definition implements java.io.Serializable {
+
+    public ClaimSuffixMessage() {
+        this.cqrcmFixed = new com.optum.comet.mctmcf.generated.vol04042017.CqrcmFixed();
+        this.cqrcmVariable = new com.optum.comet.mctmcf.generated.vol04042017.CqrcmVariable();
+        this.cqrcmVariable2 = new com.optum.comet.mctmcf.generated.vol04042017.CqrcmVariable2();
+        this.cqrcmVariable3 = new com.optum.comet.mctmcf.generated.vol04042017.CqrcmVariable3();
+        this.cqrcmVariable4 = new com.optum.comet.mctmcf.generated.vol04042017.CqrcmVariable4();
+        this.cqrcmVariable5 = new com.optum.comet.mctmcf.generated.vol04042017.CqrcmVariable5();
+    }
+
+    private static final long serialVersionUID = 1L;
+    private String cqrcmLength;
+    private com.optum.comet.mctmcf.generated.vol04042017.CqrcmFixed cqrcmFixed;
+    private com.optum.comet.mctmcf.generated.vol04042017.CqrcmVariable cqrcmVariable;
+    private com.optum.comet.mctmcf.generated.vol04042017.CqrcmVariable2 cqrcmVariable2;
+    private com.optum.comet.mctmcf.generated.vol04042017.CqrcmVariable3 cqrcmVariable3;
+    private com.optum.comet.mctmcf.generated.vol04042017.CqrcmVariable4 cqrcmVariable4;
+    private com.optum.comet.mctmcf.generated.vol04042017.CqrcmVariable5 cqrcmVariable5;
+
+    public void setCqrcmLength(String cqrcmLength) { 
+        this.cqrcmLength = cqrcmLength;
+    }
+    public String getCqrcmLength() { 
+        return this.cqrcmLength;
+    }
+    public void setCqrcmFixed(com.optum.comet.mctmcf.generated.vol04042017.CqrcmFixed cqrcmFixed) { 
+        this.cqrcmFixed = cqrcmFixed;
+    }
+    public com.optum.comet.mctmcf.generated.vol04042017.CqrcmFixed getCqrcmFixed() { 
+        return this.cqrcmFixed;
+    }
+    public void setCqrcmVariable(com.optum.comet.mctmcf.generated.vol04042017.CqrcmVariable cqrcmVariable) { 
+        this.cqrcmVariable = cqrcmVariable;
+    }
+    public com.optum.comet.mctmcf.generated.vol04042017.CqrcmVariable getCqrcmVariable() { 
+        return this.cqrcmVariable;
+    }
+    public void setCqrcmVariable2(com.optum.comet.mctmcf.generated.vol04042017.CqrcmVariable2 cqrcmVariable2) { 
+        this.cqrcmVariable2 = cqrcmVariable2;
+    }
+    public com.optum.comet.mctmcf.generated.vol04042017.CqrcmVariable2 getCqrcmVariable2() { 
+        return this.cqrcmVariable2;
+    }
+    public void setCqrcmVariable3(com.optum.comet.mctmcf.generated.vol04042017.CqrcmVariable3 cqrcmVariable3) { 
+        this.cqrcmVariable3 = cqrcmVariable3;
+    }
+    public com.optum.comet.mctmcf.generated.vol04042017.CqrcmVariable3 getCqrcmVariable3() { 
+        return this.cqrcmVariable3;
+    }
+    public void setCqrcmVariable4(com.optum.comet.mctmcf.generated.vol04042017.CqrcmVariable4 cqrcmVariable4) { 
+        this.cqrcmVariable4 = cqrcmVariable4;
+    }
+    public com.optum.comet.mctmcf.generated.vol04042017.CqrcmVariable4 getCqrcmVariable4() { 
+        return this.cqrcmVariable4;
+    }
+    public void setCqrcmVariable5(com.optum.comet.mctmcf.generated.vol04042017.CqrcmVariable5 cqrcmVariable5) { 
+        this.cqrcmVariable5 = cqrcmVariable5;
+    }
+    public com.optum.comet.mctmcf.generated.vol04042017.CqrcmVariable5 getCqrcmVariable5() { 
+        return this.cqrcmVariable5;
+    }
+}

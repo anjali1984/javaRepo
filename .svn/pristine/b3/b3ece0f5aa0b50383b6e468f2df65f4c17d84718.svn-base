@@ -1,0 +1,117 @@
+package com.optum.comet.mctmcf.generator;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.util.Iterator;
+import java.util.List;
+
+import com.optum.comet.mctmcf.generator.datastruct.AttributeStructure;
+import com.optum.comet.mctmcf.generator.datastruct.VOStructure;
+
+
+
+public class ListDecorator {
+
+	private static String tab = "    ";
+	
+	public static String decorateList(List<VOStructure> vtoList, String folderName){
+		
+		String packageName = "";
+		for(Iterator<VOStructure> it = vtoList.iterator(); it.hasNext();){
+			VOStructure vtos = it.next();
+			try{
+				String className = vtos.getClassName();
+				packageName = vtos.getPackageName().trim();
+				BufferedWriter bw = null;
+				File parentFolderName = null;
+				if(vtos.getPackageName() != null && (!vtos.getPackageName().trim().equals(""))) {
+					parentFolderName = new File(folderName+"/" + packageName.replace(".", "/")); 
+					if(!parentFolderName.exists()) {
+						System.out.println(parentFolderName.getAbsolutePath());
+						parentFolderName.mkdirs();
+					}
+				} else {
+					parentFolderName = new File(folderName);
+				}
+				
+				bw = new BufferedWriter(new FileWriter(new File(parentFolderName.getAbsolutePath()+"/" + className + ".java")));
+				
+				if(vtos.getPackageName() != null && (!vtos.getPackageName().trim().equals(""))) {
+					bw.write("package " + packageName + ";");
+					bw.newLine();
+					bw.newLine();
+				}
+				
+				bw.write("public class " + className 
+						+ (vtos.getExtendsClass() != null && vtos.getExtendsClass().length() > 0 ? " extends " + vtos.getExtendsClass() : "") 
+						+ " implements java.io.Serializable "
+						+ (vtos.getImplementsClass() != null && vtos.getImplementsClass().length() > 0 ? ", " + vtos.getImplementsClass() : "")
+						+ "{");
+				bw.newLine();
+				
+				bw.newLine();
+				bw.write(generateContructor(vtos));
+				bw.newLine();
+				
+				bw.newLine();
+				bw.write(tab + "private static final long serialVersionUID = 1L;");
+				bw.newLine();
+				for(Iterator<AttributeStructure> attrsIt = vtos.getAttrs().iterator(); attrsIt.hasNext();){
+					AttributeStructure as = attrsIt.next();
+					bw.write(tab + "private " + as.getAttrType() + " " + as.getAttrName() + ";");
+					bw.newLine();
+				}
+				bw.newLine();
+				
+				for(Iterator<AttributeStructure> attrsIt = vtos.getAttrs().iterator(); attrsIt.hasNext();){
+					AttributeStructure as = attrsIt.next();
+					
+					//setter
+					bw.write(tab + "public void set" + returnFirstLetterCaps(as.getAttrName()) + "(" + as.getAttrType() + " " + as.getAttrName() + ") { ");
+					bw.newLine();
+					bw.write(tab + tab + "this." + as.getAttrName() + " = " + as.getAttrName() + ";");
+					bw.newLine();
+					bw.write(tab + "}");
+					bw.newLine();
+					//getter
+					bw.write(tab + "public " + as.getAttrType() + " get" + returnFirstLetterCaps(as.getAttrName()) + "() { ");
+					bw.newLine();
+					bw.write(tab + tab + "return this." + as.getAttrName() + ";");
+					bw.newLine();
+					bw.write(tab + "}");
+					bw.newLine();
+				}
+				bw.write("}");
+				bw.flush();
+				bw.close();
+			} catch(Exception e){
+				e.printStackTrace();
+			} finally{
+				
+			}
+		}
+		
+		return folderName + "::" + packageName;
+	}
+	
+	private static String generateContructor (VOStructure voStruct) {
+		
+		StringBuilder constructorTxt = new StringBuilder("");
+		
+		constructorTxt.append(tab).append("public ").append(voStruct.getClassName()).append("() {\n");
+		for(AttributeStructure as : voStruct.getAttrs()) {
+			if(as.getAttrType().indexOf(".") != -1 && "$new".equals(as.getInitVal()))
+				constructorTxt.append(tab).append(tab).append("this." +as.getAttrName()).append(" = new ").append(as.getAttrType()).append("();\n");
+			else if(as.getInitVal() != null && as.getInitVal().length() > 0) 
+				constructorTxt.append(tab).append(tab).append("this." +as.getAttrName()).append(" = ").append(as.getInitVal()).append(";\n" );
+		}
+		constructorTxt.append(tab).append("}");
+		
+		return constructorTxt.toString();
+	}
+	
+	public static String returnFirstLetterCaps(String name){
+		return name.substring(0, 1).toUpperCase() + name.substring(1);
+	}
+}

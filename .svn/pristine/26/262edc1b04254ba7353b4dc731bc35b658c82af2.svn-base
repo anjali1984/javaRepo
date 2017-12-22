@@ -1,0 +1,66 @@
+package com.optum.comet.mctmcf.daos.impl;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.ResultSetExtractor;
+
+import com.optum.comet.mctmcf.aspects.Cacheable;
+import com.optum.comet.mctmcf.constants.CometConstants;
+import com.optum.comet.mctmcf.daos.ILookupDAO;
+import com.optum.comet.mctmcf.daos.dbos.LookupResults;
+import com.optum.comet.mctmcf.exception.CometException;
+import com.optum.comet.mctmcf.exception.vo.CometExceptionBean;
+import com.optum.diff.common.dao.AbstractJDBCDAOSupport;
+import com.optum.diff.common.util.PropertiesHelper;
+
+public class LookupDAO extends AbstractJDBCDAOSupport implements ILookupDAO {
+
+	String retrvMctOpenClaimCnt;
+
+	public String getDescription() {
+		return null;
+	}
+	void init() {
+		final String location = "com.optum.comet.mctmcf.daos.impl.LookupDAO.init()";
+		try {
+			retrvMctOpenClaimCnt = PropertiesHelper.getProperty("cmt-queries", "select.mct.clm.count");
+
+		} 
+		catch(Throwable th) {
+			CometExceptionBean ceb = new CometExceptionBean(th, CometConstants.ACTORS.SERVICE, location);
+			throw new CometException(ceb);
+		}
+		
+	}
+
+	/*
+	 * @see com.optum.comet.mctmcf.daos.ILookupDAO#openClmsForMCT
+	 * (java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Cacheable(cacheKey=CometConstants.MCT_OPEN_CLM_COUNTS)
+	public LookupResults openClmsForMCT(String orgId, String clmFrmTyp, String logCorrId) throws CometException {
+		final String location = "com.optum.comet.mctmcf.daos.impl.LookupDAO.init()";
+		try {
+			LookupResults retVal =  this.getJdbcTemplate().query(retrvMctOpenClaimCnt, new Object[] {orgId, clmFrmTyp, orgId}, 
+					new ResultSetExtractor<LookupResults>() {
+
+				public LookupResults extractData(ResultSet openClmCnt) throws SQLException, DataAccessException {
+					LookupResults retVal = new LookupResults();
+
+					while(openClmCnt.next() ) {
+						retVal.setOpenClmCountForOrgIdClmFrmTyp(openClmCnt.getLong(1));
+						retVal.setOpenClmCountForOrgId(openClmCnt.getLong(2));
+						retVal.setOpenClmCount(openClmCnt.getLong(3));
+					}
+					return retVal;
+				}});
+			return retVal;
+		} catch(Throwable th) {
+			this.getLogger().error(location, "Exception while openClmsForMCT: orgId [".concat(orgId).concat("]"), logCorrId);
+			CometExceptionBean ceb = new CometExceptionBean(th, CometConstants.ACTORS.SERVICE, logCorrId);
+			throw new CometException(ceb);
+		}
+	}
+}

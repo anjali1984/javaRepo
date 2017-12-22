@@ -1,0 +1,17 @@
+package com.optum.comet.mctmcf.generated.vol04042017;
+
+public class CqrcmV5CireEditRuleType extends com.optum.comet.mctmcf.generator.predefbeans.Definition implements java.io.Serializable {
+
+    public CqrcmV5CireEditRuleType() {
+    }
+
+    private static final long serialVersionUID = 1L;
+    private String cqrcmV5CireEditRule;
+
+    public void setCqrcmV5CireEditRule(String cqrcmV5CireEditRule) { 
+        this.cqrcmV5CireEditRule = cqrcmV5CireEditRule;
+    }
+    public String getCqrcmV5CireEditRule() { 
+        return this.cqrcmV5CireEditRule;
+    }
+}

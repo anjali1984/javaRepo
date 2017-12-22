@@ -1,0 +1,39 @@
+package com.optum.comet.mctmcf.converter;
+
+/**
+ * This enum will contain all the converters identified for , while declaring a new enum type here please follow this convension
+ * VO_N_<BUSINESS_ENTITY(DBO)>
+ * 
+ * @author 142037
+ */
+
+public enum CometMappers{
+
+    // Audit Message
+	CometMCFConverters("com.optum.comet.mctmcf.converter.impl.CometMCFConverters",
+                                  "mcf process related converters");
+
+    private CometMappers(String className, String description) {
+        this.classImpl = className;
+        this.description = description;
+    }
+
+    private String classImpl;
+    private String description;
+
+    public String getClassImpl() {
+        return this.classImpl;
+    }
+
+    public void setClassImpl(String classImplarg) {
+        this.classImpl = classImplarg;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String descriptionarg) {
+        this.description = descriptionarg;
+    }
+}

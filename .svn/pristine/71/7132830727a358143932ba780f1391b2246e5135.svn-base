@@ -1,0 +1,17 @@
+package com.optum.comet.mctmcf.generated.vol04042017;
+
+public class CqrcmVariable3 extends com.optum.comet.mctmcf.generator.predefbeans.Definition implements java.io.Serializable {
+
+    public CqrcmVariable3() {
+    }
+
+    private static final long serialVersionUID = 1L;
+    private String cqrcmV3RestrictCode;
+
+    public void setCqrcmV3RestrictCode(String cqrcmV3RestrictCode) { 
+        this.cqrcmV3RestrictCode = cqrcmV3RestrictCode;
+    }
+    public String getCqrcmV3RestrictCode() { 
+        return this.cqrcmV3RestrictCode;
+    }
+}

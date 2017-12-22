@@ -1,0 +1,35 @@
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns="com.optum.comet" targetNamespace="com.optum.comet">
+	
+	<!--  root element -->
+	<xs:element type="ClmInfoType" name="clmInfo" />
+	
+	<xs:complexType name="ClmInfoType">
+		<xs:sequence>
+			<xs:element type="xs:string" name="cicn" minOccurs="1" maxOccurs="1" nillable="false"/>
+			<xs:element type="xs:string" name="corg" minOccurs="1" maxOccurs="1" nillable="false"/>
+			<xs:element type="xs:string" name="cpnd" minOccurs="1" maxOccurs="1" nillable="false"/>
+			<xs:element type="xs:string" name="camt" minOccurs="1" maxOccurs="1" nillable="false"/>
+			<xs:element type="xs:string" name="cmkt" minOccurs="1" maxOccurs="1" nillable="false"/>
+			<xs:element type="xs:string" name="provid" minOccurs="1" maxOccurs="1" nillable="false"/>
+			<xs:element type="xs:string" name="cpay" minOccurs="1" maxOccurs="1" nillable="false"/>
+			<xs:element type="xs:string" name="ceng" minOccurs="1" maxOccurs="1" nillable="false"/>
+			<xs:element type="xs:string" name="cpol" minOccurs="1" maxOccurs="1" nillable="false"/>
+			<!-- indicates whether the claim is a new or an update claim -->
+			<xs:element type="xs:string" name="updtMsgInd" default="N" minOccurs="1" maxOccurs="1" nillable="false"/>
+			<!-- captures the current status of the claim from ITEM_FLAT table, claims with status PINPRC or PHOLD needn't have their work basket evaluated-->
+			<xs:element type="xs:string" name="curstat" minOccurs="1" maxOccurs="1" nillable="false"/>
+			<xs:element type="xs:string" name="curoper" minOccurs="1" maxOccurs="1" nillable="false"/>
+			<!-- captures the current claim is multi suffix or single suffix.-->
+			<xs:element type="xs:string" name="multisfxInd" default="Y" minOccurs="1" maxOccurs="1" nillable="false"/>
+			<xs:element type="xs:string" name="evalWorkBasket" default="Y" minOccurs="1" maxOccurs="1" nillable="false"/>
+			<xs:element type="xs:string" name="evalPriority" default="Y" minOccurs="1" maxOccurs="1" nillable="false" />
+			<xs:element type="xs:string" name="evalPoint" default="Y" minOccurs="1" maxOccurs="1" nillable="false" />
+		</xs:sequence>
+	</xs:complexType>
+	
+			
+</xs:schema>
+
+
+

@@ -1,0 +1,28 @@
+<project name="com.optum.comet.mctmcf" basedir="." default="generate-copybookbean-classes">
+	<taskdef name="copybookbean-generator-task" classname="com.optum.comet.mctmcf.generator.CopyBookBeanGenerator"
+		classpath="./target/classes">
+		<classpath>
+			<fileset dir="./lib">
+				<include name="*.jar" />
+			</fileset>
+			<fileset dir="./../com.optum.diff/target">
+				<include name="*.jar" />
+			</fileset>
+			<fileset dir="C:/Users/cmishr4/.m2/repository">
+				<include name="**/*.jar" />
+			</fileset>
+		</classpath>
+	</taskdef>
+
+	<target name="generate-copybookbean-classes">
+
+		<copybookbean-generator-task srcFolder="src/main/java" 
+			beanPkg="com.optum.comet.mctmcf.generated.vol04042017" parentBeanName="ClaimSuffixMessage"
+			copyBookXmlPath="artifacts/EMCCQRCM_ClmSfx.xml" />
+
+		<copybookbean-generator-task srcFolder="src/main/java" 
+			beanPkg="com.optum.comet.mctmcf.generated.vol04042017" parentBeanName="ClaimStatusUpadteMessage"
+			copyBookXmlPath="artifacts/EMCCQRCM_ClmStsUpdt.xml" />
+
+	</target>
+</project>

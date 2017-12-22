@@ -1,0 +1,231 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:int-jms="http://www.springframework.org/schema/integration/jms"
+	xmlns:int-jdbc="http://www.springframework.org/schema/integration/jdbc"
+	xmlns:int-stream="http://www.springframework.org/schema/integration/stream"
+	xmlns:int-http="http://www.springframework.org/schema/integration/http"
+
+	xsi:schemaLocation=" http://www.springframework.org/schema/beans 
+							http://www.springframework.org/schema/beans/spring-beans.xsd 
+						 http://www.springframework.org/schema/integration 
+						 	http://www.springframework.org/schema/integration/spring-integration.xsd 
+						 http://www.springframework.org/schema/integration/stream 
+						 	http://www.springframework.org/schema/integration/stream/spring-integration-stream.xsd
+						 http://www.springframework.org/schema/integration/jms 
+						 	http://www.springframework.org/schema/integration/jms/spring-integration-jms.xsd
+						 http://www.springframework.org/schema/integration/http
+				
+						 	http://www.springframework.org/schema/integration/http/spring-integration-jms.xsd
+						 http://www.springframework.org/schema/integration/jdbc
+						 	http://www.springframework.org/schema/integration/jdbc/spring-integration-jdbc.xsd">
+
+	<!-- SI constructs -->
+	<!-- input wmq channels -->
+	<int:channel id="cmt.manualQueueChannel" />
+	<int:channel id="cmt.stsupdtQueueChannel" />
+	
+
+
+	<!-- Output channel for service activators -->
+	
+	<int:channel id="cmt.inboundClmMsg" />
+	<int:channel id="cmt.processMCF" />
+	<int:channel id="cmt.multiSfxHoldCheck" />
+	<int:channel id="cmt.ldLckChnl" />
+	<int:channel id="cmt.lengthChannel" />
+
+	<int:channel id="cmt.loadClmResolved" />
+	<int:channel id="cmt.releaseClm" />
+	<int:channel id="cmt.itemPersist" />
+	<int:channel id="cmt.updateClmStsUnlckICN" />
+	<int:channel id="cmt.itmInsrt" />
+	<int:channel id="cmt.itmUpdt" />
+	<int:channel id="cmt.clmNewUpdt" />
+	<int:channel id="cmt.mltiSfxChnl" />
+	<int:channel id="cmt.notifyPega" />
+	<int:channel id="cmt.endWrkflwChnl" />
+	
+	<int:channel id="cmt.retryinboundClmMsg" />
+
+	<!-- Start of WMQ channel adapters -->
+	<int-jms:message-driven-channel-adapter  id="cmt.manualQueue1In"
+		channel="cmt.manualQueueChannel" acknowledge="auto" destination="cmt.wmq.clm.manualQ"
+		concurrent-consumers="${wmq.ica.manualQueue1In.concurent.threads}"
+		max-concurrent-consumers="${wmq.ica.manualQueue1In.concurent.threads.max}"
+		connection-factory="cmt.wmq.cachingQConnFact.mnlStsQcf2"
+		message-converter="cmt.inboundMessageConverter"/>
+		
+	<int-jms:message-driven-channel-adapter  id="cmt.manualQueue2In"
+		channel="cmt.manualQueueChannel" acknowledge="auto" destination="cmt.wmq.clm.manualQ"
+		concurrent-consumers="${wmq.ica.manualQueue2In.concurent.threads}"
+		max-concurrent-consumers="${wmq.ica.manualQueue2In.concurent.threads.max}"
+		connection-factory="cmt.wmq.cachingQConnFact.mnlStsQcf1"
+		message-converter="cmt.inboundMessageConverter"/>
+		
+	<int-jms:inbound-channel-adapter id="cmt.stsupdtQueue1In"
+		channel="cmt.stsupdtQueueChannel" acknowledge="auto" destination="cmt.wmq.clm.stsUpdtQ"
+		connection-factory="cmt.wmq.cachingQConnFact.mnlStsQcf2"
+		message-converter="cmt.inboundMessageConverter">
+		<int:poller fixed-delay="${wmq.ica.cmt.stsupdtQueue1In.fixed.delay}" />
+	</int-jms:inbound-channel-adapter>
+	
+	<int-jms:inbound-channel-adapter id="cmt.stsupdtQueue2In"
+		channel="cmt.stsupdtQueueChannel" acknowledge="auto" destination="cmt.wmq.clm.stsUpdtQ"
+		connection-factory="cmt.wmq.cachingQConnFact.mnlStsQcf1"
+		message-converter="cmt.inboundMessageConverter">
+		<int:poller fixed-rate="${wmq.ica.cmt.stsupdtQueue2In.fixed.delay}" />
+	</int-jms:inbound-channel-adapter>
+	
+	<int-jdbc:inbound-channel-adapter id="cmt.manualMsgsRetry"
+		channel="cmt.retryinboundClmMsg" data-source="cmt.datasource"
+		row-mapper="cmt.inboundClaimMessageRowMapper">
+		<int-jdbc:query><![CDATA[select * from ld_clm where sts > 1 and sts != 3  and  rtry_cnt < 5  and que='MANUAL' and ldt < to_char((sysdate - 1/96),'yyyy/MM/dd hh24:mi') and rownum < 1000]]></int-jdbc:query>
+		<int-jdbc:update><![CDATA[update ld_clm set sts = '12' , rtry_cnt = comet_mcfmct.incrmnt_numvl(rtry_cnt) where lid in (:loadId)]]></int-jdbc:update>
+		<int:poller fixed-delay="${db.mcf.msg.poller.fixed-delay}"
+			time-unit="${db.mcf.msg.poller.time-unit}">
+			<int:transactional transaction-manager="cmt.transactionManager" />
+		</int:poller>
+	</int-jdbc:inbound-channel-adapter>
+	<!-- End of WMQ channel adapters -->
+	
+
+	<!-- message converters -->
+	<bean id="cmt.inboundMessageConverter"
+		class="com.optum.comet.mctmcf.converter.si.TOPSMQMessagetoMapConverter" />
+	<!-- end message converters -->
+	<!-- row mappers -->
+	<bean id="cmt.inboundClaimMessageRowMapper"
+		class="com.optum.comet.mctmcf.converter.rowmappers.InboundClaimMessageRowMapper" />
+	<!-- end of row mappers -->
+
+
+	<!-- message routers -->
+	<bean id="cmt.clmLoadingRouter" class="com.optum.comet.mctmcf.routers.impl.CmtClmLoadingRouter">
+		<property name="mctmcfService" ref="cmt.mctmcf" />
+	</bean>
+
+	<!-- this router would determine if claim message Length valid -->
+	<int:router id="cmt.clmLengthCheck" input-channel="cmt.lengthChannel"
+		expression="@'cmt.clmLoadingRouter'.checkIfValidLength(payload)">
+		<int:mapping channel="cmt.endWrkflwChnl" value="cmt.endWrkflwChnl" />
+		<int:mapping channel="cmt.inboundClmMsg" value="cmt.inboundClmMsg" />
+	</int:router>
+
+
+	<!-- this router would determine if claim eligible for MCF processing -->
+	<int:router id="cmt.mctLoadEligibleRouter" input-channel="cmt.inboundClmMsg"
+		expression="@'cmt.clmLoadingRouter'.determineMCFEligibility(payload)">
+		<int:mapping channel="cmt.processMCF" value="cmt.processMCF" />
+		<int:mapping channel="cmt.releaseClm" value="cmt.releaseClm" />
+		<int:mapping channel="cmt.endWrkflwChnl" value="cmt.endWrkflwChnl" />
+	</int:router>
+
+	<!-- this router would determine if claim already resolved -->
+	<int:router id="cmt.checkIfAlreadyResolved" input-channel="cmt.processMCF"
+		expression="@'cmt.clmLoadingRouter'.checkIfAlreadyResolved(payload)">
+		<int:mapping channel="cmt.ldLckChnl" value="cmt.ldLckChnl" />
+		<int:mapping channel="cmt.itemPersist" value="cmt.itemPersist" />
+		<int:mapping channel="cmt.loadClmResolved" value="cmt.loadClmResolved" />
+	</int:router>
+
+	<!-- this router would determine if claim is multi-sfx and it is to be put 
+		on processing hold -->
+	<int:router id="cmt.determineMultiSfxHoldSts" input-channel="cmt.multiSfxHoldCheck"
+		expression="@'cmt.clmLoadingRouter'.determineMultiSfxHoldStatus(payload)">
+		<int:mapping channel="cmt.itemPersist" value="cmt.itemPersist" />
+		<int:mapping channel="cmt.updateClmStsUnlckICN" value="cmt.updateClmStsUnlckICN" />
+	</int:router>
+
+	<!-- this router would determine if claim is multi sfx or not -->
+	<int:router id="cmt.detrmnLoadLockSts" input-channel="cmt.ldLckChnl"
+		expression="@'cmt.clmLoadingRouter'.determineLdLckSts(payload)" 
+		default-output-channel="nullChannel">
+		<int:mapping channel="cmt.clmNewUpdt" value="cmt.clmNewUpdt" />
+		<int:mapping channel="cmt.endWrkflwChnl" value="cmt.endWrkflwChnl" />
+	</int:router>
+
+	<!-- this router would determine if lock exists for a multisuffix claim 
+		or not -->
+	<int:router id="cmt.chckMultiSfx" input-channel="cmt.clmNewUpdt"
+		expression="@'cmt.clmLoadingRouter'.determineMultiSfx(payload)">
+		<int:mapping channel="cmt.mltiSfxChnl" value="cmt.mltiSfxChnl" />
+		<int:mapping channel="cmt.itemPersist" value="cmt.itemPersist" />
+	</int:router>
+
+	<!-- this router would determine if itemflat needs insert or update -->
+	<int:router id="cmt.chckItmCurStat" input-channel="cmt.itemPersist"
+		expression="@'cmt.clmLoadingRouter'.determineItmCurStatNull(payload)">
+		<int:mapping channel="cmt.itmInsrt" value="cmt.itmInsrt" />
+		<int:mapping channel="cmt.itmUpdt" value="cmt.itmUpdt" />
+	</int:router>
+
+	<!-- end of message routers -->
+
+	<!-- delayers -->
+	<int:delayer id="cmt.multiSfxDelayer" input-channel="cmt.mltiSfxChnl"
+		output-channel="cmt.multiSfxHoldCheck" default-delay="${delayer.cmt.multiSfxDelayer.default.delay}" />
+	<!-- end of delayers -->
+
+	<!-- service activators -->
+	<!-- for status update messages -->
+	<int:service-activator id="cmt.loadsupdt.messages"
+		input-channel="cmt.stsupdtQueueChannel" auto-startup="true"
+		ref="cmt.stsupdtclaim.processing" method="recieveClmSfxMessage"
+		output-channel="cmt.processMCF">
+	</int:service-activator>
+
+	<!-- for persisting manual queue messages -->
+	<int:service-activator id="cmt.loadmcf.messages"
+		input-channel="cmt.manualQueueChannel" auto-startup="true"
+		ref="cmt.manualclaim.processing" method="recieveClmSfxMessage"
+		output-channel="cmt.lengthChannel">
+	</int:service-activator>
+
+	<!-- update load claim record to MCF already resolved -->
+	<int:service-activator id="cmt.resolveMCF"
+		input-channel="cmt.loadClmResolved" auto-startup="true"
+		output-channel="cmt.endWrkflwChnl" ref="cmt.manualclaim.processing"
+		method="markClaimAlreadyResolved">
+	</int:service-activator>
+
+	<!-- saveItemFlat -->
+	<int:service-activator id="cmt.saveItmFlat"
+		input-channel="cmt.itmInsrt" auto-startup="true" output-channel="cmt.notifyPega"
+		ref="cmt.manualclaim.processing" method="saveItmFlat">
+	</int:service-activator>
+
+	<!-- updateItmFlat -->
+	<int:service-activator id="cmt.updateItmFlat"
+		input-channel="cmt.itmUpdt" auto-startup="true" output-channel="cmt.notifyPega"
+		ref="cmt.manualclaim.processing" method="updateItmFlat">
+	</int:service-activator>
+
+	<int:service-activator id="cmt.sendNotificationToPega"
+		input-channel="cmt.notifyPega" auto-startup="true" output-channel="cmt.updateClmStsUnlckICN"
+		ref="cmt.manualclaim.processing" method="sendNotificationToPega">
+	</int:service-activator>
+
+	<int:service-activator id="cmt.sendReleaseClmMsg"
+		input-channel="cmt.releaseClm" auto-startup="true" output-channel="cmt.endWrkflwChnl"
+		ref="cmt.manualclaim.processing" method="sendReleaseClmMsg">
+	</int:service-activator>
+
+	<int:service-activator id="cmt.updateClmStatusUnlckICN"
+		input-channel="cmt.updateClmStsUnlckICN" output-channel="cmt.endWrkflwChnl"
+		auto-startup="true" ref="cmt.manualclaim.processing" method="onHoldDeleteIcnLck">
+	</int:service-activator>
+
+	<int:service-activator id="cmt.endFlow"
+		input-channel="cmt.endWrkflwChnl" auto-startup="true"
+		ref="cmt.manualclaim.processing" method="endFlow">
+	</int:service-activator>
+
+	<!-- define chain -->
+	<int:chain input-channel="cmt.retryinboundClmMsg" id="cmt.mesgRetryChain"
+		output-channel="cmt.inboundClmMsg">
+		<int:splitter id="clmMsgRsSpltr" />
+	</int:chain>
+
+
+
+</beans>

@@ -1,0 +1,23 @@
+package com.optum.comet.mctmcf.util;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+public class CommonUtil {
+
+    public static String rpad(String str, int finalLength) {
+        
+        String s = str == null ? "" : str; 
+        StringBuilder builder = new StringBuilder(s);
+        for (int i = finalLength - s.length(); i > 0; i--) {
+            builder.append(" ");
+        }
+        
+        return builder.toString();
+    }
+    
+    public static boolean validateToken (String data, String regex) {
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(data);
+        return m.matches();
+    }
+
+}

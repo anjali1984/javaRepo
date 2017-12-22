@@ -1,0 +1,31 @@
+package com.optum.comet.mctmcf.generated.vol04042017;
+
+public class CqrcsqReturnDt extends com.optum.comet.mctmcf.generator.predefbeans.Definition implements java.io.Serializable {
+
+    public CqrcsqReturnDt() {
+    }
+
+    private static final long serialVersionUID = 1L;
+    private String cqrcsuRetDtYyyy;
+    private String cqrcsuExpDtMm;
+    private String cqrcsuExpDtDd;
+
+    public void setCqrcsuRetDtYyyy(String cqrcsuRetDtYyyy) { 
+        this.cqrcsuRetDtYyyy = cqrcsuRetDtYyyy;
+    }
+    public String getCqrcsuRetDtYyyy() { 
+        return this.cqrcsuRetDtYyyy;
+    }
+    public void setCqrcsuExpDtMm(String cqrcsuExpDtMm) { 
+        this.cqrcsuExpDtMm = cqrcsuExpDtMm;
+    }
+    public String getCqrcsuExpDtMm() { 
+        return this.cqrcsuExpDtMm;
+    }
+    public void setCqrcsuExpDtDd(String cqrcsuExpDtDd) { 
+        this.cqrcsuExpDtDd = cqrcsuExpDtDd;
+    }
+    public String getCqrcsuExpDtDd() { 
+        return this.cqrcsuExpDtDd;
+    }
+}

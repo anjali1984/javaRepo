@@ -1,0 +1,63 @@
+package com.optum.comet.mctmcf.converter.rowmappers;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import org.springframework.jdbc.core.RowMapper;
+
+import com.optum.comet.mctmcf.constants.CometConstants;
+import com.optum.comet.mctmcf.vo.InboundClaimMessage;
+
+public class InboundClaimMessageRowMapper implements RowMapper<InboundClaimMessage> {
+
+	public InboundClaimMessage mapRow(ResultSet rs, int numRows) throws SQLException {
+
+		InboundClaimMessage icm = new InboundClaimMessage();
+
+		if (rs != null) {
+
+			long lid = rs.getLong("LID");
+
+			//System.out.println("Inside result set:" + numRows);
+			//System.out.println("Inside result set:" + lid);
+			long fldCnt = rs.getLong("FLD_CNT");
+			String queue = rs.getString("QUE");
+			String icn = rs.getString("ICN");
+			String ldt = rs.getString("LDT");
+			String msg = rs.getString("MSG");
+			String orgid = rs.getString("ORGID");
+			String currSfx = rs.getString("CUR_SFX");
+			String totSfx = rs.getString("TOT_SFX");
+			String pndCd = rs.getString("PND_CD");
+			String icoTyp = rs.getString("CLM_ICO_TYP");
+			String altLid = rs.getString("LID_ALT");
+			long retryCnt = rs.getLong("RTRY_CNT");
+
+			icm.setLoadId(lid);
+			icm.setCurrSfx(Integer.valueOf(currSfx));
+			//icm.setLoadClaimSts(LOAD_CLAIM_STATUS.NEW); // change WAITING to NEW here
+														
+			icm.setQueue(queue);
+			icm.setIcn(icn);
+			icm.setMsg(msg);
+			icm.setPendCode(pndCd);
+			icm.setTotalSfx(Integer.valueOf(totSfx));
+			
+			icm.setOrgId(orgid);
+			icm.setLoadDate(ldt);
+			icm.setFailedCnt((int) fldCnt);
+			icm.setRetryCnt(retryCnt);
+			icm.setCorrId(altLid.concat(CometConstants.RETRY_MARKER).concat(String.valueOf(retryCnt)));
+			icm.setIcoType(icoTyp);
+			icm.setOrgIdClaimIcoTypeMCTKEY(
+					icm.getOrgId().concat(",").concat(icm.getIcoType() == null 
+					? "" : icm.getIcoType()));
+			icm.setPickedUpByBatch(true);
+			icm.setNoRowsAvailableInPoller(false);
+		} else {
+			icm.setNoRowsAvailableInPoller(true);
+		}
+		return icm;
+	}
+
+}

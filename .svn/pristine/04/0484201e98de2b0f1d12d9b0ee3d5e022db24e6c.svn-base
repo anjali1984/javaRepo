@@ -1,0 +1,61 @@
+package com.optum.comet.mctmcf.services;
+
+import com.optum.diff.common.util.logging.LoggingServiceInterface;
+
+/**
+ * Abstract service definition
+ * 
+ * @author 142037
+ * 
+ */
+public  abstract class CometBaseService implements ICometService {
+	/**
+	 * This method is used to configure the Logger
+	 * 
+	 * @throws Exception
+	 */
+	public void init() throws Exception {
+		/*if (this.description == null || this.description.trim().length() == 0)
+			throw new GenericRuntimeException("Service description is null.");
+		logger = new LoggingServiceForLog4j(this.getClass(),
+				this.loggingPropsPath, true);
+		logger.init();*/
+	}
+
+	/**
+	 * This method is used to access the Logger object
+	 */
+	public LoggingServiceInterface getLogger() {
+		return this.logger;
+	}
+	
+	/**
+	 * This method is used to access the Logger object
+	 */
+	public void setLogger(LoggingServiceInterface logger) {
+		this.logger = logger;
+	}
+
+	/**
+	 * This method is used to provide description
+	 * 
+	 * @param descriptionarg
+	 */
+	public void setDescription(String descriptionarg) {
+		this.description = descriptionarg;
+	}
+
+	/**
+	 * This method is used to get the path of Log Configuration file
+	 */
+	public String getDescription() {
+		return this.description;
+	}
+	
+	protected LoggingServiceInterface logger;
+
+	//private String loggingPropsPath;
+
+	private String description;
+	
+}

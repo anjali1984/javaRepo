@@ -1,0 +1,138 @@
+package com.optum.comet.mctmcf.daos.dbos;
+
+public class ItemFlatStage extends CometBaseDBO {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6265992769851193779L;
+	private String cicn;
+	private String iid;
+	private String corg;
+	private String cpnd;
+	private String camt;
+	private String cmkt;
+	private String provid;
+	private String cpay;
+	private String ceng;
+	private String cpol;
+	private String curstat;
+	private String curoper;
+	
+	private String multisfxInd;
+	private String clmSfxUpdtMsgInd;
+	private String clmStsUpdtInd;
+	
+	private String evalWorkBasketFlag;
+	private String evalPriorityFlag;
+	private String evalPointFlag;
+	
+	public String getCicn() {
+		return cicn;
+	}
+	public void setCicn(String cicn) {
+		this.cicn = cicn;
+	}
+	public String getIid() {
+		return iid;
+	}
+	public void setIid(String iid) {
+		this.iid = iid;
+	}
+	public String getCorg() {
+		return corg;
+	}
+	public void setCorg(String corg) {
+		this.corg = corg;
+	}
+	public String getCpnd() {
+		return cpnd;
+	}
+	public void setCpnd(String cpnd) {
+		this.cpnd = cpnd;
+	}
+	public String getCamt() {
+		return camt;
+	}
+	public void setCamt(String camt) {
+		this.camt = camt;
+	}
+	public String getCmkt() {
+		return cmkt;
+	}
+	public void setCmkt(String cmkt) {
+		this.cmkt = cmkt;
+	}
+	public String getProvid() {
+		return provid;
+	}
+	public void setProvid(String provid) {
+		this.provid = provid;
+	}
+	public String getCpay() {
+		return cpay;
+	}
+	public void setCpay(String cpay) {
+		this.cpay = cpay;
+	}
+	public String getCeng() {
+		return ceng;
+	}
+	public void setCeng(String ceng) {
+		this.ceng = ceng;
+	}
+	public String getCpol() {
+		return cpol;
+	}
+	public void setCpol(String cpol) {
+		this.cpol = cpol;
+	}
+	public String getCurstat() {
+		return curstat;
+	}
+	public void setCurstat(String curstat) {
+		this.curstat = curstat;
+	}
+	public String getCuroper() {
+		return curoper;
+	}
+	public void setCuroper(String curoper) {
+		this.curoper = curoper;
+	}
+	public String getMultisfxInd() {
+		return multisfxInd;
+	}
+	public void setMultisfxInd(String multisfxInd) {
+		this.multisfxInd = multisfxInd;
+	}
+	public String getClmSfxUpdtMsgInd() {
+		return clmSfxUpdtMsgInd;
+	}
+	public void setClmSfxUpdtMsgInd(String clmSfxUpdtMsgInd) {
+		this.clmSfxUpdtMsgInd = clmSfxUpdtMsgInd;
+	}
+	public String getClmStsUpdtInd() {
+		return clmStsUpdtInd;
+	}
+	public void setClmStsUpdtInd(String clmStsUpdtInd) {
+		this.clmStsUpdtInd = clmStsUpdtInd;
+	}
+	public String getEvalWorkBasketFlag() {
+		return evalWorkBasketFlag;
+	}
+	public void setEvalWorkBasketFlag(String evalWorkBasketFlag) {
+		this.evalWorkBasketFlag = evalWorkBasketFlag;
+	}
+	public String getEvalPriorityFlag() {
+		return evalPriorityFlag;
+	}
+	public void setEvalPriorityFlag(String evalPriorityFlag) {
+		this.evalPriorityFlag = evalPriorityFlag;
+	}
+	public String getEvalPointFlag() {
+		return evalPointFlag;
+	}
+	public void setEvalPointFlag(String evalPointFlag) {
+		this.evalPointFlag = evalPointFlag;
+	}
+}

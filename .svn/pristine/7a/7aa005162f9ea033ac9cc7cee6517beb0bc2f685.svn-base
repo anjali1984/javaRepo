@@ -1,0 +1,85 @@
+package com.optum.comet.mctmcf.constants;
+
+public interface CometConstants {
+
+	/**
+	 * This enum can used to fill up the actor value for the application vos
+	 * 
+	 * @author 142037
+	 */
+	enum ACTORS {
+		Comet("MCTMCF"), RULES("EXTERNAL_SERVICE"), SERVICE("INTERNAL_SERVICE");
+
+		private String description;
+
+		private ACTORS(String description) {
+			this.description = description;
+		}
+
+		public String getDescription() {
+			return this.description;
+		}
+
+		public static ACTORS fromValue(String value) throws IllegalArgumentException {
+			if (value == null || value.trim().length() == 0)
+				throw new IllegalArgumentException("Invalid paramater");
+			ACTORS retVal = null;
+			for (ACTORS actor : ACTORS.values()) {
+				if (value.equals(actor.getDescription())) {
+					retVal = actor;
+					break;
+				}
+			}
+			return retVal;
+		}
+	}
+	
+	
+	
+	// Message Loading Status
+	public enum LoadStatus {
+		NEW, // = New Message not processed
+		WIP, // = Message is under processing
+		ERROR, // = Can't process the message
+		ALREADY_RESOLVED, // = Can't Process as already resolved
+		ICN_NOT_FOUND, // = Status update received for a claim which not exists
+		COMPLETE, // = Processing Complete
+		DISCARDED, // Message is ignored or discarded
+		ICN_NT_FND_RPSTD, // When ICN_NOT_FOUND messages will be reposted
+		ICNSFX_NOT_FOUND, // Status update received for a claim suffix which not
+							// exists
+		ICNSFX_NT_FND_RPSTD // Status update received for a claim suffix which
+							// not exists and system repost the message to
+							// corresponding queue
+	};
+
+	// Claim Message Type
+	public enum ClaimMessageType {
+		RTF, // MCF message
+		UPDT, // StatusUpdate message
+		OTHR // OTHER Message
+	}
+
+	// Other constants
+	String SYSTEM_USER 				= "Comet";
+	String MCT_OPEN_CLM_COUNTS 		= "MCT_OPENCLM_COUNTS";
+	String MCTCONFIG_MAPKEY 		= "cmt-mctmap";
+	String ITM_REC_PARAM_MAP_KEY 	= "ITEM";
+	String RELEASE_MSG 				= "RELEASE_MSG";
+	String ANY_CLM_FRM_TYP			= ",*";
+	String DEFAULT_MCT_KEY			= "DEFAULT,*";
+	String NULL_CUR_STAT			= "Null Current Status Exception";
+ 
+    String NEW_REC_IND = "NEW";
+    String UPDATE_CLAIM_IND = "UPDATE";
+    String CLM_RELOCATED_STATUS = "RRLOC";
+	String RETRY_MARKER = "-retry";
+	String CRE_OPER = "MCF";
+
+	String BLANK_VALUE	= ""; 
+	String MANUALMSG ="MANUAL";
+	String STATUSMSG ="STATUS";
+	int MANUALMSGlENGTH = 1043;
+	String BLANK="";
+	
+}

@@ -1,0 +1,24 @@
+package com.optum.comet.mctmcf.exception;
+
+import com.optum.comet.mctmcf.exception.vo.CometExceptionBean;
+
+
+public class ICNNotFoundException extends CometException {
+    private static final long serialVersionUID = 1996469330920496059L;
+
+    public ICNNotFoundException() {
+        super();
+    }
+
+    public ICNNotFoundException(CometExceptionBean exceptionVO, String messString) {
+        super(exceptionVO, messString);
+    }
+
+    public ICNNotFoundException(CometExceptionBean exceptionVO) {
+        super(exceptionVO);
+    }
+
+    public ICNNotFoundException(String message) {
+        super(message);
+    }
+}

@@ -1,0 +1,27 @@
+package com.optum.comet.mctmcf.generator;
+
+import org.apache.tools.ant.BuildException;
+
+public interface ICopyBookBeanGenerator {
+	
+	String ATT_NODE_LEVEL = "level";
+	String ATT_NODE_NAME = "name";
+	String ATT_NODE_POS = "position";
+	String ATT_NODE_STORAGE_LENGTH = "storage-length";
+	String ATT_NODE_TYP_NUMERIC = "numeric";
+	String ATT_NODE_REDEFINES = "redefines";
+	String ATT_NODE_REDEFINED = "redefined";
+	String ATT_NODE_SIGNED = "signed";
+	String ATT_NODE_PIC = "picture";
+	String ATT_NODE_OCCURS = "occurs";
+	String NODE_TYP_FILLER = "FILLER";
+	String NODE_TYP_COND = "condition";
+	String NODE_TYP_COND_VAL = "value";
+	
+	void setCopyBookXmlPath(String copyBookXmlPath);
+	void setSrcFolder(String srcFolder);
+	void setBeanPkg(String beanPkg);
+	void setParentBeanName(String beanName);
+	void generate (String copyBookXmlPath) throws Exception;
+	void execute () throws BuildException;
+}

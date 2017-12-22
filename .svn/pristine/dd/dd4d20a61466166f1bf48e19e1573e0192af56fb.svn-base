@@ -1,0 +1,31 @@
+package com.optum.comet.mctmcf.generated.vol04042017;
+
+public class CqrcmNonselErrCode extends com.optum.comet.mctmcf.generator.predefbeans.Definition implements java.io.Serializable {
+
+    public CqrcmNonselErrCode() {
+    }
+
+    private static final long serialVersionUID = 1L;
+    private String cqrcmNonselErrLit;
+    private String cqrcmNonselErrCd;
+
+    public void setCqrcmNonselErrLit(String cqrcmNonselErrLit) { 
+        this.cqrcmNonselErrLit = cqrcmNonselErrLit;
+    }
+    public String getCqrcmNonselErrLit() { 
+        return this.cqrcmNonselErrLit;
+    }
+    public void setCqrcmNonselErrCd(String cqrcmNonselErrCd) { 
+        this.cqrcmNonselErrCd = cqrcmNonselErrCd;
+    }
+    public String getCqrcmNonselErrCd() { 
+        return this.cqrcmNonselErrCd;
+    }
+	@Override
+	public String toString() {
+		return cqrcmNonselErrLit + cqrcmNonselErrCd;
+				
+	}
+    
+    
+}

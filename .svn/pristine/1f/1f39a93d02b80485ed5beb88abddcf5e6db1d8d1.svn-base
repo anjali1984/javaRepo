@@ -1,0 +1,128 @@
+#application name
+AppName=cmt
+
+#logging properties
+cmt.log4jConfig=META-INF/com.optum.comet.mctmcf.log4j.xml
+cmtmcf.cat=cmt.mcfmsgs
+cmtgen.cat=cmt
+
+#DB details
+db.connection.driver_class=oracle.jdbc.driver.OracleDriver
+db.connection.url=jdbc:oracle:thin:@dbsrd2262:1521/cmp0dv04svc.uhc.com
+db.connection.username=pega_data
+db.connection.password=pegaadmin123
+db.connection.initialSize=1
+db.connection.maxTotal=200
+db.connection.maxIdle=180
+db.connection.minIdle=20
+db.connection.minEvictableIdleTimeMillis=600000
+db.connection.timeBetweenEvictionRunsMillis=1800000
+db.connection.numTestsPerEvictionRun=20
+
+db.mcf.msg.poller.fixed-delay=240
+db.mcf.msg.poller.time-unit=SECONDS
+db.mcf.msg.poller.max-messages-per-poll=100
+
+#EH - cache
+cache.manager.temp.dir=/cmt-ecache
+
+#Date Format
+cmt.DateFormat=yyyy-MM-dd HH.mm.ss,yyyy-MM-dd,yyyy/MM/dd HH:mm:ss,yyyyMMdd,MM-dd-yyyy,MM/dd/yyyy,yyddd
+
+#MQ details - 
+#$interim queue manager1 details 
+wmq.channel.qmf1=COMETCLNT
+wmq.hostName.qmf1=wmqlt0006
+wmq.port.qmf1=1965
+wmq.queueManager.qmf1=WMQRA014
+wmq.transportType.qmf1=1
+wmq.session.cache.size.qmf1=50
+
+
+#$interim queue manager2 details
+wmq.channel.qmf2=COMETCLNT
+wmq.hostName.qmf2=wmqlt0006
+wmq.port.qmf2=1965
+wmq.queueManager.qmf2=WMQRA014
+wmq.transportType.qmf2=1
+wmq.session.cache.size.qmf2=50
+
+#$manual/status update queue manager1 details
+wmq.channel.topsqmf1=COMETCLNT
+wmq.hostName.topsqmf1=wmqlt0006
+wmq.port.topsqmf1=1965
+wmq.queueManager.topsqmf1=WMQRA014
+wmq.transportType.topsqmf1=1
+wmq.session.cache.size.topsqmf1=50
+
+
+#$manual/status update queue manager1 details
+wmq.channel.topsqmf2=COMETCLNT
+wmq.hostName.topsqmf2=wmqlt0006
+wmq.port.topsqmf2=1965
+wmq.queueManager.topsqmf2=WMQRA014
+wmq.transportType.topsqmf2=1
+wmq.session.cache.size.topsqmf2=50
+
+
+#queue details
+wmq.clm.loc.manualQ.name=A5141COMET.MANUAL_CLAIMQ_MCF
+wmq.clm.loc.stsUpdt.name=A5141COMET.CLAIM_STATUS_UPDQ_MCF
+wmq.clm.loc.interim.name=A5141COMET.INTERIM_CLAIMQ
+wmq.manual.msgTyp=MANUAL
+wmq.stsupdt.msgTyp=STATUS
+
+#$manual queue1/queue2  Inbound channel adapters details
+wmq.ica.manualQueue1In.fixed.delay=50
+wmq.ica.manualQueue1In.max.messages.per.poll=1000
+wmq.ica.manualQueue1In.concurent.threads=50
+wmq.ica.manualQueue1In.concurent.threads.max=100
+
+wmq.ica.manualQueue2In.fixed.delay=50
+wmq.ica.manualQueue2In.max.messages.per.poll=1000
+wmq.ica.manualQueue2In.concurent.threads=50
+wmq.ica.manualQueue2In.concurent.threads.max=100
+
+
+#$status update queue1/queue2  Inbound channel adapters details
+wmq.ica.cmt.stsupdtQueue1In.fixed.delay=500
+wmq.ica.cmt.stsupdtQueue2In.fixed.delay=500
+
+#$delayer
+delayer.cmt.multiSfxDelayer.default.delay=3000
+
+
+#JMS event toggler
+#properties declared in this section would affect 
+#both the templates and the JMS session that the template carries
+#DELIVERY MODE - 1 to make the message persisting, has -ve performance impact
+#			   - 2 to make the message non persisting
+cmt.msg.del.mod=1
+#max retry for the sending a message
+#Currently there is no delay in retrying
+cmt.send.maxRetryTimes=4
+#indicates if the JMS queue connection is to participate in a global transaction is found
+cmt.jms.session.transacted=false
+#if the transaction mode is set to false then the ackwldgmnt mode can be 
+#		1 - AUTO_ACKWLDGMNT   
+#		2 - CLIENT_ACKWLDGMNT
+#		3 - DUPS_ACKWLDGMNT_OK
+# else if transacted then the mode has to be 0(SESSION_ACKWLDGMNT)
+#		CLIENT_ACKWLDGMNT has -ve performance impact
+##
+cmt.jms.session.ackwldgmnt=1
+
+
+
+#Spring Boot Actuator :Customizing Endpoints
+endpoints.beans.id=springbeans 
+endpoints.beans.sensitive=true 
+endpoints.shutdown.enabled=true 
+endpoints.enabled=true 
+endpoints.info.enabled=true 
+endpoints.metrics.id=metrics 
+endpoints.metrics.sensitive=true 
+endpoints.metrics.enabled=true 
+endpoints.actuator.enabled=true 
+endpoints.logfile.enabled=true
+

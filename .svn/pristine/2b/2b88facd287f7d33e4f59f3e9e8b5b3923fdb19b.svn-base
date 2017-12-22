@@ -1,0 +1,10 @@
+package com.optum.comet.mctmcf.services;
+
+import com.optum.diff.common.service.IBPMBaseService;
+import com.optum.diff.common.util.logging.LoggingServiceInterface;
+
+public interface ICometService extends IBPMBaseService {
+	
+	public LoggingServiceInterface getLogger();
+	public String getDescription();
+}

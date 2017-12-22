@@ -1,0 +1,128 @@
+package com.optum.comet.mctmcf.parser.impl;
+
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.jdom2.Element;
+
+
+public class CobolCopyBookSpecReaderUtil {
+
+	public static final String ATT_NODE_LEVEL = "level";
+	public static final String ATT_NODE_NAME = "name";
+	public static final String ATT_NODE_POS = "position";
+	public static final String ATT_NODE_STORAGE_LENGTH = "storage-length";
+	public static final String ATT_NODE_TYP_NUMERIC = "numeric";
+	public static final String ATT_NODE_REDEFINES = "redefines";
+	public static final String ATT_NODE_REDEFINED = "redefined";
+	public static final String ATT_NODE_SIGNED = "signed";
+	public static final String ATT_NODE_PIC = "picture";
+	public static final String ATT_NODE_OCCURS = "occurs";
+	public static final String NODE_TYP_FILLER = "FILLER";
+	public static final String NODE_TYP_COND = "condition";
+	public static final String NODE_TYP_COND_VAL = "value";
+
+	public static String toJavaNodeName (String cobolNodeName, boolean varOrClassName) { // CQRCM-FILE-FLN-ALT-KEY to cqrcmFileFlnAltKey
+
+		String javaName = "";
+		String restSyllables = null;
+
+		if (varOrClassName) { // java variable name
+			if (cobolNodeName.indexOf("-") != -1) {
+				// get first syllable
+				javaName = cobolNodeName.substring(0, cobolNodeName.indexOf("-")).toLowerCase();
+				restSyllables = cobolNodeName.substring(cobolNodeName.indexOf("-") + 1);
+			} else {
+				restSyllables = cobolNodeName;
+			}
+
+		} else { // java Class name
+			restSyllables = cobolNodeName;
+		}
+		String[] tokens = restSyllables.split("-");
+		for (String token : tokens) {
+			javaName += token.substring(0, 1).toUpperCase();
+			javaName += token.substring(1).toLowerCase();
+		}
+		/*System.out.println("CobolCopyBookSpecReaderUtil.toJavaNodeName(): " + cobolNodeName 
+										+ " Converted to Java" + (varOrClassName ? "VarName = " : "ClassName = ")
+										+ javaName);*/
+		return javaName;
+	}
+
+	public static boolean hasChildren (Element currNode) {
+
+		List<Element> children = currNode.getChildren();
+		return children != null && children.size() > 0;
+	}
+
+	public static boolean isChoiceNode (Element currNode) {
+
+		boolean isChoiceNode = false;
+		List<Element> children = currNode.getChildren();
+		for (Element element : children) {
+			isChoiceNode = NODE_TYP_COND.equalsIgnoreCase(element.getName());
+			if (!isChoiceNode) break;
+		}
+
+		return isChoiceNode;
+	}
+
+	public static boolean isNumeric (Element currNode) {
+		return currNode.getAttributeValue(ATT_NODE_TYP_NUMERIC) != null 
+				&& Boolean.valueOf(currNode.getAttributeValue(ATT_NODE_TYP_NUMERIC));
+	}
+
+	public static boolean isDecimal (Element currNode) {
+		return currNode.getAttributeValue(ATT_NODE_TYP_NUMERIC) != null 
+				&& Boolean.valueOf(currNode.getAttributeValue(ATT_NODE_TYP_NUMERIC))
+				&& (currNode.getAttributeValue(ATT_NODE_PIC).indexOf("V") != -1 
+				|| currNode.getAttributeValue(ATT_NODE_PIC).indexOf(".") != -1);
+	}
+
+	public static boolean isValidNumber(String data) {
+
+		return CobolCopyBookSpecReaderUtil.validateToken (data, "^([0-9]*|\\d*\\.\\d{1}?\\d*)$");
+	}
+
+	public static String formatDecimal (Element currNode, String data) {
+
+		String formattedData = "";
+		String picture = currNode.getAttributeValue(ATT_NODE_PIC);
+		int placesAfterDecimal = picture.indexOf("V") != -1 
+				? picture.substring(picture.indexOf("V") + 1).length()
+						: picture.indexOf(".") != -1 
+						? picture.substring(picture.indexOf(".") + 1).length() : 0; 
+						if(data.length() >= placesAfterDecimal)
+							formattedData = data.substring(0, data.length() - placesAfterDecimal) 
+							+ (placesAfterDecimal > 0 ? "." + data.substring(data.length() - placesAfterDecimal) : "");
+						return formattedData;
+	}
+
+	public static boolean validateToken (String data, String regex) {
+		Pattern p = Pattern.compile(regex);
+		Matcher m = p.matcher(data);
+
+		return m.matches();
+	}
+
+	public static Element findRedefinition (Element parentNode, Element currNode) throws Exception {
+
+		Element redefinedNode = null;
+		String currNodeName = currNode.getAttributeValue(ATT_NODE_NAME);
+
+		List<Element> children = parentNode.getChildren();
+		for (Element element : children) {
+
+			String redefinedNodeName = null;
+			if ((redefinedNodeName = element.getAttributeValue(ATT_NODE_REDEFINES)) != null
+					&& currNodeName.equalsIgnoreCase(redefinedNodeName)) {
+				redefinedNode =  element;
+				break;
+			}
+		}
+
+		return redefinedNode;
+	}
+}

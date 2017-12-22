@@ -1,0 +1,756 @@
+package com.optum.comet.mctmcf.daos.dbos;
+
+import java.util.Date;
+
+import com.optum.comet.mctmcf.generated.vol04042017.CqrcmEmpId;
+import com.optum.comet.mctmcf.generated.vol04042017.CqrcmFln;
+import com.optum.comet.mctmcf.generated.vol04042017.CqrcmV2PrvTinSufx;
+import com.optum.comet.mctmcf.generated.vol04042017.CqrcmWorkflowId;
+import com.optum.comet.mctmcf.generated.vol04042017.CqrcsqReturnDt;
+import com.optum.comet.mctmcf.generator.predefbeans.ChoiceRestriction;
+
+public class ItemFlat extends CometBaseDBO {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8095622545809414318L;
+	private String I_IID            ;
+	private String IID              ;
+	private String CURSTAT          ;
+	private String CURPT            ;
+	private String OPEN_OR_RESOLVED ;
+	private int TOTPRIOR            ;
+	private String CPLE             ;
+	private String CPRV             ;
+	private String CPWB             ;
+	private String CRPT             ;
+	private String CSUS             ;
+	private Date RESOL_DATE         ;
+	private String ERRLIST          ;
+	private String CLNGTH           ;
+	private String CPAY             ;
+	private CqrcmFln CFLN             ;
+	private String CFLN_TYP         ;
+	private CqrcmEmpId EMPID            ;
+	private String EMPID_REC_TYP    ;
+	private String CICN             ;
+	private String CICN_REC_TYP     ;
+	private String CSFX             ;
+	private String CDT_STMP1        ;
+	private String CTM_STMP1        ;
+	private String CENG             ;
+	private String CNUM_TYP1        ;
+	private String CNUM_TYP2        ;
+	private String CNUM_TYP3        ;
+	private String CFRM_TYP         ;
+	private String CSND_TO          ;
+	private String CSND_CNT         ;
+	private String CNSL_ERR         ;
+	private String CNSL_ERR_FILL_IN ;
+	private CqrcmWorkflowId CRSL_CLM_TYP     ;
+	private String CPND             ;
+	private String CCMMTS           ;
+	private ChoiceRestriction CSQ_STS          ;
+	private ChoiceRestriction CSQ_RTN_SYS      ;
+	private CqrcsqReturnDt CSQ_RTN_DT       ;
+	private CqrcmV2PrvTinSufx TINSFX           ;
+	private String CV2_NEMP_ID      ;
+	private String CV2_NEMP_POL     ;
+	private String CV2_NPAT_FNM     ;
+	private String CV2_NPAT_REL     ;
+	private String CV2_NENG         ;
+	private String CV2_NOFC         ;
+	private String CV2_NPLTFRM      ;
+	private String CPTP             ;
+	private String CV2_TRG_RS_CD    ;
+	private String CV2_ALT_ID       ;
+	private String CV2_MGR_OFC      ;
+	private String CV2_SYS_IND      ;
+	private String CORG             ;
+	private String CTYP             ;
+	private String CV2_SQ_DSG       ;
+	private String CV2_SFX_AMT      ;
+	private String CAMT             ;
+	private String CV2_POS          ;
+	private String CV2_MSVC_CD      ;
+	private String CV2_BLL_TYP      ;
+	private String CV2_FLN_DCC      ;
+	private String CRDT             ;
+	private String CEDT             ;
+	private String CSDT             ;
+	private String RELCD            ;
+	private String CV2_PAT_DOB      ;
+	private String PATNM            ;
+	private String CV2_PAT_M        ;
+	private String CV2_PAT_LNM      ;
+	private String CV2_PAT_ADR1     ;
+	private String CV2_PAT_ADR2     ;
+	private String CV2_PAT_CTY      ;
+	private String CV2_PAT_STE      ;
+	private String CV2_PAT_ZIP      ;
+	private String CV2_INS_DOB      ;
+	private String CV2_INS_FNM      ;
+	private String CV2_INS_M        ;
+	private String CV2_INS_LNM      ;
+	private String CV2_INS_ADR1     ;
+	private String CV2_INS_ADR2     ;
+	private String CV2_INS_CTY      ;
+	private String CV2_INS_STE      ;
+	private String CV2_INS_ZIP      ;
+	private String CV2_INS_ID       ;
+	private String CV2_POL_NO       ;
+	private String CPOL             ;
+	private String CMKT             ;
+	private String CPRD             ;
+	private String CV2_PRV_SSN      ;
+	private String PROVID           ;
+	private String CV2_PRV_DGR      ;
+	private String PROVNAME         ;
+	private String CV2_PRV_IND_FNM  ;
+	private String CV2_PRV_IND_LNM  ;
+	private String CV2_PRV_IND_INIT ;
+	private String CV2_PRV_ADR1     ;
+	private String CV2_PRV_ADR2     ;
+	private String CV2_PRV_CTY      ;
+	private String CV2_PRV_STE      ;
+	private String CV2_PRV_ZIP      ;
+	private String CV2_EPD_MTCH_CD  ;
+	private String CV2_CLM_CMMTS    ;
+	private String CPOLRSTRCTCD     ;
+	private String CRSKDT           ;
+	private String CUROPER          ;
+	public String getI_IID() {
+		return I_IID;
+	}
+	public void setI_IID(String i_IID) {
+		I_IID = i_IID;
+	}
+	public String getIID() {
+		return IID;
+	}
+	public void setIID(String iID) {
+		IID = iID;
+	}
+	public String getCURSTAT() {
+		return CURSTAT;
+	}
+	public void setCURSTAT(String cURSTAT) {
+		CURSTAT = cURSTAT;
+	}
+	public String getCURPT() {
+		return CURPT;
+	}
+	public void setCURPT(String cURPT) {
+		CURPT = cURPT;
+	}
+	public String getOPEN_OR_RESOLVED() {
+		return OPEN_OR_RESOLVED;
+	}
+	public void setOPEN_OR_RESOLVED(String oPEN_OR_RESOLVED) {
+		OPEN_OR_RESOLVED = oPEN_OR_RESOLVED;
+	}
+	public int getTOTPRIOR() {
+		return TOTPRIOR;
+	}
+	public void setTOTPRIOR(int tOTPRIOR) {
+		TOTPRIOR = tOTPRIOR;
+	}
+	public String getCPLE() {
+		return CPLE;
+	}
+	public void setCPLE(String cPLE) {
+		CPLE = cPLE;
+	}
+	public String getCPRV() {
+		return CPRV;
+	}
+	public void setCPRV(String cPRV) {
+		CPRV = cPRV;
+	}
+	public String getCPWB() {
+		return CPWB;
+	}
+	public void setCPWB(String cPWB) {
+		CPWB = cPWB;
+	}
+	public String getCRPT() {
+		return CRPT;
+	}
+	public void setCRPT(String cRPT) {
+		CRPT = cRPT;
+	}
+	public String getCSUS() {
+		return CSUS;
+	}
+	public void setCSUS(String cSUS) {
+		CSUS = cSUS;
+	}
+	public Date getRESOL_DATE() {
+		return RESOL_DATE;
+	}
+	public void setRESOL_DATE(Date rESOL_DATE) {
+		RESOL_DATE = rESOL_DATE;
+	}
+	public String getERRLIST() {
+		return ERRLIST;
+	}
+	public void setERRLIST(String eRRLIST) {
+		ERRLIST = eRRLIST;
+	}
+	public String getCLNGTH() {
+		return CLNGTH;
+	}
+	public void setCLNGTH(String cLNGTH) {
+		CLNGTH = cLNGTH;
+	}
+	public String getCPAY() {
+		return CPAY;
+	}
+	public void setCPAY(String cPAY) {
+		CPAY = cPAY;
+	}
+	public CqrcmFln getCFLN() {
+		return CFLN;
+	}
+	public void setCFLN(CqrcmFln cqrcmFln) {
+		CFLN = cqrcmFln;
+	}
+	public String getCFLN_TYP() {
+		return CFLN_TYP;
+	}
+	public void setCFLN_TYP(String cFLN_TYP) {
+		CFLN_TYP = cFLN_TYP;
+	}
+	public CqrcmEmpId getEMPID() {
+		return EMPID;
+	}
+	public void setEMPID(CqrcmEmpId eMPID) {
+		EMPID = eMPID;
+	}
+	public String getEMPID_REC_TYP() {
+		return EMPID_REC_TYP;
+	}
+	public void setEMPID_REC_TYP(String eMPID_REC_TYP) {
+		EMPID_REC_TYP = eMPID_REC_TYP;
+	}
+	public String getCICN() {
+		return CICN;
+	}
+	public void setCICN(String cICN) {
+		CICN = cICN;
+	}
+	public String getCICN_REC_TYP() {
+		return CICN_REC_TYP;
+	}
+	public void setCICN_REC_TYP(String cICN_REC_TYP) {
+		CICN_REC_TYP = cICN_REC_TYP;
+	}
+	public String getCSFX() {
+		return CSFX;
+	}
+	public void setCSFX(String cSFX) {
+		CSFX = cSFX;
+	}
+	public String getCDT_STMP1() {
+		return CDT_STMP1;
+	}
+	public void setCDT_STMP1(String cDT_STMP1) {
+		CDT_STMP1 = cDT_STMP1;
+	}
+	public String getCTM_STMP1() {
+		return CTM_STMP1;
+	}
+	public void setCTM_STMP1(String cTM_STMP1) {
+		CTM_STMP1 = cTM_STMP1;
+	}
+	public String getCENG() {
+		return CENG;
+	}
+	public void setCENG(String cENG) {
+		CENG = cENG;
+	}
+	public String getCNUM_TYP1() {
+		return CNUM_TYP1;
+	}
+	public void setCNUM_TYP1(String cNUM_TYP1) {
+		CNUM_TYP1 = cNUM_TYP1;
+	}
+	public String getCNUM_TYP2() {
+		return CNUM_TYP2;
+	}
+	public void setCNUM_TYP2(String cNUM_TYP2) {
+		CNUM_TYP2 = cNUM_TYP2;
+	}
+	public String getCNUM_TYP3() {
+		return CNUM_TYP3;
+	}
+	public void setCNUM_TYP3(String cNUM_TYP3) {
+		CNUM_TYP3 = cNUM_TYP3;
+	}
+	public String getCFRM_TYP() {
+		return CFRM_TYP;
+	}
+	public void setCFRM_TYP(String cFRM_TYP) {
+		CFRM_TYP = cFRM_TYP;
+	}
+	public String getCSND_TO() {
+		return CSND_TO;
+	}
+	public void setCSND_TO(String cSND_TO) {
+		CSND_TO = cSND_TO;
+	}
+	public String getCSND_CNT() {
+		return CSND_CNT;
+	}
+	public void setCSND_CNT(String cSND_CNT) {
+		CSND_CNT = cSND_CNT;
+	}
+	public String getCNSL_ERR() {
+		return CNSL_ERR;
+	}
+	public void setCNSL_ERR(String cNSL_ERR) {
+		CNSL_ERR = cNSL_ERR;
+	}
+	public String getCNSL_ERR_FILL_IN() {
+		return CNSL_ERR_FILL_IN;
+	}
+	public void setCNSL_ERR_FILL_IN(String cNSL_ERR_FILL_IN) {
+		CNSL_ERR_FILL_IN = cNSL_ERR_FILL_IN;
+	}
+	public CqrcmWorkflowId getCRSL_CLM_TYP() {
+		return CRSL_CLM_TYP;
+	}
+	public void setCRSL_CLM_TYP(CqrcmWorkflowId cqrcmWorkflowId) {
+		CRSL_CLM_TYP = cqrcmWorkflowId;
+	}
+	public String getCPND() {
+		return CPND;
+	}
+	public void setCPND(String cPND) {
+		CPND = cPND;
+	}
+	public String getCCMMTS() {
+		return CCMMTS;
+	}
+	public void setCCMMTS(String cCMMTS) {
+		CCMMTS = cCMMTS;
+	}
+	public ChoiceRestriction getCSQ_STS() {
+		return CSQ_STS;
+	}
+	public void setCSQ_STS(ChoiceRestriction choiceRestriction) {
+		CSQ_STS = choiceRestriction;
+	}
+	public ChoiceRestriction getCSQ_RTN_SYS() {
+		return CSQ_RTN_SYS;
+	}
+	public void setCSQ_RTN_SYS(ChoiceRestriction choiceRestriction) {
+		CSQ_RTN_SYS = choiceRestriction;
+	}
+	public CqrcsqReturnDt getCSQ_RTN_DT() {
+		return CSQ_RTN_DT;
+	}
+	public void setCSQ_RTN_DT(CqrcsqReturnDt cqrcsqReturnDt) {
+		CSQ_RTN_DT = cqrcsqReturnDt;
+	}
+	public CqrcmV2PrvTinSufx getTINSFX() {
+		return TINSFX;
+	}
+	public void setTINSFX(CqrcmV2PrvTinSufx cqrcmV2PrvTinSufx) {
+		TINSFX = cqrcmV2PrvTinSufx;
+	}
+	public String getCV2_NEMP_ID() {
+		return CV2_NEMP_ID;
+	}
+	public void setCV2_NEMP_ID(String cV2_NEMP_ID) {
+		CV2_NEMP_ID = cV2_NEMP_ID;
+	}
+	public String getCV2_NEMP_POL() {
+		return CV2_NEMP_POL;
+	}
+	public void setCV2_NEMP_POL(String cV2_NEMP_POL) {
+		CV2_NEMP_POL = cV2_NEMP_POL;
+	}
+	public String getCV2_NPAT_FNM() {
+		return CV2_NPAT_FNM;
+	}
+	public void setCV2_NPAT_FNM(String cV2_NPAT_FNM) {
+		CV2_NPAT_FNM = cV2_NPAT_FNM;
+	}
+	public String getCV2_NPAT_REL() {
+		return CV2_NPAT_REL;
+	}
+	public void setCV2_NPAT_REL(String cV2_NPAT_REL) {
+		CV2_NPAT_REL = cV2_NPAT_REL;
+	}
+	public String getCV2_NENG() {
+		return CV2_NENG;
+	}
+	public void setCV2_NENG(String cV2_NENG) {
+		CV2_NENG = cV2_NENG;
+	}
+	public String getCV2_NOFC() {
+		return CV2_NOFC;
+	}
+	public void setCV2_NOFC(String cV2_NOFC) {
+		CV2_NOFC = cV2_NOFC;
+	}
+	public String getCV2_NPLTFRM() {
+		return CV2_NPLTFRM;
+	}
+	public void setCV2_NPLTFRM(String cV2_NPLTFRM) {
+		CV2_NPLTFRM = cV2_NPLTFRM;
+	}
+	public String getCPTP() {
+		return CPTP;
+	}
+	public void setCPTP(String cPTP) {
+		CPTP = cPTP;
+	}
+	public String getCV2_TRG_RS_CD() {
+		return CV2_TRG_RS_CD;
+	}
+	public void setCV2_TRG_RS_CD(String cV2_TRG_RS_CD) {
+		CV2_TRG_RS_CD = cV2_TRG_RS_CD;
+	}
+	public String getCV2_ALT_ID() {
+		return CV2_ALT_ID;
+	}
+	public void setCV2_ALT_ID(String cV2_ALT_ID) {
+		CV2_ALT_ID = cV2_ALT_ID;
+	}
+	public String getCV2_MGR_OFC() {
+		return CV2_MGR_OFC;
+	}
+	public void setCV2_MGR_OFC(String cV2_MGR_OFC) {
+		CV2_MGR_OFC = cV2_MGR_OFC;
+	}
+	public String getCV2_SYS_IND() {
+		return CV2_SYS_IND;
+	}
+	public void setCV2_SYS_IND(String cV2_SYS_IND) {
+		CV2_SYS_IND = cV2_SYS_IND;
+	}
+	public String getCORG() {
+		return CORG;
+	}
+	public void setCORG(String cORG) {
+		CORG = cORG;
+	}
+	public String getCTYP() {
+		return CTYP;
+	}
+	public void setCTYP(String cTYP) {
+		CTYP = cTYP;
+	}
+	public String getCV2_SQ_DSG() {
+		return CV2_SQ_DSG;
+	}
+	public void setCV2_SQ_DSG(String cV2_SQ_DSG) {
+		CV2_SQ_DSG = cV2_SQ_DSG;
+	}
+	public String getCV2_SFX_AMT() {
+		return CV2_SFX_AMT;
+	}
+	public void setCV2_SFX_AMT(String cV2_SFX_AMT) {
+		CV2_SFX_AMT = cV2_SFX_AMT;
+	}
+	public String getCAMT() {
+		return CAMT;
+	}
+	public void setCAMT(String cAMT) {
+		CAMT = cAMT;
+	}
+	public String getCV2_POS() {
+		return CV2_POS;
+	}
+	public void setCV2_POS(String cV2_POS) {
+		CV2_POS = cV2_POS;
+	}
+	public String getCV2_MSVC_CD() {
+		return CV2_MSVC_CD;
+	}
+	public void setCV2_MSVC_CD(String cV2_MSVC_CD) {
+		CV2_MSVC_CD = cV2_MSVC_CD;
+	}
+	public String getCV2_BLL_TYP() {
+		return CV2_BLL_TYP;
+	}
+	public void setCV2_BLL_TYP(String cV2_BLL_TYP) {
+		CV2_BLL_TYP = cV2_BLL_TYP;
+	}
+	public String getCV2_FLN_DCC() {
+		return CV2_FLN_DCC;
+	}
+	public void setCV2_FLN_DCC(String cV2_FLN_DCC) {
+		CV2_FLN_DCC = cV2_FLN_DCC;
+	}
+	public String getCRDT() {
+		return CRDT;
+	}
+	public void setCRDT(String cRDT) {
+		CRDT = cRDT;
+	}
+	public String getCEDT() {
+		return CEDT;
+	}
+	public void setCEDT(String cEDT) {
+		CEDT = cEDT;
+	}
+	public String getCSDT() {
+		return CSDT;
+	}
+	public void setCSDT(String cSDT) {
+		CSDT = cSDT;
+	}
+	public String getRELCD() {
+		return RELCD;
+	}
+	public void setRELCD(String rELCD) {
+		RELCD = rELCD;
+	}
+	public String getCV2_PAT_DOB() {
+		return CV2_PAT_DOB;
+	}
+	public void setCV2_PAT_DOB(String cV2_PAT_DOB) {
+		CV2_PAT_DOB = cV2_PAT_DOB;
+	}
+	public String getPATNM() {
+		return PATNM;
+	}
+	public void setPATNM(String pATNM) {
+		PATNM = pATNM;
+	}
+	public String getCV2_PAT_M() {
+		return CV2_PAT_M;
+	}
+	public void setCV2_PAT_M(String cV2_PAT_M) {
+		CV2_PAT_M = cV2_PAT_M;
+	}
+	public String getCV2_PAT_LNM() {
+		return CV2_PAT_LNM;
+	}
+	public void setCV2_PAT_LNM(String cV2_PAT_LNM) {
+		CV2_PAT_LNM = cV2_PAT_LNM;
+	}
+	public String getCV2_PAT_ADR1() {
+		return CV2_PAT_ADR1;
+	}
+	public void setCV2_PAT_ADR1(String cV2_PAT_ADR1) {
+		CV2_PAT_ADR1 = cV2_PAT_ADR1;
+	}
+	public String getCV2_PAT_ADR2() {
+		return CV2_PAT_ADR2;
+	}
+	public void setCV2_PAT_ADR2(String cV2_PAT_ADR2) {
+		CV2_PAT_ADR2 = cV2_PAT_ADR2;
+	}
+	public String getCV2_PAT_CTY() {
+		return CV2_PAT_CTY;
+	}
+	public void setCV2_PAT_CTY(String cV2_PAT_CTY) {
+		CV2_PAT_CTY = cV2_PAT_CTY;
+	}
+	public String getCV2_PAT_STE() {
+		return CV2_PAT_STE;
+	}
+	public void setCV2_PAT_STE(String cV2_PAT_STE) {
+		CV2_PAT_STE = cV2_PAT_STE;
+	}
+	public String getCV2_PAT_ZIP() {
+		return CV2_PAT_ZIP;
+	}
+	public void setCV2_PAT_ZIP(String cV2_PAT_ZIP) {
+		CV2_PAT_ZIP = cV2_PAT_ZIP;
+	}
+	public String getCV2_INS_DOB() {
+		return CV2_INS_DOB;
+	}
+	public void setCV2_INS_DOB(String cV2_INS_DOB) {
+		CV2_INS_DOB = cV2_INS_DOB;
+	}
+	public String getCV2_INS_FNM() {
+		return CV2_INS_FNM;
+	}
+	public void setCV2_INS_FNM(String cV2_INS_FNM) {
+		CV2_INS_FNM = cV2_INS_FNM;
+	}
+	public String getCV2_INS_M() {
+		return CV2_INS_M;
+	}
+	public void setCV2_INS_M(String cV2_INS_M) {
+		CV2_INS_M = cV2_INS_M;
+	}
+	public String getCV2_INS_LNM() {
+		return CV2_INS_LNM;
+	}
+	public void setCV2_INS_LNM(String cV2_INS_LNM) {
+		CV2_INS_LNM = cV2_INS_LNM;
+	}
+	public String getCV2_INS_ADR1() {
+		return CV2_INS_ADR1;
+	}
+	public void setCV2_INS_ADR1(String cV2_INS_ADR1) {
+		CV2_INS_ADR1 = cV2_INS_ADR1;
+	}
+	public String getCV2_INS_ADR2() {
+		return CV2_INS_ADR2;
+	}
+	public void setCV2_INS_ADR2(String cV2_INS_ADR2) {
+		CV2_INS_ADR2 = cV2_INS_ADR2;
+	}
+	public String getCV2_INS_CTY() {
+		return CV2_INS_CTY;
+	}
+	public void setCV2_INS_CTY(String cV2_INS_CTY) {
+		CV2_INS_CTY = cV2_INS_CTY;
+	}
+	public String getCV2_INS_STE() {
+		return CV2_INS_STE;
+	}
+	public void setCV2_INS_STE(String cV2_INS_STE) {
+		CV2_INS_STE = cV2_INS_STE;
+	}
+	public String getCV2_INS_ZIP() {
+		return CV2_INS_ZIP;
+	}
+	public void setCV2_INS_ZIP(String cV2_INS_ZIP) {
+		CV2_INS_ZIP = cV2_INS_ZIP;
+	}
+	public String getCV2_INS_ID() {
+		return CV2_INS_ID;
+	}
+	public void setCV2_INS_ID(String cV2_INS_ID) {
+		CV2_INS_ID = cV2_INS_ID;
+	}
+	public String getCV2_POL_NO() {
+		return CV2_POL_NO;
+	}
+	public void setCV2_POL_NO(String cV2_POL_NO) {
+		CV2_POL_NO = cV2_POL_NO;
+	}
+	public String getCPOL() {
+		return CPOL;
+	}
+	public void setCPOL(String cPOL) {
+		CPOL = cPOL;
+	}
+	public String getCMKT() {
+		return CMKT;
+	}
+	public void setCMKT(String cMKT) {
+		CMKT = cMKT;
+	}
+	public String getCPRD() {
+		return CPRD;
+	}
+	public void setCPRD(String cPRD) {
+		CPRD = cPRD;
+	}
+	public String getCV2_PRV_SSN() {
+		return CV2_PRV_SSN;
+	}
+	public void setCV2_PRV_SSN(String cV2_PRV_SSN) {
+		CV2_PRV_SSN = cV2_PRV_SSN;
+	}
+	public String getPROVID() {
+		return PROVID;
+	}
+	public void setPROVID(String pROVID) {
+		PROVID = pROVID;
+	}
+	public String getCV2_PRV_DGR() {
+		return CV2_PRV_DGR;
+	}
+	public void setCV2_PRV_DGR(String cV2_PRV_DGR) {
+		CV2_PRV_DGR = cV2_PRV_DGR;
+	}
+	public String getPROVNAME() {
+		return PROVNAME;
+	}
+	public void setPROVNAME(String pROVNAME) {
+		PROVNAME = pROVNAME;
+	}
+	public String getCV2_PRV_IND_FNM() {
+		return CV2_PRV_IND_FNM;
+	}
+	public void setCV2_PRV_IND_FNM(String cV2_PRV_IND_FNM) {
+		CV2_PRV_IND_FNM = cV2_PRV_IND_FNM;
+	}
+	public String getCV2_PRV_IND_LNM() {
+		return CV2_PRV_IND_LNM;
+	}
+	public void setCV2_PRV_IND_LNM(String cV2_PRV_IND_LNM) {
+		CV2_PRV_IND_LNM = cV2_PRV_IND_LNM;
+	}
+	public String getCV2_PRV_IND_INIT() {
+		return CV2_PRV_IND_INIT;
+	}
+	public void setCV2_PRV_IND_INIT(String cV2_PRV_IND_INIT) {
+		CV2_PRV_IND_INIT = cV2_PRV_IND_INIT;
+	}
+	public String getCV2_PRV_ADR1() {
+		return CV2_PRV_ADR1;
+	}
+	public void setCV2_PRV_ADR1(String cV2_PRV_ADR1) {
+		CV2_PRV_ADR1 = cV2_PRV_ADR1;
+	}
+	public String getCV2_PRV_ADR2() {
+		return CV2_PRV_ADR2;
+	}
+	public void setCV2_PRV_ADR2(String cV2_PRV_ADR2) {
+		CV2_PRV_ADR2 = cV2_PRV_ADR2;
+	}
+	public String getCV2_PRV_CTY() {
+		return CV2_PRV_CTY;
+	}
+	public void setCV2_PRV_CTY(String cV2_PRV_CTY) {
+		CV2_PRV_CTY = cV2_PRV_CTY;
+	}
+	public String getCV2_PRV_STE() {
+		return CV2_PRV_STE;
+	}
+	public void setCV2_PRV_STE(String cV2_PRV_STE) {
+		CV2_PRV_STE = cV2_PRV_STE;
+	}
+	public String getCV2_PRV_ZIP() {
+		return CV2_PRV_ZIP;
+	}
+	public void setCV2_PRV_ZIP(String cV2_PRV_ZIP) {
+		CV2_PRV_ZIP = cV2_PRV_ZIP;
+	}
+	public String getCV2_EPD_MTCH_CD() {
+		return CV2_EPD_MTCH_CD;
+	}
+	public void setCV2_EPD_MTCH_CD(String cV2_EPD_MTCH_CD) {
+		CV2_EPD_MTCH_CD = cV2_EPD_MTCH_CD;
+	}
+	public String getCV2_CLM_CMMTS() {
+		return CV2_CLM_CMMTS;
+	}
+	public void setCV2_CLM_CMMTS(String cV2_CLM_CMMTS) {
+		CV2_CLM_CMMTS = cV2_CLM_CMMTS;
+	}
+	public String getCPOLRSTRCTCD() {
+		return CPOLRSTRCTCD;
+	}
+	public void setCPOLRSTRCTCD(String cPOLRSTRCTCD) {
+		CPOLRSTRCTCD = cPOLRSTRCTCD;
+	}
+	public String getCRSKDT() {
+		return CRSKDT;
+	}
+	public void setCRSKDT(String cRSKDT) {
+		CRSKDT = cRSKDT;
+	}
+	public String getCUROPER() {
+		return CUROPER;
+	}
+	public void setCUROPER(String cUROPER) {
+		CUROPER = cUROPER;
+	}
+	
+	
+
+}

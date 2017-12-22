@@ -1,0 +1,55 @@
+package com.optum.comet.mctmcf.daos.dbos;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+public class CometBaseDBO  implements Serializable {
+    
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
+	
+	protected String                 creatByUserId;
+    protected Date                   creatDttm;
+    protected String                 lstUpdtByUserId;
+    protected Date                   lstUpdtDttm;
+    protected Map<String, Object>    paramMap = new HashMap<String, Object>();
+  
+  	
+    
+    public String getCreatByUserId() {
+        return creatByUserId;
+    }
+    public void setCreatByUserId(String creatByUserId) {
+        this.creatByUserId = creatByUserId;
+    }
+    public Date getCreatDttm() {
+        return creatDttm;
+    }
+    public void setCreatDttm(Date creatDttm) {
+        this.creatDttm = creatDttm;
+    }
+    public String getLstUpdtByUserId() {
+        return lstUpdtByUserId;
+    }
+    public void setLstUpdtByUserId(String lstUpdtByUserId) {
+        this.lstUpdtByUserId = lstUpdtByUserId;
+    }
+    public Date getLstUpdtDttm() {
+        return lstUpdtDttm;
+    }
+    public void setLstUpdtDttm(Date lstUpdtDttm) {
+        this.lstUpdtDttm = lstUpdtDttm;
+    }
+    
+    public Map<String, Object> getParamMap() {
+        return paramMap;
+    }
+    
+}

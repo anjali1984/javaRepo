@@ -1,0 +1,19 @@
+package com.optum.comet.mctmcf.enums;
+
+public enum CqrcsqReturnSystem {
+	
+	CQRCSQ_TYPE_CQR("A"), 
+	CQRCSQ_TYPE_COMET("C");           
+
+	private String value;
+	private CqrcsqReturnSystem(String value)
+	{
+		this.value=value;
+	}
+	
+	@Override
+	public String toString(){
+		return this.value;
+	}
+
+}

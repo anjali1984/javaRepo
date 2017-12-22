@@ -1,0 +1,32 @@
+package com.optum.comet.mctmcf.constants;
+
+public interface CometDAOConstants {
+    
+           
+    enum Queries{
+        UN_KNOWN("unknown");
+    	
+        private Queries(String queryNameArg) {
+            this.queryName = queryNameArg;
+        }
+
+        public String getQueryName() {
+            return queryName;
+        }
+
+        String queryName;
+    };
+    
+    public enum QueryParameters {
+    	UN_KNOWN("unknown");
+	
+	private QueryParameters(String queryParameterArg) {
+	    this.queryParameter = queryParameterArg;
+	}	
+	
+	public String getQueryParameter() {
+	    return queryParameter;
+	}
+	String queryParameter;
+    };
+}

@@ -1,0 +1,77 @@
+package com.optum.comet.mctmcf.daos;
+
+import com.optum.comet.mctmcf.daos.dbos.StagedClmSfxMessage;
+import com.optum.comet.mctmcf.exception.CometException;
+
+/**
+ * Purpose:For creating and retrieving ITEM_FLAT data records
+ * Change log:   <<date>> : <<user>> : <<1 liner for the change>>
+ * @author smore106
+ *
+ */
+
+public interface IItemFlatDAO extends ICometDAO {
+
+	/**
+	 * Purpose: Get transactional details from item_flat + claims_work view for curoper and curstat
+	 * Change log: <<date>> : <<user>> : <<1 liner for the change>>
+	 * @param dbo
+	 * @param logCorrId
+	 */
+
+	public StagedClmSfxMessage getTransDetails(StagedClmSfxMessage icn, String logCorrId) throws CometException;
+
+	/**
+	 * Purpose: Save claim into Item Flat
+	 * @param itm
+	 * @param logCorrId
+	 * @throws CometException
+	 * @throws Throwable 
+	 */
+	public void saveItm(StagedClmSfxMessage itm, String logCorrId) throws CometException;
+
+
+	/**
+	 * Purpose: Save claim into Item Flat Stage
+	 * @param itm
+	 * @param logCorrId
+	 * @throws CometException
+	 */
+	public void saveItmFlatStage(StagedClmSfxMessage itm, String logCorrId) throws CometException;
+
+	/**
+	 * Purpose: Update claim from Item Flat 
+	 * @param itm
+	 * @param logCorrId
+	 * @throws CometException
+	 * @throws Throwable 
+	 */
+	public void updateItm(StagedClmSfxMessage itm, String logCorrId)throws CometException, Throwable;
+	
+	/**
+	 * Purpose:to check if claim not processed in item_flat_stg
+	 * @param itm
+	 * @param logCorrId
+	 * @return
+	 * @throws CometException
+	 */
+	public StagedClmSfxMessage checkNotProcessedItmStg (StagedClmSfxMessage itm, String logCorrId) throws CometException;
+	/**
+	 * Purpose:to save sts update msg in item_flat_stg
+	 * @param itm
+	 * @param logCorrId
+	 * @return
+	 * @throws CometException
+	 */
+
+	public void saveStsUptdItmFlatStage(StagedClmSfxMessage clmSfxMessage, String logCorrId) throws CometException;
+
+	/**
+	 * Purpose: Save sts updt claim into Item Flat Stage
+	 * @param itm
+	 * @param logCorrId
+	 * @throws CometException
+	 */
+	public void saveStsUpdtItm(StagedClmSfxMessage clmSfxMessage, String logCorrId) throws CometException;
+	
+}

@@ -1,0 +1,25 @@
+package com.optum.comet.mctmcf.generated.vol04042017;
+
+public class CqrcmNonselErrArea extends com.optum.comet.mctmcf.generator.predefbeans.Definition implements java.io.Serializable {
+
+    public CqrcmNonselErrArea() {
+        this.cqrcmNonselErrEntry = new java.util.ArrayList<com.optum.comet.mctmcf.generated.vol04042017.CqrcmNonselErrCode>();
+    }
+
+    private static final long serialVersionUID = 1L;
+    private java.util.ArrayList<com.optum.comet.mctmcf.generated.vol04042017.CqrcmNonselErrCode> cqrcmNonselErrEntry;
+    private String cqrcmNonselErrFillIn;
+
+    public void setCqrcmNonselErrEntry(java.util.ArrayList<com.optum.comet.mctmcf.generated.vol04042017.CqrcmNonselErrCode> cqrcmNonselErrEntry) { 
+        this.cqrcmNonselErrEntry = cqrcmNonselErrEntry;
+    }
+    public java.util.ArrayList<com.optum.comet.mctmcf.generated.vol04042017.CqrcmNonselErrCode> getCqrcmNonselErrEntry() { 
+        return this.cqrcmNonselErrEntry;
+    }
+    public void setCqrcmNonselErrFillIn(String cqrcmNonselErrFillIn) { 
+        this.cqrcmNonselErrFillIn = cqrcmNonselErrFillIn;
+    }
+    public String getCqrcmNonselErrFillIn() { 
+        return this.cqrcmNonselErrFillIn;
+    }
+}

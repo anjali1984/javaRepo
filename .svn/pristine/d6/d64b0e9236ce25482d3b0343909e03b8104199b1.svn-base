@@ -1,0 +1,42 @@
+/**
+ * 
+ */
+package com.optum.comet.mctmcf.exception;
+import java.util.Calendar;
+
+import com.optum.comet.mctmcf.constants.CometConstants;
+import com.optum.comet.mctmcf.exception.vo.CometExceptionBean;
+
+
+/**
+ * Copyright statement :
+ *
+ *
+ * Description : This is an UTIL class which hase utility methods to return
+ * Exception bean
+ *
+ * 
+ * Usecase reference : 
+ * @author sabsu22
+ *
+ * # Change History
+ *
+ *	Issue ID    Description    Stage     Owner    Change 
+ *
+ */
+public class ExceptionUtil {
+	/**
+	 * return a CWFException Message
+	 * 
+	 * @param location
+	 * @param reasonarg
+	 * @return
+	 */
+	public static CometException getExceptionForReason(String location, String reasonarg) {
+		CometConstants.ACTORS actor = CometConstants.ACTORS.Comet;
+		CometExceptionBean exceptionBean = new CometExceptionBean(reasonarg, 
+				null, Calendar.getInstance(), actor, location);
+		CometException bean = new CometException(exceptionBean,reasonarg);
+		return  bean; 
+	}
+}

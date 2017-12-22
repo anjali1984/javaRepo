@@ -1,0 +1,26 @@
+package com.optum.comet.mctmcf.generated.vol04042017;
+
+public class CqrcmVariable2 extends com.optum.comet.mctmcf.generator.predefbeans.Definition implements java.io.Serializable {
+
+    public CqrcmVariable2() {
+        this.cqrcmV2InboundFields = new com.optum.comet.mctmcf.generated.vol04042017.CqrcmV2InboundFields();
+        this.cqrcmV2OutboundFields = new com.optum.comet.mctmcf.generated.vol04042017.CqrcmV2OutboundFields();
+    }
+
+    private static final long serialVersionUID = 1L;
+    private com.optum.comet.mctmcf.generated.vol04042017.CqrcmV2InboundFields cqrcmV2InboundFields;
+    private com.optum.comet.mctmcf.generated.vol04042017.CqrcmV2OutboundFields cqrcmV2OutboundFields;
+
+    public void setCqrcmV2InboundFields(com.optum.comet.mctmcf.generated.vol04042017.CqrcmV2InboundFields cqrcmV2InboundFields) { 
+        this.cqrcmV2InboundFields = cqrcmV2InboundFields;
+    }
+    public com.optum.comet.mctmcf.generated.vol04042017.CqrcmV2InboundFields getCqrcmV2InboundFields() { 
+        return this.cqrcmV2InboundFields;
+    }
+    public void setCqrcmV2OutboundFields(com.optum.comet.mctmcf.generated.vol04042017.CqrcmV2OutboundFields cqrcmV2OutboundFields) { 
+        this.cqrcmV2OutboundFields = cqrcmV2OutboundFields;
+    }
+    public com.optum.comet.mctmcf.generated.vol04042017.CqrcmV2OutboundFields getCqrcmV2OutboundFields() { 
+        return this.cqrcmV2OutboundFields;
+    }
+}

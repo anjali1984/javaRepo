@@ -1,0 +1,70 @@
+package com.optum.comet.mctmcf.generated.vol04042017;
+
+public class CqrcmMsgOutboundFields extends com.optum.comet.mctmcf.generator.predefbeans.Definition implements java.io.Serializable {
+
+    public CqrcmMsgOutboundFields() {
+        this.cqrcmNonselErrArea = new com.optum.comet.mctmcf.generated.vol04042017.CqrcmNonselErrArea();
+        this.cqrslClaimType = new com.optum.comet.mctmcf.generator.predefbeans.ChoiceRestriction("UBH,NONUBH");
+        this.cqrcmWorkflowId = new com.optum.comet.mctmcf.generated.vol04042017.CqrcmWorkflowId();
+    }
+
+    private static final long serialVersionUID = 1L;
+    private String cqrcmType;
+    private String cqrcmSendTo;
+    private String cqrcmSendCnt;
+    private com.optum.comet.mctmcf.generated.vol04042017.CqrcmNonselErrArea cqrcmNonselErrArea;
+    private com.optum.comet.mctmcf.generator.predefbeans.ChoiceRestriction cqrslClaimType;
+    private com.optum.comet.mctmcf.generated.vol04042017.CqrcmWorkflowId cqrcmWorkflowId;
+    private String cqrcmPseudoPendPendCode;
+    private String cqrcmComments;
+
+    
+    public String getCqrcmType() {
+		return cqrcmType;
+	}
+	public void setCqrcmType(String cqrcmType) {
+		this.cqrcmType = cqrcmType;
+	}
+	public void setCqrcmSendTo(String cqrcmSendTo) { 
+        this.cqrcmSendTo = cqrcmSendTo;
+    }
+    public String getCqrcmSendTo() { 
+        return this.cqrcmSendTo;
+    }
+    public void setCqrcmSendCnt(String cqrcmSendCnt) { 
+        this.cqrcmSendCnt = cqrcmSendCnt;
+    }
+    public String getCqrcmSendCnt() { 
+        return this.cqrcmSendCnt;
+    }
+    public void setCqrcmNonselErrArea(com.optum.comet.mctmcf.generated.vol04042017.CqrcmNonselErrArea cqrcmNonselErrArea) { 
+        this.cqrcmNonselErrArea = cqrcmNonselErrArea;
+    }
+    public com.optum.comet.mctmcf.generated.vol04042017.CqrcmNonselErrArea getCqrcmNonselErrArea() { 
+        return this.cqrcmNonselErrArea;
+    }
+    public void setCqrslClaimType(com.optum.comet.mctmcf.generator.predefbeans.ChoiceRestriction cqrslClaimType) { 
+        this.cqrslClaimType = cqrslClaimType;
+    }
+    public com.optum.comet.mctmcf.generator.predefbeans.ChoiceRestriction getCqrslClaimType() { 
+        return this.cqrslClaimType;
+    }
+    public void setCqrcmWorkflowId(com.optum.comet.mctmcf.generated.vol04042017.CqrcmWorkflowId cqrcmWorkflowId) { 
+        this.cqrcmWorkflowId = cqrcmWorkflowId;
+    }
+    public com.optum.comet.mctmcf.generated.vol04042017.CqrcmWorkflowId getCqrcmWorkflowId() { 
+        return this.cqrcmWorkflowId;
+    }
+    public void setCqrcmPseudoPendPendCode(String cqrcmPseudoPendPendCode) { 
+        this.cqrcmPseudoPendPendCode = cqrcmPseudoPendPendCode;
+    }
+    public String getCqrcmPseudoPendPendCode() { 
+        return this.cqrcmPseudoPendPendCode;
+    }
+    public void setCqrcmComments(String cqrcmComments) { 
+        this.cqrcmComments = cqrcmComments;
+    }
+    public String getCqrcmComments() { 
+        return this.cqrcmComments;
+    }
+}

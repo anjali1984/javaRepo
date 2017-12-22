@@ -1,0 +1,77 @@
+package com.optum.comet.mctmcf.exception;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
+/**
+ * Collection of constants to denote the business exceptions, that might occur, through the java service layer calls
+ * 
+ * @author 142037
+ */
+public interface CometExceptionConstants {
+
+    enum POSSIBLE_REASONS{
+        // possible exception definitions
+
+        // generic exceptions section
+        INVLD_PARAMS("Invalid Parameters Found"),
+        INVLD_VO_DBO_PARAM_CONVERTER("The required parameter is missing at the converter method, " 
+                + "for getDBO its the vo thatis required, for getVO the dbo is mandatory"),
+        INVLD_CONVERTER_ACTION("The converter action is not known here to the context of the converter"),
+        GENERIC_EXCEPTION_MESSAGE("An exception occured"),
+        STAN_CONV_NOT_ALLOWED("Standard converter action is not allowed for CometBaseVO and CometBaseDBO"),
+        UNSUPPORTED_CONV_ACTN("Unsuuported converter action for the converter"),
+        UNSUPPORTED_METHOD_INVOCATION("The invoked method doesnt support the arguments type"),
+        INVLD_MESSAGE_LENGTH("The length of message recieved from queue is not valid");
+
+        private static Properties reasonRemedyprops = null;
+
+        static {
+            try {
+                reasonRemedyprops = new Properties();
+                InputStream is = CometExceptionConstants.class.getResourceAsStream("/resources/CometExRem.properties");
+                reasonRemedyprops.load(is);
+            } catch (IOException e) {
+                reasonRemedyprops = null;
+                e.printStackTrace();
+            }
+        }
+
+        private String            description;
+        private String            remedy;
+
+        private POSSIBLE_REASONS(String description) {
+            this.description = description;
+        }
+
+        public String getDescription() {
+            return this.description;
+        }
+
+        public String getRemedy() {
+            if (reasonRemedyprops == null) {
+                this.remedy = "The remedy properties file " + "at /resources/cwfExRem.properties couldn't be located, therefore no remedy suggested";
+            } else {
+                this.remedy = reasonRemedyprops
+                        .getProperty(
+                                this.toString(),
+                                "No remedy registered for this exception. " + "Please check the artifact /resources/ISAExceptionRemedies.properties");
+            }
+            return this.remedy;
+        }
+
+        public static POSSIBLE_REASONS fromValue(String value) throws IllegalArgumentException {
+            if (value == null || value.trim().length() == 0) throw new IllegalArgumentException("Invalid paramater");
+            POSSIBLE_REASONS retVal = null;
+            for (POSSIBLE_REASONS possibleReason : POSSIBLE_REASONS.values()) {
+                if (value.equals(possibleReason.getDescription())) {
+                    retVal = possibleReason;
+                    break;
+                }
+            }
+            return retVal;
+        }
+    }
+
+}

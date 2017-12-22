@@ -1,0 +1,205 @@
+package com.optum.comet.mctmcf.daos.dbos;
+
+import java.util.Map;
+
+public class StagedClmSfxMessage extends CometBaseDBO {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8782597304906314406L;
+	private String icn;
+	private String orgid;
+	private int currSfx;
+	private int totSfx;
+	private String pendcd;
+	private String queue;
+	private String engine;
+	private String icoType;
+	private String clmInd;
+	private int status;
+	
+	private boolean multiSfx;
+	private boolean ifmultiSfxWait;
+	private String completeMesage;
+	private long lid;
+	private boolean LdLckExists;
+	private String curStat;
+	private String curOper;
+	private boolean claimAlreadyExists;
+	private boolean ClaimAlreadyResolved;
+	private boolean ItmStgNotProcessed;
+	
+	
+	//ICN SUFFIX MAP
+	
+	private Map<String,String> sfxPendcd;
+	
+	public Map<String, String> getSfxPendcd() {
+		return sfxPendcd;
+	}
+
+	public void setSfxPendcd(Map<String, String> sfxPendcd) {
+		this.sfxPendcd = sfxPendcd;
+	}
+
+	public String getClmInd() {
+		return clmInd;
+	}
+
+	public void setClmInd(String clmInd) {
+		this.clmInd = clmInd;
+	}
+
+	public String getEngine() {
+		return engine;
+	}
+	public void setEngine(String engine) {
+		this.engine = engine;
+	}
+	public String getIcn() {
+		return icn;
+	}
+	public void setIcn(String icn) {
+		this.icn = icn;
+	}
+	public String getOrgid() {
+		return orgid;
+	}
+	public void setOrgid(String orgid) {
+		this.orgid = orgid;
+	}
+	
+	public int getCurrSfx() {
+		return currSfx;
+	}
+
+	public void setCurrSfx(int currSfx) {
+		this.currSfx = currSfx;
+	}
+
+	public int getTotSfx() {
+		return totSfx;
+	}
+	public void setTotSfx(int totSfx) {
+		this.totSfx = totSfx;
+	}
+	public String getPendcd() {
+		return pendcd;
+	}
+	public void setPendcd(String pendcd) {
+		this.pendcd = pendcd;
+	}
+	public String getQueue() {
+		return queue;
+	}
+	public void setQueue(String queue) {
+		this.queue = queue;
+	}
+	public boolean isMultiSfx() {
+		return multiSfx;
+	}
+	public void setMultiSfx(boolean multiSfx) {
+		this.multiSfx = multiSfx;
+	}
+	public long getLid() {
+		return lid;
+	}
+	public void setLid(long lid) {
+		this.lid = lid;
+	}
+	public String getCompleteMesage() {
+		return completeMesage;
+	}
+	public void setCompleteMesage(String completeMesage) {
+		this.completeMesage = completeMesage;
+	}
+	public int getStatus() {
+		return status;
+	}
+	public void setStatus(int status) {
+		this.status = status;
+	}
+	public boolean isIfmultiSfxWait() {
+		return ifmultiSfxWait;
+	}
+	public void setIfmultiSfxWait(boolean ifmultiSfxWait) {
+		this.ifmultiSfxWait = ifmultiSfxWait;
+	}
+	public boolean isLdLckExists() {
+		return LdLckExists;
+	}
+	public void setLdLckExists(boolean ldLckExists) {
+		LdLckExists = ldLckExists;
+	}
+	public String getIcoType() {
+		return icoType;
+	}
+	public void setIcoType(String icoType) {
+		this.icoType = icoType;
+	}
+
+	/**
+	 * @return the curStat
+	 */
+	public String getCurStat() {
+		return curStat;
+	}
+
+	/**
+	 * @param curStat the curStat to set
+	 */
+	public void setCurStat(String curStat) {
+		this.curStat = curStat;
+	}
+
+	/**
+	 * @return the curOper
+	 */
+	public String getCurOper() {
+		return curOper;
+	}
+
+	/**
+	 * @param curOper the curOper to set
+	 */
+	public void setCurOper(String curOper) {
+		this.curOper = curOper;
+	}
+
+	/**
+	 * @return the claimAlreadyExists
+	 */
+	public boolean isClaimAlreadyExists() {
+		return claimAlreadyExists;
+	}
+
+	/**
+	 * @param claimAlreadyExists the claimAlreadyExists to set
+	 */
+	public void setClaimAlreadyExists(boolean claimAlreadyExists) {
+		this.claimAlreadyExists = claimAlreadyExists;
+	}
+
+	/**
+	 * @return the claimAlreadyResolved
+	 */
+	public boolean isClaimAlreadyResolved() {
+		return ClaimAlreadyResolved;
+	}
+
+	/**
+	 * @param claimAlreadyResolved the claimAlreadyResolved to set
+	 */
+	public void setClaimAlreadyResolved(boolean claimAlreadyResolved) {
+		ClaimAlreadyResolved = claimAlreadyResolved;
+	}
+
+	public boolean isItmStgNotProcessed() {
+		return ItmStgNotProcessed;
+	}
+
+	public void setItmStgNotProcessed(boolean itmStgNotProcessed) {
+		ItmStgNotProcessed = itmStgNotProcessed;
+	}
+}

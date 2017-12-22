@@ -1,0 +1,246 @@
+package com.optum.comet.mctmcf.services.impl;
+
+import javax.jms.TextMessage;
+
+import com.optum.comet.mctmcf.constants.CometConstants;
+import com.optum.comet.mctmcf.constants.CometServiceActionConstants;
+import com.optum.comet.mctmcf.services.ICometService;
+import com.optum.comet.mctmcf.vo.InboundClaimMessage;
+import com.optum.diff.common.exception.BPMSystemException;
+import com.optum.diff.common.exception.GenericRuntimeException;
+import com.optum.diff.common.util.logging.LoggingServiceForLog4j;
+import com.optum.diff.common.vo.ServiceParamVO;
+
+public class TOPSWMQMessageHandler {
+
+	private String msgTyp;
+	private ICometService mctmcfService;
+
+	// create the logger to record all incoming messages from source system
+	private LoggingServiceForLog4j msgsRcvdLogger;
+
+	private LoggingServiceForLog4j methodLogger;
+
+	/** METHODS FOR MANUAL MCF Messages **/
+
+	// update load claim to MCF already resolved
+	public InboundClaimMessage markClaimAlreadyResolved(InboundClaimMessage mnlQueueMsg)
+			throws GenericRuntimeException {
+		final String logCorrid = (mnlQueueMsg.getCorrId() == null ? String.valueOf(Thread.currentThread().getId())
+				: mnlQueueMsg.getCorrId());
+		final String location = "TOPSWMQMessageHandler.markClaimAlreadyResolved(InboundClaimMessage)";
+
+		InboundClaimMessage retVal = null;
+
+		ServiceParamVO serviceObj = new ServiceParamVO();
+		serviceObj.setBpmBaseVO(mnlQueueMsg);
+		try {
+			methodLogger.debug(location, "START", logCorrid);
+			// call service to handle request
+			serviceObj = mctmcfService.execute(
+					CometServiceActionConstants.ClaimServiceActions.UPDATE_LID_CLM_ALREADY_RESOLVED.getDescription(),
+					serviceObj, logCorrid);
+			retVal = (InboundClaimMessage) serviceObj.getBpmBaseVO();
+			methodLogger.debug(location, "END", logCorrid);
+		} catch (Exception e) {
+			throw new BPMSystemException(e);
+		}
+		return retVal;
+	}
+
+	// save claim record in item_flat
+	public InboundClaimMessage saveItmFlat(InboundClaimMessage mnlQueueMsg) throws GenericRuntimeException {
+		final String logCorrid = (mnlQueueMsg.getCorrId() == null ? String.valueOf(Thread.currentThread().getId())
+				: mnlQueueMsg.getCorrId());
+		final String location = "TOPSWMQMessageHandler.saveItmFlat(InboundClaimMessage)";
+
+		InboundClaimMessage retVal = null;
+		ServiceParamVO serviceObj = new ServiceParamVO();
+		serviceObj.setBpmBaseVO(mnlQueueMsg);
+		try {
+			methodLogger.debug(location, "START", logCorrid);
+			serviceObj = mctmcfService.execute(
+					CometServiceActionConstants.ClaimServiceActions.SAVE_CLM_ITEM.getDescription(), serviceObj,
+					logCorrid);
+			retVal = (InboundClaimMessage) serviceObj.getBpmBaseVO();
+			methodLogger.debug(location, "END", logCorrid);
+		} catch (Exception e) {
+			throw new BPMSystemException(e);
+		}
+		return retVal;
+	}
+
+	// update itmflat with latest rec if claim already in item_flat
+	public InboundClaimMessage updateItmFlat(InboundClaimMessage mnlQueueMsg) throws GenericRuntimeException {
+		final String logCorrid = (mnlQueueMsg.getCorrId() == null ? String.valueOf(Thread.currentThread().getId())
+				: mnlQueueMsg.getCorrId());
+		final String location = "TOPSWMQMessageHandler.updateItmFlat(InboundClaimMessage)";
+
+		InboundClaimMessage retVal = null;
+		ServiceParamVO serviceObj = new ServiceParamVO();
+		serviceObj.setBpmBaseVO(mnlQueueMsg);
+		try {
+			methodLogger.debug(location, "START", logCorrid);
+			serviceObj = mctmcfService.execute(
+					CometServiceActionConstants.ClaimServiceActions.UPDATE_CLM_ITEM.getDescription(), serviceObj,
+					logCorrid);
+			retVal = (InboundClaimMessage) serviceObj.getBpmBaseVO();
+			methodLogger.debug(location, "END", logCorrid);
+		} catch (Exception e) {
+			throw new BPMSystemException(e);
+		}
+		return retVal;
+	}
+
+	// release claim message to UNET - MCT
+	public void sendReleaseClmMsg(InboundClaimMessage mnlQueueMsg) throws GenericRuntimeException {
+		final String logCorrid = (mnlQueueMsg.getCorrId() == null ? String.valueOf(Thread.currentThread().getId())
+				: mnlQueueMsg.getCorrId());
+		final String location = "TOPSWMQMessageHandler.sendReleaseClmMsg(InboundClaimMessage)";
+
+		ServiceParamVO serviceObj = new ServiceParamVO();
+		serviceObj.setBpmBaseVO(mnlQueueMsg);
+		try {
+			methodLogger.debug(location, "START", logCorrid);
+
+			serviceObj = mctmcfService.execute(
+					CometServiceActionConstants.ClaimServiceActions.RELEASE_CLAIM.getDescription(), serviceObj,
+					logCorrid);
+
+			methodLogger.debug(location, "END", logCorrid);
+		} catch (Exception e) {
+			throw new BPMSystemException(e);
+		}
+		return;
+	}
+
+	// put wait on clm sfx to allow other suffixes to load up
+	public InboundClaimMessage onHoldDeleteIcnLck(InboundClaimMessage mnlQueueMsg) throws GenericRuntimeException {
+		final String logCorrid = (mnlQueueMsg.getCorrId() == null ? String.valueOf(Thread.currentThread().getId())
+				: mnlQueueMsg.getCorrId());
+		final String location = "TOPSWMQMessageHandler.onHoldDeleteIcnLck(InboundClaimMessage)";
+		InboundClaimMessage retVal = null;
+		ServiceParamVO serviceObj = new ServiceParamVO();
+		serviceObj.setBpmBaseVO(mnlQueueMsg);
+		try {
+			methodLogger.debug(location, "START", logCorrid);
+			// populate code to put hold/ WAIT on clm suffix message
+			serviceObj = mctmcfService.execute(
+					CometServiceActionConstants.ClaimServiceActions.UPDATE_CLAIMST_UNLOCK_ICN.getDescription(),
+					serviceObj, logCorrid);
+			retVal = (InboundClaimMessage) serviceObj.getBpmBaseVO();
+			methodLogger.debug(location, "END", logCorrid);
+		} catch (Exception e) {
+			throw new BPMSystemException(e);
+		}
+		return retVal;
+	}
+
+	/** END OF METHODS FOR MANUAL MCF Messages **/
+
+	/** COMMON / UTILITY METHODS **/
+	// save the wmq message
+	public InboundClaimMessage recieveClmSfxMessage(TextMessage mqMsg) throws GenericRuntimeException {
+		final String location = "TOPSWMQMessageHandler.recieveClmSfxMessage";
+
+		ServiceParamVO serviceObj = new ServiceParamVO();
+		InboundClaimMessage msg = new InboundClaimMessage();
+		try {
+			String messageID = mqMsg.getJMSMessageID();
+			methodLogger.debug(location, "START", messageID);
+
+			String sfxMsg = mqMsg.getText();
+
+			msg.setMsg(sfxMsg);
+			msg.setQueue(msgTyp);
+			msg.setCorrId(messageID);
+
+			if ((sfxMsg.length() != CometConstants.MANUALMSGlENGTH)
+					&& msgTyp.equals(CometConstants.MANUALMSG)) {
+				msg.setInvalidLength(true);
+				serviceObj.setBpmBaseVO(msg);
+				msgsRcvdLogger.info(location.concat("[invalid length Message] "), sfxMsg, msg.getCorrId());
+
+			} else {
+				msg.setLoadClaimSts(InboundClaimMessage.LOAD_CLAIM_STATUS.NEW);
+				serviceObj.setBpmBaseVO(msg);
+
+				// recording message at a info level to retain the same in prod
+				msgsRcvdLogger.info(location.concat("[".concat(this.msgTyp).concat("]")), sfxMsg, msg.getCorrId());
+
+				// call service to handle request
+				mctmcfService.execute(this.msgTyp, serviceObj, msg.getCorrId());
+
+				methodLogger.debug(location, "END", msg.getCorrId());
+			}
+
+		} catch (Exception e) {
+			throw new BPMSystemException(e);
+		}
+		return (InboundClaimMessage) serviceObj.getBpmBaseVO();
+	}
+
+	// Save claim record in item_flat_Stage -Stage table will be used by pega
+	// team
+	public InboundClaimMessage sendNotificationToPega(InboundClaimMessage mnlQueueMsg) throws GenericRuntimeException {
+		final String logCorrid = (mnlQueueMsg.getCorrId() == null ? String.valueOf(Thread.currentThread().getId())
+				: mnlQueueMsg.getCorrId());
+		InboundClaimMessage retVal = null;
+		ServiceParamVO serviceObj = new ServiceParamVO();
+		serviceObj.setBpmBaseVO(mnlQueueMsg);
+		try {
+			serviceObj = mctmcfService.execute(
+					CometServiceActionConstants.ClaimServiceActions.SAVE_ITEM_STG.getDescription(), serviceObj,
+					logCorrid);
+			retVal = (InboundClaimMessage) serviceObj.getBpmBaseVO();
+		} catch (Exception e) {
+			throw new BPMSystemException(e);
+		}
+		return retVal;
+	}
+
+	// indicates end of flow
+	public void endFlow(InboundClaimMessage mnlQueueMsg) throws GenericRuntimeException {
+		final String logCorrid = (mnlQueueMsg.getCorrId() == null ? String.valueOf(Thread.currentThread().getId())
+				: mnlQueueMsg.getCorrId());
+		final String location = "TOPSWMQMessageHandler.endFlow(InboundClaimMessage)";
+		methodLogger.debug(location, "END - FLOW", logCorrid);
+
+	}
+
+	/** END OF COMMON METHODS **/
+
+	// GETTERS & SETTERS
+	public String getMsgTyp() {
+		return msgTyp;
+	}
+
+	public void setMsgTyp(String msgTyp) {
+		this.msgTyp = msgTyp;
+	}
+
+	public ICometService getMctmcfService() {
+		return mctmcfService;
+	}
+
+	public void setMctmcfService(ICometService mctmcfService) {
+		this.mctmcfService = mctmcfService;
+	}
+
+	public LoggingServiceForLog4j getMsgsRcvdLogger() {
+		return msgsRcvdLogger;
+	}
+
+	public void setMsgsRcvdLogger(LoggingServiceForLog4j msgsRcvdLogger) {
+		this.msgsRcvdLogger = msgsRcvdLogger;
+	}
+
+	public LoggingServiceForLog4j getMethodLogger() {
+		return methodLogger;
+	}
+
+	public void setMethodLogger(LoggingServiceForLog4j methodLogger) {
+		this.methodLogger = methodLogger;
+	}
+
+}

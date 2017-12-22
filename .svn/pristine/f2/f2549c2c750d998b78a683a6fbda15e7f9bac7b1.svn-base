@@ -1,0 +1,565 @@
+package com.optum.comet.mctmcf.services.impl;
+
+import com.optum.comet.mctmcf.constants.CometConstants;
+import com.optum.comet.mctmcf.constants.CometServiceActionConstants;
+import com.optum.comet.mctmcf.converter.CometMappers;
+import com.optum.comet.mctmcf.converter.ConversionFactory;
+import com.optum.comet.mctmcf.converter.ConverterActions;
+import com.optum.comet.mctmcf.daos.IItemFlatDAO;
+import com.optum.comet.mctmcf.daos.ILoadClaimDAO;
+import com.optum.comet.mctmcf.daos.ILookupDAO;
+import com.optum.comet.mctmcf.daos.dbos.StagedClmSfxMessage;
+import com.optum.comet.mctmcf.exception.CometException;
+import com.optum.comet.mctmcf.exception.vo.CometExceptionBean;
+import com.optum.comet.mctmcf.generated.vol04042017.ClaimStatusUpadteMessage;
+import com.optum.comet.mctmcf.generated.vol04042017.ClaimSuffixMessage;
+import com.optum.comet.mctmcf.parser.ICobolCopyBookMessageParser;
+import com.optum.comet.mctmcf.services.CometBaseService;
+import com.optum.comet.mctmcf.services.ICometService;
+import com.optum.comet.mctmcf.vo.InboundClaimMessage;
+import com.optum.comet.mctmcf.vo.InboundClaimMessage.LOAD_CLAIM_STATUS;
+import com.optum.diff.common.util.PropertiesHelper;
+import com.optum.diff.common.util.logging.LoggingServiceForLog4j;
+import com.optum.diff.common.vo.ServiceParamVO;
+
+@SuppressWarnings("unchecked")
+public class MCTMCFService extends CometBaseService implements ICometService {
+
+	private ILoadClaimDAO loadClaimDao;
+	private ILookupDAO lookupDAO;
+	private IItemFlatDAO itemFlatDAO;
+
+	private ICobolCopyBookMessageParser manualMessageParser;
+	private ICobolCopyBookMessageParser statUpdtMessageParser;
+	private LoggingServiceForLog4j mmsLogger;
+
+	public ServiceParamVO execute(String action, ServiceParamVO srvcprmvo, String logCorrId) throws CometException {
+
+		final String METHOD_NAME = "execute(String, ServiceParamVO, String)";
+		try {
+
+			// declare local variables
+
+			InboundClaimMessage icm;
+			ClaimStatusUpadteMessage csupdtm;
+			//StagedClmSfxMessage clmSfxMessage;
+
+			switch (CometServiceActionConstants.ClaimServiceActions.fromValue(action)) {
+
+			/* saves the manual message in ld_clm table */
+			case SAVE_MANUAL_MESSAGE:
+				// get the inbound vo from service param vo wrapper
+				icm = (InboundClaimMessage) srvcprmvo.getBpmBaseVO();
+				// reverse populate vo from dbo and set back to service param vo
+				srvcprmvo.setBpmBaseVO(saveManualMessage(icm, logCorrId));
+
+				break;
+
+				/* saves the status update message in ld_clm table */
+			case SAVE_STATUS_UPDT_MESSAGE:
+				// get the inbound vo from service param vo wrapper
+				icm = (InboundClaimMessage) srvcprmvo.getBpmBaseVO();
+				// reverse populate vo from dbo and set back to service param vo
+				srvcprmvo.setBpmBaseVO(saveStatusMessage(icm, logCorrId));
+
+				break;
+
+				/*
+				 * checks if claim eligible for further processing based on the
+				 * count of open claims associated with orgid
+				 */
+			case OPN_CLMS_FOR_ORG:
+
+				// get the inbound vo from service param vo wrapper
+				icm = (InboundClaimMessage) srvcprmvo.getBpmBaseVO();
+
+				// call dao to pull open claim count associated to org id
+				checkOrgidEligibility(icm, logCorrId);
+
+				srvcprmvo.setBpmBaseVO(icm);
+
+				break;
+
+				/*
+				 * parses the manual message read from the queue to the java Oject
+				 */
+
+			case PARSE_SU:
+				icm = (InboundClaimMessage) srvcprmvo.getBpmBaseVO();
+				// parse entire claim suffix message
+				csupdtm = statUpdtMessageParser.parseMessage(icm.getMsg(), ClaimStatusUpadteMessage.class);
+				icm.setCsupdtm(csupdtm);
+				srvcprmvo.setBpmBaseVO(icm);
+				break;
+
+				/*
+				 * saves the parsed record in item_flat;inserts/updates in icn_sfx
+				 */
+			case SAVE_CLM_ITEM:
+				icm = (InboundClaimMessage) srvcprmvo.getBpmBaseVO();
+				saveItemAndIcnSfx(icm, logCorrId);
+				// reverse populate vo from dbo and set back to service param vo
+				srvcprmvo.setBpmBaseVO((InboundClaimMessage) ConversionFactory.getInstance()
+						.getConverter(CometMappers.CometMCFConverters)
+						.getVO((StagedClmSfxMessage) ConversionFactory.getInstance()
+								.getConverter(CometMappers.CometMCFConverters).getDBO(icm, null,
+										ConverterActions.UpdateClaim, logCorrId),
+								icm, ConverterActions.UpdateClaim, logCorrId));
+				break;
+
+				/*
+				 * updates the record with current record in item_flat ,if icn
+				 * already exits;inserts/updates in icn_sfx
+				 */
+			case UPDATE_CLM_ITEM:
+				icm = (InboundClaimMessage) srvcprmvo.getBpmBaseVO();
+
+				updateItemAndIcnSfx(icm, logCorrId);
+
+				// reverse populate vo from dbo and set back to service param vo
+				srvcprmvo.setBpmBaseVO((InboundClaimMessage) ConversionFactory.getInstance()
+						.getConverter(CometMappers.CometMCFConverters)
+						.getVO((StagedClmSfxMessage) ConversionFactory.getInstance()
+								.getConverter(CometMappers.CometMCFConverters).getDBO(icm, null,
+										ConverterActions.UpdateClaim, logCorrId),
+								icm, ConverterActions.UpdateClaim, logCorrId));
+				break;
+
+				/* get claim transactional details */
+			case GET_TRANS_DETAILS:
+				icm = (InboundClaimMessage) srvcprmvo.getBpmBaseVO();
+				icm = getClaimTransDetails(icm, logCorrId);
+				srvcprmvo.setBpmBaseVO(icm);
+				break;
+
+				/*
+				 * updates the status to resolved in ld_clm, if claim already
+				 * resolved in item_flat
+				 */
+			case UPDATE_LID_CLM_ALREADY_RESOLVED:
+				// get the inbound vo from service param vo wrapper
+				icm = (InboundClaimMessage) srvcprmvo.getBpmBaseVO();
+				updateMCFAlreadyResolved(icm, logCorrId);
+				break;
+
+				/* releases claim if not eligible for processing */
+			case RELEASE_CLAIM:
+				icm = (InboundClaimMessage) srvcprmvo.getBpmBaseVO();
+				// TODO: Incomplete implementation.
+				/*
+				 * ConversionFactory.getInstance().getConverter(CometMappers.
+				 * CometMCFConverters) .getDBO(icm, null,
+				 * ConverterActions.PrepareReleaseMessage,
+				 * logCorrId).getParamMap().get("");
+				 */
+				break;
+
+				/* inserts the record in ldlck */
+			case LOCK_ICN:
+				icm = (InboundClaimMessage) srvcprmvo.getBpmBaseVO();
+				icm = lockICN(icm, logCorrId);
+				srvcprmvo.setBpmBaseVO(icm);
+				break;
+
+				/* checks if multisfx claim need to wait */
+			case MCF_MULTI_SUFX:
+				mmsLogger.info(METHOD_NAME, "Check if multi suffix and wait", logCorrId);
+				icm = (InboundClaimMessage) srvcprmvo.getBpmBaseVO();
+
+				icm = getMultiSfxClmDetails(icm, logCorrId);
+				break;
+
+				/*
+				 * updates the claim sts as waiting/completed in ld_clm and deletes
+				 * the entry from ld_lck
+				 */
+			case UPDATE_CLAIMST_UNLOCK_ICN:
+				icm = (InboundClaimMessage) srvcprmvo.getBpmBaseVO();
+
+				cleanUp(icm, logCorrId);
+
+				srvcprmvo.setBpmBaseVO(icm);
+				break;
+
+				/* makes the entry in item_flat_stage to notify pega */
+			case SAVE_ITEM_STG:
+				icm = (InboundClaimMessage) srvcprmvo.getBpmBaseVO();
+				saveItemStage(icm, logCorrId);
+
+				break;
+			default:
+				this.getLogger().error(METHOD_NAME, "Exception in service:inside default case", logCorrId);
+				break;
+			}
+		} catch (Throwable th) {
+			mmsLogger.error(METHOD_NAME, "Exception in service", logCorrId);
+			if (th instanceof CometException) {
+				throw (CometException) th;
+			} else {
+				CometExceptionBean ceb = new CometExceptionBean(th, CometConstants.ACTORS.SERVICE, logCorrId);
+				throw new CometException(ceb);
+			}
+		}
+		return srvcprmvo;
+	}
+
+	// service implementation methods
+	public InboundClaimMessage saveManualMessage(InboundClaimMessage icm, String logCorrId) {
+		final String METHOD_NAME = "MCTMCFService.saveManualMessage(InboundClaimMessage, String)";
+		// at this point in time the vo would only have a message and a
+		// queue
+		InboundClaimMessage retVal = (InboundClaimMessage) ConversionFactory.getInstance()
+				.getConverter(CometMappers.CometMCFConverters).getVO(
+						// call dao to save claim suffix message message
+						loadClaimDao.saveClmMsg(
+								(StagedClmSfxMessage) ConversionFactory.getInstance()
+								.getConverter(CometMappers.CometMCFConverters)
+								.getDBO(icm, null, ConverterActions.LoadStageClaimSfxMessage, logCorrId),
+								logCorrId),
+						icm, ConverterActions.LoadStageClaimSfxMessage, logCorrId);
+		// log action
+		mmsLogger.info(METHOD_NAME, "SAVED ICN= ".concat(icm.getIcn()).concat(" Suffix= ")
+				.concat(Integer.toString(icm.getCurrSfx())).concat(" INTO LOAD CLAIM"), logCorrId);
+		return retVal;
+	}
+
+	public InboundClaimMessage saveStatusMessage(InboundClaimMessage icm, String logCorrId) {
+
+		final String METHOD_NAME = "MCTMCFService.saveStatusMessage(InboundClaimMessage, String)";
+		// at this point in time the vo would only have a message and a queue
+		InboundClaimMessage retVal = (InboundClaimMessage) ConversionFactory.getInstance()
+				.getConverter(CometMappers.CometMCFConverters).getVO(
+						// call dao to save claim suffix message message
+						loadClaimDao.saveClmMsg(
+								(StagedClmSfxMessage) ConversionFactory.getInstance()
+								.getConverter(CometMappers.CometMCFConverters)
+								.getDBO(icm, null, ConverterActions.LoadStageClaimSfxStsUpdtMsg, logCorrId),
+								logCorrId),
+						icm, ConverterActions.LoadStageClaimSfxStsUpdtMsg, logCorrId);
+		// log action
+		mmsLogger.info(METHOD_NAME, "SAVED STATUS Load Claim= ".concat(icm.getIcn()).concat(" INTO LOAD CLAIM"), logCorrId);
+		return retVal;
+
+	}
+
+
+
+	public void updateMCFAlreadyResolved(InboundClaimMessage icm, String logCorrId) {
+		final String METHOD_NAME = "MCTMCFService.updateMCFAlreadyResolved(InboundClaimMessage, String)";
+
+		// update load claim sts as "claim alreadyResolved"
+		loadClaimDao.updateLdClmSts(
+				(StagedClmSfxMessage) ConversionFactory.getInstance().getConverter(CometMappers.CometMCFConverters)
+				.getDBO(icm, null, ConverterActions.UpdateLoadClaimRec, logCorrId),
+				icm.getCorrId());
+
+		// log action
+		mmsLogger.debug(METHOD_NAME,
+				"Updated ICN [".concat(icm.getIcn()).concat("]. status [")
+				.concat(LOAD_CLAIM_STATUS.MCF_RESOLVED_CLAIM_EXCEPTION.name()).concat("] Lid [")
+				.concat(String.valueOf(icm.getLoadId())),
+				logCorrId);
+	}
+
+	public InboundClaimMessage getClaimTransDetails(InboundClaimMessage icm, String logCorrId) {
+		final String METHOD_NAME = "MCTMCFService.getClaimTransDetails(InboundClaimMessage, String)";
+
+		// reverse populate vo from dbo and set back to service param vo
+		InboundClaimMessage retVal = (InboundClaimMessage) ConversionFactory.getInstance()
+				.getConverter(CometMappers.CometMCFConverters)
+				.getVO(itemFlatDAO
+						.getTransDetails(
+								(StagedClmSfxMessage) ConversionFactory.getInstance()
+								.getConverter(CometMappers.CometMCFConverters)
+								.getDBO(icm, null, ConverterActions.GetClaimTransDetails, logCorrId),
+								logCorrId),
+						icm, ConverterActions.GetClaimTransDetails, logCorrId);
+		// log tran details
+		mmsLogger.debug(METHOD_NAME, "Claim transactional details icn[".concat(retVal.getIcn()).concat("], claim ind [ ")
+				.concat(retVal.isClaimAlreadyExists() ? CometConstants.UPDATE_CLAIM_IND : CometConstants.NEW_CLAIM_IND)
+				.concat(String.valueOf(retVal.getLoadId())), logCorrId);
+
+		return retVal;
+	}
+
+	public InboundClaimMessage lockICN(InboundClaimMessage icm, String logCorrId) {
+		final String METHOD_NAME = "MCTMCFService.lockICN(InboundClaimMessage, String)";
+		InboundClaimMessage retVal = (InboundClaimMessage) ConversionFactory.getInstance()
+				.getConverter(CometMappers.CometMCFConverters)
+				.getVO(loadClaimDao.insertIntoLdLck((StagedClmSfxMessage) ConversionFactory.getInstance()
+						.getConverter(CometMappers.CometMCFConverters).getDBO(icm, null, ConverterActions.UpdateClaim,
+								logCorrId),
+						icm.getCorrId()), icm, ConverterActions.UpdateClaim, logCorrId);
+
+		// icn locked in service
+		retVal.setLdLckExists(true);
+
+		// log tran details
+		mmsLogger.debug(METHOD_NAME, "lock icn details[".concat(icm.getIcn()).concat("], load lock exists [")
+				.concat(String.valueOf(!icm.isAddedLock())), logCorrId);
+
+		return retVal;
+	}
+
+	public void saveItemAndIcnSfx(InboundClaimMessage icm, String logCorrId) {
+		final String METHOD_NAME = "MCTMCFService.saveClaimItem(InboundClaimMessage, String)";
+
+
+		//CometBaseDBO cbo = new CometBaseDBO();
+
+		if (icm.getQueue().equals(CometConstants.MANUALMSG))
+		{
+			icm.setCsm(manualMessageParser.parseMessage(icm.getMsg(), ClaimSuffixMessage.class));
+
+			StagedClmSfxMessage clmSfxMessage = (StagedClmSfxMessage) ConversionFactory.getInstance()
+					.getConverter(CometMappers.CometMCFConverters)
+					.getDBO(icm, null, ConverterActions.UpdateClaim, logCorrId);
+
+			clmSfxMessage.getParamMap().put(CometConstants.ITM_REC_PARAM_MAP_KEY, icm.getCsm());
+
+
+			//cbo.getParamMap().put(CometConstants.ITM_REC_PARAM_MAP_KEY, icm.getCsm());
+
+			itemFlatDAO.saveItm(clmSfxMessage, logCorrId);
+			// log action
+			mmsLogger.info(METHOD_NAME, "  ICN= ".concat(icm.getIcn()).concat("manual msg inserted in Item Flat "), logCorrId);
+
+			loadClaimDao.saveICNSfx(
+					(StagedClmSfxMessage) ConversionFactory.getInstance().getConverter(CometMappers.CometMCFConverters)
+					.getDBO(icm, null, ConverterActions.UpdateClaim, logCorrId),
+					logCorrId);
+			mmsLogger.info(METHOD_NAME.concat(":: SAVE_ICN_SUFFIX,  ICN= "), icm.getIcn(), logCorrId);
+		}
+		else
+		{
+			icm.setCsupdtm(statUpdtMessageParser.parseMessage(icm.getMsg(), ClaimStatusUpadteMessage.class));
+			StagedClmSfxMessage clmSfxMessage = (StagedClmSfxMessage) ConversionFactory.getInstance()
+					.getConverter(CometMappers.CometMCFConverters)
+					.getDBO(icm, null, ConverterActions.UpdateClaim, logCorrId);
+
+			clmSfxMessage.getParamMap().put(CometConstants.ITM_REC_PARAM_MAP_KEY, icm.getCsupdtm());
+
+			itemFlatDAO.saveStsUpdtItm(clmSfxMessage, logCorrId);
+
+			// log action
+			mmsLogger.info(METHOD_NAME, "  ICN= ".concat(icm.getIcn()).concat("status update msg inserted in Item Flat "), logCorrId);
+
+			loadClaimDao.saveICNSfx(
+					(StagedClmSfxMessage) ConversionFactory.getInstance().getConverter(CometMappers.CometMCFConverters)
+					.getDBO(icm, null, ConverterActions.UpdateClaim, logCorrId),
+					logCorrId);
+			mmsLogger.info(METHOD_NAME.concat(":: SAVE_ICN_SUFFIX,  ICN= "), icm.getIcn(), logCorrId);
+
+
+
+		}
+
+
+	}
+
+	public void updateItemAndIcnSfx(InboundClaimMessage icm, String logCorrId) throws Throwable {
+		final String METHOD_NAME = "MCTMCFService.updateItemAndIcnSfx(InboundClaimMessage, String)";
+		//To be removed
+		//CometBaseDBO cbo = new CometBaseDBO();
+		//For status update
+
+		if (icm.getQueue().equals(CometConstants.MANUALMSG))
+		{
+			icm.setCsm(manualMessageParser.parseMessage(icm.getMsg(), ClaimSuffixMessage.class));
+
+			StagedClmSfxMessage clmSfxMessage = (StagedClmSfxMessage) ConversionFactory.getInstance()
+					.getConverter(CometMappers.CometMCFConverters)
+					.getDBO(icm, null, ConverterActions.UpdateClaim, logCorrId);
+
+			clmSfxMessage.getParamMap().put(CometConstants.ITM_REC_PARAM_MAP_KEY, icm.getCsm());
+			//To be removed
+			//cbo.getParamMap().put(CometConstants.ITM_REC_PARAM_MAP_KEY, icm.getCsm());
+			itemFlatDAO.updateItm(clmSfxMessage, logCorrId);
+
+			loadClaimDao.saveICNSfx(
+					(StagedClmSfxMessage) ConversionFactory.getInstance().getConverter(CometMappers.CometMCFConverters)
+					.getDBO(icm, null, ConverterActions.UpdateClaim, logCorrId),
+					logCorrId);
+
+			// log action
+			mmsLogger.info(METHOD_NAME, "  ICN= ".concat(icm.getIcn()).concat("updated in Item Flat  "), logCorrId);
+		}
+		else
+		{
+
+			icm.setCsupdtm(statUpdtMessageParser.parseMessage(icm.getMsg(), ClaimStatusUpadteMessage.class));
+		}
+
+	}
+
+	public void checkOrgidEligibility(InboundClaimMessage icm, String logCorrId) throws Throwable {
+		final String METHOD_NAME = "MCTMCFService.checkOrgidEligibility(InboundClaimMessage, String)";
+
+		String orgClmTypCountStr = PropertiesHelper.getProperty(CometConstants.MCTCONFIG_MAPKEY,
+				icm.getOrgIdClaimIcoTypeMCTKEY());
+		String orgCountStr = PropertiesHelper.getProperty(CometConstants.MCTCONFIG_MAPKEY,
+				icm.getOrgId().concat(CometConstants.ANY_CLM_FRM_TYP));
+		String defaultCountStr = PropertiesHelper.getProperty(CometConstants.MCTCONFIG_MAPKEY,
+				CometConstants.DEFAULT_MCT_KEY);
+		if (orgClmTypCountStr == null) {
+			if (orgCountStr == null) {
+				if (defaultCountStr == null) {
+					icm.setLoadEligible(false);
+				} else {
+					icm.setLoadEligible(icm.getOpenClaims() < Long.valueOf(defaultCountStr));
+				}
+			} else {
+				icm.setLoadEligible(icm.getOpenClaimsForOrgId() < Long.valueOf(orgCountStr));
+			}
+		} else {
+			icm.setLoadEligible(icm.getOpenClaimsForOrgIdClmFrmTyp() < Long.valueOf(orgClmTypCountStr));
+		}
+
+		// log action
+		mmsLogger.info(METHOD_NAME, "If ICN= ".concat(icm.getIcn()).concat(" is LoadEligible= ")
+				.concat(Boolean.toString(icm.isLoadEligible())), logCorrId);
+
+	}
+
+	public InboundClaimMessage getMultiSfxClmDetails(InboundClaimMessage icm, String logCorrId) {
+		final String METHOD_NAME = "MCTMCFService.getMultiSfxclaims(InboundClaimMessage, String)";
+
+		if ((icm.getTotalSfx() > 1) || icm.getCurrSfx() > 1) {
+			// reverse populate vo from dbo and set back to service param vo
+			InboundClaimMessage retVal = (InboundClaimMessage) ConversionFactory.getInstance()
+					.getConverter(CometMappers.CometMCFConverters)
+					.getVO(loadClaimDao.multiSfxWaitCheck((StagedClmSfxMessage) ConversionFactory.getInstance()
+							.getConverter(CometMappers.CometMCFConverters).getDBO(icm, null,
+									ConverterActions.UpdateClaim, logCorrId),
+							logCorrId), icm, ConverterActions.UpdateClaim, logCorrId);
+
+			// log tran details
+			mmsLogger.debug(METHOD_NAME,
+					"MultiSfx Check 1 [".concat(retVal.getIcn()).concat("], Is claim multi suffix? [")
+					.concat(String.valueOf(retVal.isMultiSfx())).concat("], put on hold?  [")
+					.concat(String.valueOf(retVal.isMultiSfxWait())).concat("], Rowmapper ind [")
+					.concat(String.valueOf(retVal.isPickedUpByBatch())).concat("]"),
+					logCorrId);
+			return retVal;
+
+		}
+
+		// log tran details
+		mmsLogger.debug(METHOD_NAME,
+				"MultiSfx Check [".concat(icm.getIcn()).concat("], Is claim multi suffix? [")
+				.concat(String.valueOf(icm.isMultiSfx())).concat("], put on hold?  [")
+				.concat(String.valueOf(icm.isMultiSfxWait())).concat("], claim ind ["),
+				logCorrId);
+
+		return icm;
+	}
+
+	public void saveItemStage(InboundClaimMessage icm, String logCorrId) throws Throwable {
+		final String METHOD_NAME = "MCTMCFService.saveItemStage(InboundClaimMessage, String)";
+
+
+		StagedClmSfxMessage clmSfxMessage = (StagedClmSfxMessage) ConversionFactory.getInstance()
+				.getConverter(CometMappers.CometMCFConverters)
+				.getDBO(icm, null, ConverterActions.UpdateClaim, logCorrId);
+
+		icm = (InboundClaimMessage) ConversionFactory.getInstance().getConverter(CometMappers.CometMCFConverters).getVO(
+				itemFlatDAO.checkNotProcessedItmStg(clmSfxMessage, logCorrId), icm, ConverterActions.InsertItmStage,
+				logCorrId);
+
+		String icn = icm.getIcn() != null ? icm.getIcn() : "";
+
+		mmsLogger.info(METHOD_NAME, "  ICN= ".concat(icn).concat("Before Item Flat Stage insert  "), logCorrId);
+		// insert into item_flat_stg only when rec processed i.e itemstatus not
+		// 'New'
+		if (!icm.isItmStgNotProcessedVo()) {
+			// log action
+
+			if (icm.getQueue().equals(CometConstants.MANUALMSG))
+			{
+				clmSfxMessage.getParamMap().put(CometConstants.ITM_REC_PARAM_MAP_KEY, icm.getCsm());
+				mmsLogger.info(METHOD_NAME, "  ICN [".concat(icn).concat("] Item Stage status is not new   "), logCorrId);
+				itemFlatDAO.saveItmFlatStage(clmSfxMessage, logCorrId);
+
+				// log action
+				mmsLogger.info(METHOD_NAME, "  ICN [".concat(icn).concat("] inserted into Item Flat Stage "), logCorrId);
+			}
+			else
+			{
+				clmSfxMessage.getParamMap().put(CometConstants.ITM_REC_PARAM_MAP_KEY, icm.getCsupdtm());
+				// log action
+				mmsLogger.info(METHOD_NAME, "  ICN [".concat(icn).concat("] Item Stage status is not new for sts updt  "), logCorrId);
+				itemFlatDAO.saveStsUptdItmFlatStage(clmSfxMessage, logCorrId);
+				// log action
+				mmsLogger.info(METHOD_NAME, "  ICN [".concat(icn).concat("] inserted into Item Flat Stage for sts updt"), logCorrId);
+
+
+			}
+		} else {
+			// log action
+			mmsLogger.info(METHOD_NAME, "  ICN [".concat(icn).concat("] icn not processed in itm_stg "), logCorrId);
+		}
+
+	}
+
+	public void cleanUp(InboundClaimMessage icm, String logCorrId) {
+		final String METHOD_NAME = "MCTMCFService.cleanUp(InboundClaimMessage, String)";
+		loadClaimDao.updateLdClmSts(
+				(StagedClmSfxMessage) ConversionFactory.getInstance().getConverter(CometMappers.CometMCFConverters)
+				.getDBO(icm, null, ConverterActions.UpdateLoadClaimRec, logCorrId),
+				icm.getCorrId());
+
+		// log action
+		mmsLogger.info(METHOD_NAME, " ICN= ".concat(icm.getIcn())
+				.concat("  Load claim status updated(to waiting or completed) and ICN lock deleted  "), logCorrId);
+	}
+
+	/* ACCESSORS and GETTERS */
+	public ICobolCopyBookMessageParser getManualMessageParser() {
+		return manualMessageParser;
+	}
+
+	public void setManualMessageParser(ICobolCopyBookMessageParser manualMessageParser) {
+		this.manualMessageParser = manualMessageParser;
+	}
+
+	public ICobolCopyBookMessageParser getStatUpdtMessageParser() {
+		return statUpdtMessageParser;
+	}
+
+	public void setStatUpdtMessageParser(ICobolCopyBookMessageParser statUpdtMessageParser) {
+		this.statUpdtMessageParser = statUpdtMessageParser;
+	}
+
+	public ILoadClaimDAO getLoadClaimDao() {
+		return loadClaimDao;
+	}
+
+	public void setLoadClaimDao(ILoadClaimDAO loadClaimDao) {
+		this.loadClaimDao = loadClaimDao;
+	}
+
+	public ILookupDAO getLookupDAO() {
+		return lookupDAO;
+	}
+
+	public void setLookupDAO(ILookupDAO lookupDAO) {
+		this.lookupDAO = lookupDAO;
+	}
+
+	public IItemFlatDAO getItemFlatDAO() {
+		return itemFlatDAO;
+	}
+
+	public void setItemFlatDAO(IItemFlatDAO itemFlatDAO) {
+		this.itemFlatDAO = itemFlatDAO;
+	}
+
+	public LoggingServiceForLog4j getMmsLogger() {
+		return mmsLogger;
+	}
+
+	public void setMmsLogger(LoggingServiceForLog4j mmsLogger) {
+		this.mmsLogger = mmsLogger;
+	}
+
+}

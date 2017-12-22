@@ -1,0 +1,27 @@
+package com.optum.comet.mctmcf.aspects;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+
+/**
+ * 
+ * This class is used to mark methods in various DAO classes as cacheable.
+ * Based on this aspect we can cache the results returned from a DAO call, 
+ * 
+ * The important parameters to keep in mind to mark methods as cacheable as 
+ * 1. The frequency with which the methods are to be invoked.
+ * 2. The data set that gets returned for the same arguments, 
+ * is it time dependent and if yes what's the frequency.
+ * 
+ * @author cmishr4
+ *
+ */
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)  
+public @interface Cacheable {
+	String cacheKey();
+	String actionId() default "";
+}

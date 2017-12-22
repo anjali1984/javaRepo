@@ -1,0 +1,109 @@
+package com.optum.comet.mctmcf.generator.predefbeans;
+
+import java.io.Serializable;
+
+public abstract class Definition implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private String level;
+	private String name;
+	private String position;
+	private int storageLength;
+	private String picture;
+	private boolean numeric;
+	private boolean signed;
+	private int occurs;
+	private boolean redefined = false;
+	private String redefines;
+	
+
+	
+	
+	public String getLevel() {
+		return level;
+	}
+	public void setLevel(String level) {
+		this.level = level;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getPosition() {
+		return position;
+	}
+	public void setPosition(String position) {
+		this.position = position;
+	}
+	public int getStorageLength() {
+		return storageLength;
+	}
+	public void setStorageLength(int storageLength) {
+		this.storageLength = storageLength;
+	}
+	public boolean isNumeric() {
+		return numeric;
+	}
+	public void setNumeric(boolean numeric) {
+		this.numeric = numeric;
+	}
+	public boolean isSigned() {
+		return signed;
+	}
+	public void setSigned(boolean signed) {
+		this.signed = signed;
+	}
+	public String getPicture() {
+		return picture;
+	}
+	public void setPicture(String picture) {
+		this.picture = picture;
+	}
+	public int getOccurs() {
+		return occurs;
+	}
+	public void setOccurs(int occurs) {
+		this.occurs = occurs;
+	}
+	public boolean isRedefined() {
+		return redefined;
+	}
+	public void setRedefined(boolean redefined) {
+		this.redefined = redefined;
+	}
+	public String getRedefines() {
+		return redefines;
+	}
+	public void setRedefines(String redefines) {
+		this.redefines = redefines;
+	}
+	
+	@Override
+	public String toString() {
+	    return super.toString();
+	}
+    
+	@Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        return result;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        Definition other = (Definition) obj;
+        if (name == null) {
+            if (other.name != null) return false;
+        } else if (!name.equals(other.name)) return false;
+        return true;
+    }
+}

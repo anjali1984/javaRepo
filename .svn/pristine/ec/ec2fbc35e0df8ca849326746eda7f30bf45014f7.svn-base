@@ -1,0 +1,25 @@
+package com.optum.comet.mctmcf.exception;
+
+import com.optum.comet.mctmcf.exception.vo.CometExceptionBean;
+import com.optum.diff.common.exception.BPMBaseException;
+
+public class CometException extends BPMBaseException {
+    private static final long serialVersionUID = 3172109747760049874L;
+    private CometExceptionBean  exceptionVO;
+    public CometException(String message) {
+        super(message);
+    }
+    public CometException(CometExceptionBean exceptionVO) {
+        this.exceptionVO = exceptionVO;
+    }
+    public CometException(CometExceptionBean exceptionVO, String messString) {
+        super(messString);
+        this.exceptionVO = exceptionVO;
+    }
+    public CometExceptionBean getExceptionVO() {
+        return this.exceptionVO;
+    }
+    public CometException() {
+        super();
+    }
+}

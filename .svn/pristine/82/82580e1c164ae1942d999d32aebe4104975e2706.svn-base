@@ -1,0 +1,29 @@
+package com.optum.comet.mctmcf.converter;
+
+/**
+ * This enum will be used to hold actions for a converter, 
+ * 
+ * variations required while dbo to vo mapping 
+ * or from vo to dbo mapping can be recorded via this enum
+ * 
+ * @author 142037
+ *
+ */
+public enum ConverterActions {
+	//global actions
+	
+	Standard,//standard conversion between a vo and a dbo
+	LookupResultsCMTClmCounts,//standard conversion between a vo and a dbo
+	
+	PrepareReleaseMessage, //Prepare release message from inbound claim message vo
+	LoadStageClaimSfxMessage,  // prepare the dbo to load the claim to staging table
+	InboundClaimMesasgetoClaimItem,  // prepare the dbo to load the claim to staging table
+	UpdateClaim, //prepare the dbo to update load claim status-persist or wait (insert/delete lock icn) 
+	LoadStageClaimSfxStsUpdtMsg, //prepare the dbo to load status update to staging table;
+	UpdateLoadClaimRec,//update load claim record
+	GetClaimTransDetails,//pass icn to get the transactional details on the claim [ including if the claim is New or Update ]
+	SfxPendcd,//prepare VO from DBO for icn_sfx table
+	InsertItmStage;//for non processed recs in item_flat_stage
+
+	
+}

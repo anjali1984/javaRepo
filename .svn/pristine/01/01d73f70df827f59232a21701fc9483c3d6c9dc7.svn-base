@@ -1,0 +1,175 @@
+package com.optum.comet.mctmcf.util;
+
+import java.lang.reflect.Array;
+
+
+
+/**
+* Collected methods which allow easy implementation of <code>hashCode</code>.
+*
+* Example use case:
+* <pre>
+*  public int hashCode(){
+*    int result = HashCodeUtil.SEED;
+*    //collect the contributions of various fields
+*    result = HashCodeUtil.hash(result, fPrimitive);
+*    result = HashCodeUtil.hash(result, fObject);
+*    result = HashCodeUtil.hash(result, fArray);
+*    return result;
+*  }
+* </pre>
+*/
+public final class HashCodeUtil {
+
+  /**
+  * An initial value for a <code>hashCode</code>, to which is added contributions
+  * from fields. Using a non-zero value decreases collisons of <code>hashCode</code>
+  * values.
+  */
+  public static final int SEED = 23;
+
+  /**
+  * booleans.
+  */
+  public static long hash( long aSeed, boolean aBoolean ) {
+    return firstTerm( aSeed ) + ( aBoolean ? 1 : 0 );
+  }
+
+  /**
+  * chars.
+  */
+  public static long hash( long aSeed, char aChar ) {
+    return firstTerm( aSeed ) + (long)aChar;
+  }
+
+  /**
+  * ints.
+  */
+  public static long hash( long aSeed , int aInt ) {
+    /*
+    * Implementation Note
+    * Note that byte and short are handled by this method, through
+    * implicit conversion.
+    */
+    return firstTerm( aSeed ) + aInt;
+  }
+
+  /**
+  * longs.
+  */
+  public static long hash( long aSeed , long aLong ) {
+    return firstTerm(aSeed)  + (long)( aLong ^ (aLong >>> 32) );
+  }
+
+  /**
+  * floats.
+  */
+  public static long hash( long aSeed , float aFloat ) {
+    return hash( aSeed, Float.floatToIntBits(aFloat) );
+  }
+
+  /**
+  * doubles.
+  */
+  public static long hash( long aSeed , double aDouble ) {
+    return hash( aSeed, Double.doubleToLongBits(aDouble) );
+  }
+
+  /**
+  * <code>aObject</code> is a possibly-null object field, and possibly an array.
+  *
+  * If <code>aObject</code> is an array, then each element may be a primitive
+  * or a possibly-null object.
+  */
+  public static long hash( long aSeed , Object aObject ) {
+	long result = aSeed;
+    if ( aObject == null) {
+      result = hash(result, 0);
+    }
+    else if ( ! isArray(aObject) ) {
+      result = hash(result, aObject.hashCode());
+    }
+    else {
+      int length = Array.getLength(aObject);
+      for ( int idx = 0; idx < length; ++idx ) {
+        Object item = Array.get(aObject, idx);
+        //recursive call!
+        result = hash(result, item);
+      }
+    }
+    return result;
+  }
+
+  public static long generateHashCode(Object obj) {
+	  long result = HashCodeUtil.SEED;
+	  
+	/*  if (obj instanceof ClaimMessageType) {
+		  	
+		  	ClaimMessageType clmMshTyp = (ClaimMessageType) obj; 
+		  	result = HashCodeUtil.hash( result, clmMshTyp.getAiIndicator() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getBillType() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getBilledPOS() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getClaimFromDate() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getClaimRecievedDateFromFln() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getClaimToDate() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getCobCancelDt() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getCobEffectiveDate() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getCobIndicator() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getCobPriorCancelDt() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getCobPriorEffectiveDate() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getDiagCode() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getEditWarnMsg() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getEmployeeCoverageCode() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getEngine() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getFirst2DigitsBillType() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getFln() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getFlnDtPatDOBDiff() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getIcesRanking() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getIcn() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getIsPatientNameBlank() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getMedicareCancelDt() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getMedicareEffectiveDate() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getMedicareIndicator() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getMedicarePriorCancelDt() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getMedicarePriorEffectiveDate() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getMemberIdPrefix() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getNonSelectCodes() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getObligorId() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getOtherInsuranceInfo() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getPatientDOB() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getPatientRelationshipCode() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getPayloc() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getPolicy() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getProcCodes() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getProviderTaxId() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getProviderTaxIdPrefix() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getProviderTaxIdSuffix() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getProviderType() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getRecentPendCode() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getRecentUnetOffice() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getIndRestrictCode() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getFamRestrictCode() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getIndRestrictCodeCancelDt() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getIndRestrictCodeEffectiveDate() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getFamRestrictCodeCancelDt() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getFamRestrictCodeEffectiveDate() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getRevenueCode() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getSourceIdOfClaim() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getTotalBilledAmount() );
+			result = HashCodeUtil.hash( result, clmMshTyp.getVendorCode() );
+	  }*/
+	  return result;
+  }
+  /// PRIVATE ///
+  private static final int fODD_PRIME_NUMBER = 37;
+
+  private static long firstTerm( long aSeed ){
+    return fODD_PRIME_NUMBER * aSeed;
+  }
+
+  private static boolean isArray(Object aObject){
+    return aObject.getClass().isArray();
+  }
+} 
+
+

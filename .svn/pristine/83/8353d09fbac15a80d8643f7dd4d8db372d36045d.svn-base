@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation=" http://www.springframework.org/schema/beans 
+							http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- For environment configuration -->
+	<import	resource="classpath:META-INF/spring/com.optum.comet.mctmcf.app.cntxt.env.xml" />
+
+	<!-- For common components to be used across all services and dao -->
+	<import	resource="classpath:META-INF/spring/com.optum.comet.mctmcf.app.common.comp.xml" />
+
+	<!-- For dao configuration -->
+	<import	resource="classpath:META-INF/spring/com.optum.comet.mctmcf.app.dao.xml" />
+
+	<!-- For services configuration -->
+	<import	resource="classpath:META-INF/spring/com.optum.comet.mctmcf.app.services.xml" />
+	
+	<!-- For spring integration components -->
+	<import	resource="classpath:META-INF/spring/com.optum.comet.mctmcf.app.si.components.xml"/>
+
+	<!-- For advisors configuration -->
+	<import	resource="classpath:META-INF/spring/com.optum.comet.mctmcf.app.advisors.xml" />
+	 
+</beans>

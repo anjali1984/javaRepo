@@ -1,0 +1,76 @@
+package com.optum.comet.mctmcf.generated.vol04042017;
+
+public class CqrcmFixed extends com.optum.comet.mctmcf.generator.predefbeans.Definition implements java.io.Serializable {
+
+    public CqrcmFixed() {
+        this.cqrcmFileFlnAltKey = new com.optum.comet.mctmcf.generated.vol04042017.CqrcmFileFlnAltKey();
+        this.cqrcmFileSsnAltKey = new com.optum.comet.mctmcf.generated.vol04042017.CqrcmFileSsnAltKey();
+        this.cqrcmFileKey = new com.optum.comet.mctmcf.generated.vol04042017.CqrcmFileKey();
+    }
+
+    private static final long serialVersionUID = 1L;
+    private com.optum.comet.mctmcf.generated.vol04042017.CqrcmFileFlnAltKey cqrcmFileFlnAltKey;
+    private com.optum.comet.mctmcf.generated.vol04042017.CqrcmFileSsnAltKey cqrcmFileSsnAltKey;
+    private com.optum.comet.mctmcf.generated.vol04042017.CqrcmFileKey cqrcmFileKey;
+    private String cqrcmClaimDateStamp1;
+    private String cqrcmClaimTimeStamp1;
+    private String cqrcmEngineInd;
+    private String cqrcmNumberTyp1;
+    private String cqrcmNumberTyp2;
+    private String cqrcmNumberTyp3;
+
+    public void setCqrcmFileFlnAltKey(com.optum.comet.mctmcf.generated.vol04042017.CqrcmFileFlnAltKey cqrcmFileFlnAltKey) { 
+        this.cqrcmFileFlnAltKey = cqrcmFileFlnAltKey;
+    }
+    public com.optum.comet.mctmcf.generated.vol04042017.CqrcmFileFlnAltKey getCqrcmFileFlnAltKey() { 
+        return this.cqrcmFileFlnAltKey;
+    }
+    public void setCqrcmFileSsnAltKey(com.optum.comet.mctmcf.generated.vol04042017.CqrcmFileSsnAltKey cqrcmFileSsnAltKey) { 
+        this.cqrcmFileSsnAltKey = cqrcmFileSsnAltKey;
+    }
+    public com.optum.comet.mctmcf.generated.vol04042017.CqrcmFileSsnAltKey getCqrcmFileSsnAltKey() { 
+        return this.cqrcmFileSsnAltKey;
+    }
+    public void setCqrcmFileKey(com.optum.comet.mctmcf.generated.vol04042017.CqrcmFileKey cqrcmFileKey) { 
+        this.cqrcmFileKey = cqrcmFileKey;
+    }
+    public com.optum.comet.mctmcf.generated.vol04042017.CqrcmFileKey getCqrcmFileKey() { 
+        return this.cqrcmFileKey;
+    }
+    public void setCqrcmClaimDateStamp1(String cqrcmClaimDateStamp1) { 
+        this.cqrcmClaimDateStamp1 = cqrcmClaimDateStamp1;
+    }
+    public String getCqrcmClaimDateStamp1() { 
+        return this.cqrcmClaimDateStamp1;
+    }
+    public void setCqrcmClaimTimeStamp1(String cqrcmClaimTimeStamp1) { 
+        this.cqrcmClaimTimeStamp1 = cqrcmClaimTimeStamp1;
+    }
+    public String getCqrcmClaimTimeStamp1() { 
+        return this.cqrcmClaimTimeStamp1;
+    }
+    public void setCqrcmEngineInd(String cqrcmEngineInd) { 
+        this.cqrcmEngineInd = cqrcmEngineInd;
+    }
+    public String getCqrcmEngineInd() { 
+        return this.cqrcmEngineInd;
+    }
+    public void setCqrcmNumberTyp1(String cqrcmNumberTyp1) { 
+        this.cqrcmNumberTyp1 = cqrcmNumberTyp1;
+    }
+    public String getCqrcmNumberTyp1() { 
+        return this.cqrcmNumberTyp1;
+    }
+    public void setCqrcmNumberTyp2(String cqrcmNumberTyp2) { 
+        this.cqrcmNumberTyp2 = cqrcmNumberTyp2;
+    }
+    public String getCqrcmNumberTyp2() { 
+        return this.cqrcmNumberTyp2;
+    }
+    public void setCqrcmNumberTyp3(String cqrcmNumberTyp3) { 
+        this.cqrcmNumberTyp3 = cqrcmNumberTyp3;
+    }
+    public String getCqrcmNumberTyp3() { 
+        return this.cqrcmNumberTyp3;
+    }
+}

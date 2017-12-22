@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<!--  Rolling file appender cmtra-->
+	<appender class="org.apache.log4j.DailyRollingFileAppender" name="cmtra">
+		<param name="Threshold" value="INFO" />
+		<param value="/cmttrangtwlogs/test/cmtmctmcf.log" name="File" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd-HH" />
+		<param name="Append" value="true" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param value="%d %-5p %c{1}:%L - %m%n" name="ConversionPattern" />
+		</layout>
+	</appender>
+	
+	<!--  Rolling file appender cmttrans-->
+	<appender class="org.apache.log4j.RollingFileAppender" name="cmttrans">
+		<param name="Threshold" value="INFO" />
+		<param value="/cmttrangtwlogs/test/tops_mq_msgs.log" name="File" />
+		<param value="200" name="MaxBackupIndex" />
+		<param value="10000KB" name="MaxFileSize" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param value="%d %-5p %c{1}:%L - %m%n" name="ConversionPattern" />
+		</layout>
+	</appender>
+	
+	<!--  Rolling file appender cmt_perfmatrix-->
+	<appender class="org.apache.log4j.RollingFileAppender" name="cmt_perfmatrix">
+		<param name="Threshold" value="DEBUG" />
+		<param value="/cmttrangtwlogs/test/perf_cmtmctmcf_perf_matrix.log" name="File" />
+		<param value="200" name="MaxBackupIndex" />
+		<param value="10000KB" name="MaxFileSize" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param value="%d %-5p %c{1}:%L - %m%n" name="ConversionPattern" />
+		</layout>
+	</appender>
+	
+	<!--  CONSOLE appender-->
+	<appender class="org.apache.log4j.ConsoleAppender" name="CON">
+		<param name="Threshold" value="ERROR" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param value="%d %-5p %c{1}:%L - %m%n" name="ConversionPattern" />
+		</layout>
+	</appender>
+	
+	<!-- Async Coalescing Statistics Appender for perf4j -->
+	<appender name="CoalescingStatistics"
+              class="org.perf4j.log4j.AsyncCoalescingStatisticsAppender">
+        <!--
+          The TimeSlice option is used to determine the time window for which 
+          all received StopWatch logs are aggregated to create a single
+          GroupedTimingStatistics log. 
+          Here we set it to 10000 ms , overriding the default of 30000 ms
+        -->
+        <param name="TimeSlice" value="1000000"/>
+        <appender-ref ref="cmt_perfmatrix"/>
+    </appender>
+
+	<!-- Defined loggers  -->
+	
+	<!--
+      org.perf4j.TimingLogger is the value of the org.perf4j.StopWatch.DEFAULT_LOGGER_NAME constant. 
+      Also, note that additivity is set to false, which is usually what is desired - this means
+      that timing statements will only be sent to this logger and NOT to upstream loggers.
+    -->
+    <logger name="org.perf4j.TimingLogger" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="CoalescingStatistics"/>
+    </logger>
+    
+	<logger name="cmt" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="cmtra" />		
+		<appender-ref ref="CON" />
+	</logger>
+	
+	<logger name="cmt.mcfmsgs" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="cmttrans" />
+	</logger>
+	
+	
+	<!-- Logger additivity -->
+	<logger additivity="false" name="com.optum.diff">
+		<level value="DEBUG" />
+		<appender-ref ref="cmtra" />
+		<appender-ref ref="CON" />
+	</logger>
+
+	<logger name="com.optum.comet">
+		<level value="DEBUG" />
+		<appender-ref ref="cmtra" />
+		<appender-ref ref="CON" />
+	</logger>
+
+	<logger additivity="false" name="net.sf.ehcache">
+		<level value="WARN" />
+		<appender-ref ref="cmtra" />
+		<appender-ref ref="CON" />
+	</logger>
+
+	<logger additivity="false" name="org.dozer">
+		<level value="WARN" />
+		<appender-ref ref="cmtra" />
+		<appender-ref ref="CON" />
+	</logger>
+
+	<logger additivity="false" name="org.springframework">
+		<level value="WARN" />
+		<appender-ref ref="cmtra" />
+		<appender-ref ref="CON" />
+	</logger>
+	
+	<logger additivity="false" name="org.hibernate">
+		<level value="WARN" />
+		<appender-ref ref="cmtra" />
+		<appender-ref ref="CON" />
+	</logger>
+	
+	<logger additivity="false" name="org.apache.commons">
+		<level value="WARN" />
+		<appender-ref ref="cmtra" />
+		<appender-ref ref="CON" />
+	</logger>
+	
+</log4j:configuration>

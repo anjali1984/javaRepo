@@ -1,0 +1,80 @@
+package com.optum.comet.mctmcf.generated.vol04042017;
+
+public class CqrcmV2PatientInfo extends com.optum.comet.mctmcf.generator.predefbeans.Definition implements java.io.Serializable {
+
+    public CqrcmV2PatientInfo() {
+    }
+
+    private static final long serialVersionUID = 1L;
+    private String cqrcmV2PatRelationship;
+    private String cqrcmV2PatDob;
+    private String cqrcmV2PatFirstName;
+    private String cqrcmV2PatMidInit;
+    private String cqrcmV2PatLastName;
+    private String cqrcmV2PatAdr1;
+    private String cqrcmV2PatAdr2;
+    private String cqrcmV2PatCity;
+    private String cqrcmV2PatState;
+    private String cqrcmV2PatZip;
+
+    public void setCqrcmV2PatRelationship(String cqrcmV2PatRelationship) { 
+        this.cqrcmV2PatRelationship = cqrcmV2PatRelationship;
+    }
+    public String getCqrcmV2PatRelationship() { 
+        return this.cqrcmV2PatRelationship;
+    }
+    public void setCqrcmV2PatDob(String cqrcmV2PatDob) { 
+        this.cqrcmV2PatDob = cqrcmV2PatDob;
+    }
+    public String getCqrcmV2PatDob() { 
+        return this.cqrcmV2PatDob;
+    }
+    public void setCqrcmV2PatFirstName(String cqrcmV2PatFirstName) { 
+        this.cqrcmV2PatFirstName = cqrcmV2PatFirstName;
+    }
+    public String getCqrcmV2PatFirstName() { 
+        return this.cqrcmV2PatFirstName;
+    }
+    public void setCqrcmV2PatMidInit(String cqrcmV2PatMidInit) { 
+        this.cqrcmV2PatMidInit = cqrcmV2PatMidInit;
+    }
+    public String getCqrcmV2PatMidInit() { 
+        return this.cqrcmV2PatMidInit;
+    }
+    public void setCqrcmV2PatLastName(String cqrcmV2PatLastName) { 
+        this.cqrcmV2PatLastName = cqrcmV2PatLastName;
+    }
+    public String getCqrcmV2PatLastName() { 
+        return this.cqrcmV2PatLastName;
+    }
+    public void setCqrcmV2PatAdr1(String cqrcmV2PatAdr1) { 
+        this.cqrcmV2PatAdr1 = cqrcmV2PatAdr1;
+    }
+    public String getCqrcmV2PatAdr1() { 
+        return this.cqrcmV2PatAdr1;
+    }
+    public void setCqrcmV2PatAdr2(String cqrcmV2PatAdr2) { 
+        this.cqrcmV2PatAdr2 = cqrcmV2PatAdr2;
+    }
+    public String getCqrcmV2PatAdr2() { 
+        return this.cqrcmV2PatAdr2;
+    }
+    public void setCqrcmV2PatCity(String cqrcmV2PatCity) { 
+        this.cqrcmV2PatCity = cqrcmV2PatCity;
+    }
+    public String getCqrcmV2PatCity() { 
+        return this.cqrcmV2PatCity;
+    }
+    public void setCqrcmV2PatState(String cqrcmV2PatState) { 
+        this.cqrcmV2PatState = cqrcmV2PatState;
+    }
+    public String getCqrcmV2PatState() { 
+        return this.cqrcmV2PatState;
+    }
+    public void setCqrcmV2PatZip(String cqrcmV2PatZip) { 
+        this.cqrcmV2PatZip = cqrcmV2PatZip;
+    }
+    public String getCqrcmV2PatZip() { 
+        return this.cqrcmV2PatZip;
+    }
+}

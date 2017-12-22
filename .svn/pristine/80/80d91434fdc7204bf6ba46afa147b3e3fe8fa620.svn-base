@@ -1,0 +1,190 @@
+package com.optum.comet.mctmcf.routers.impl;
+
+import com.optum.comet.mctmcf.constants.CometConstants;
+import com.optum.comet.mctmcf.constants.CometServiceActionConstants;
+import com.optum.comet.mctmcf.exception.CometException;
+import com.optum.comet.mctmcf.exception.vo.CometExceptionBean;
+import com.optum.comet.mctmcf.services.ICometService;
+import com.optum.comet.mctmcf.vo.InboundClaimMessage;
+import com.optum.diff.common.exception.GenericRuntimeException;
+import com.optum.diff.common.vo.ServiceParamVO;
+
+public class CmtClmLoadingRouter {
+
+	private ICometService mctmcfService;
+	
+	//check if manual message length valid(i.e 1043)
+	public String checkIfValidLength(InboundClaimMessage payload) throws GenericRuntimeException {
+		InboundClaimMessage icm = (InboundClaimMessage) payload;
+		String retChannel = icm.isInvalidLength() ? "cmt.endWrkflwChnl" : "cmt.inboundClmMsg" ;
+		return retChannel;
+	}
+	
+
+	// check if multi-sfx needs to wait
+	public String determineMultiSfxHoldStatus(InboundClaimMessage payload)  throws GenericRuntimeException {
+		InboundClaimMessage icm = checkMultiSufx(payload);
+		/**
+		 * Implement logic to determine a. if current clm sfx is multisuffix or
+		 * single suffix b. if single suffix return "cmt.itemPersist" c. if
+		 * multi-suffix c1. find out the total number of claims (x1), the total
+		 * number of claims waiting for more than x secs [ configurable ] (x2)
+		 * the total number of loaded claims for the icn (x3) c2. if x1 = x3
+		 * then return "cmt.itemPersist" c3. if x2 > 1 then return
+		 * "cmt.itemPersist" c4. else "cmt.loadClmSfxWait"
+		 */
+		String retChannel = !icm.isMultiSfxWait() || icm.isPickedUpByBatch() ?  "cmt.itemPersist" : "cmt.updateClmStsUnlckICN" ;
+		return retChannel;
+	}
+
+	// check if mct passed and determine if required to release claim
+	public String determineMCFEligibility(InboundClaimMessage payload) throws GenericRuntimeException {
+		
+		String retChannel = null;
+		
+		
+		if(payload.isNoRowsAvailableInPoller()) {
+			retChannel = "cmt.endWrkflwChnl";
+		} else {
+			InboundClaimMessage icm = checkLoadEligiblity(payload);
+			retChannel = icm.isLoadEligible() ? "cmt.processMCF" : "cmt.releaseClm";
+		}
+		return retChannel;
+	}
+
+	/**
+	 * check if the status of the claim is resolved in comet or open, if open put a load lock on the claim, 
+	 * if closed the status of the load claim record can be updated to ALREADY_RESOLVED.
+	 * @param payload
+	 * @return
+	 * @throws CometException
+	 */
+	public String checkIfAlreadyResolved(InboundClaimMessage payload) throws GenericRuntimeException {
+		InboundClaimMessage icm = determineClaimStatus(payload);
+		
+		String retChannel;
+		if(payload.getQueue().equals(CometConstants.STATUSMSG))
+		{
+			 retChannel = icm.isClaimAlreadyResolved() ? "cmt.loadClmResolved" : "cmt.itemPersist";
+			 return retChannel;
+		}else
+		{
+			 retChannel = icm.isClaimAlreadyResolved() ? "cmt.loadClmResolved" : "cmt.ldLckChnl";
+			 return retChannel;
+		}
+
+	}
+
+	//determine if claim sfx message is part of a multi suffix claim 
+	public String determineMultiSfx (InboundClaimMessage payload)  throws GenericRuntimeException {
+		InboundClaimMessage icm = (InboundClaimMessage) payload;
+		String retChannel = !icm.isMultiSfx()  ?  "cmt.itemPersist" : "cmt.mltiSfxDtrmnLock";
+		return retChannel;
+	}
+
+
+	//determine if ICN exists in ld_lck
+	public String determineLdLckSts (InboundClaimMessage payload)  throws GenericRuntimeException {
+		InboundClaimMessage icm = null;
+		icm = detrmineLockSts(payload);
+		String retChannel = icm.isAddedLock() ?   "cmt.mltiSfxChnl" : "cmt.endWrkflwChnl" ;
+		return retChannel;
+	}
+
+
+	//determine if curstat null in item_flat
+	public String determineItmCurStatNull (InboundClaimMessage payload) throws GenericRuntimeException {
+		InboundClaimMessage icm = payload;
+		String retChannel = icm.isClaimAlreadyExists() ?  "cmt.itmUpdt" : "cmt.itmInsrt" ;
+		return retChannel;
+	}
+
+
+	/** Utility methods **/
+	// check if eligible to be loaded
+	private InboundClaimMessage checkLoadEligiblity(InboundClaimMessage mnlQueueMsg) throws GenericRuntimeException {
+		final String logCorrid = (mnlQueueMsg.getCorrId() == null ? String.valueOf(Thread.currentThread().getId())
+				: mnlQueueMsg.getCorrId());
+		InboundClaimMessage retVal = null;
+		ServiceParamVO serviceObj = new ServiceParamVO();
+		serviceObj.setBpmBaseVO(mnlQueueMsg);
+		try {
+			// call service to handle request
+			serviceObj = mctmcfService.execute(
+					CometServiceActionConstants.ClaimServiceActions.OPN_CLMS_FOR_ORG.getDescription(), serviceObj,
+					logCorrid);
+			retVal = (InboundClaimMessage) serviceObj.getBpmBaseVO();
+		} catch (Throwable th) {
+			//throw new BPMSystemException(e);
+			CometExceptionBean ceb = new CometExceptionBean(th, CometConstants.ACTORS.SERVICE, mnlQueueMsg.getCorrId(),mnlQueueMsg.getLoadId(),mnlQueueMsg.getIcn());
+			throw new CometException(ceb);
+		}
+		return retVal;
+	}
+
+	//Get Transactional attributes for the claim
+	private InboundClaimMessage determineClaimStatus(InboundClaimMessage mnlQueueMsg)
+			throws CometException {
+		final String logCorrid = (mnlQueueMsg.getCorrId() == null ? String.valueOf(Thread.currentThread().getId())
+				: mnlQueueMsg.getCorrId());
+		InboundClaimMessage retVal = null;
+		ServiceParamVO serviceObj = new ServiceParamVO();
+		serviceObj.setBpmBaseVO(mnlQueueMsg);
+		try {
+			// call service to handle request
+			serviceObj = mctmcfService.execute(
+					CometServiceActionConstants.ClaimServiceActions.GET_TRANS_DETAILS.getDescription(), serviceObj,
+					logCorrid);
+			retVal = (InboundClaimMessage) serviceObj.getBpmBaseVO();
+		} catch (Throwable th) {
+			//throw new BPMSystemException(e);
+			CometExceptionBean ceb = new CometExceptionBean(th, CometConstants.ACTORS.SERVICE, mnlQueueMsg.getCorrId(),mnlQueueMsg.getLoadId(),mnlQueueMsg.getIcn());
+			throw new CometException(ceb);
+		}
+		return retVal;
+	}
+
+	// check if MCF is multisuffix
+	private InboundClaimMessage checkMultiSufx(InboundClaimMessage mnlQueueMsg) {
+		final String logCorrid = (mnlQueueMsg.getCorrId() == null ? String.valueOf(Thread.currentThread().getId())
+				: mnlQueueMsg.getCorrId());
+		InboundClaimMessage retVal = null;
+		ServiceParamVO serviceObj = new ServiceParamVO();
+		serviceObj.setBpmBaseVO(mnlQueueMsg);
+		try {
+			// call service to handle request
+			serviceObj = mctmcfService.execute(
+					CometServiceActionConstants.ClaimServiceActions.MCF_MULTI_SUFX.getDescription(), serviceObj,
+					logCorrid);
+			retVal = (InboundClaimMessage) serviceObj.getBpmBaseVO();
+		} catch (Throwable th) {
+			//throw new BPMSystemException(e);
+			CometExceptionBean ceb = new CometExceptionBean(th, CometConstants.ACTORS.SERVICE, mnlQueueMsg.getCorrId(),mnlQueueMsg.getLoadId(),mnlQueueMsg.getIcn());
+			throw new CometException(ceb);
+		}
+		return retVal;
+	}
+	
+	//Determine if lock exists and lock claim ICN
+	private InboundClaimMessage detrmineLockSts(InboundClaimMessage mnlQueueMsg) {
+		final String logCorrid = (mnlQueueMsg.getCorrId() == null ? String.valueOf(Thread.currentThread().getId()) : mnlQueueMsg.getCorrId());
+		InboundClaimMessage retVal = null;
+		ServiceParamVO serviceObj = new ServiceParamVO();
+		serviceObj.setBpmBaseVO(mnlQueueMsg);
+	
+			serviceObj = mctmcfService.execute(
+					CometServiceActionConstants.ClaimServiceActions.LOCK_ICN.getDescription(), serviceObj,
+					logCorrid);
+			retVal = (InboundClaimMessage) serviceObj.getBpmBaseVO();
+			
+		
+		return retVal;
+	}
+	// ACCESSORS + SETTERS
+	public ICometService getMctmcfService() {
+		return mctmcfService;
+	}
+	public void setMctmcfService(ICometService mctmcfService) {
+		this.mctmcfService = mctmcfService;
+	}
+}

@@ -1,0 +1,24 @@
+package com.optum.comet.mctmcf.util;
+
+import java.io.BufferedReader;
+import java.io.Reader;
+import java.sql.Clob;
+
+public class DataTypeConversionUtil {
+
+    public static String getString (Clob clob) {
+        
+        StringBuilder clobStr = new StringBuilder();
+        try {
+            Reader reader = clob.getCharacterStream();
+            BufferedReader br = new BufferedReader(reader);
+            String str = null;
+            while ((str = br.readLine()) != null) {
+                clobStr.append(str);
+            }
+        } catch (Exception e) {
+            
+        }
+        return clobStr.toString();
+    }
+}

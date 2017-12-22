@@ -1,0 +1,138 @@
+## inserts the message read from queue to ld_clm with sts as new
+insert.into.ld_clm=insert into ld_clm  ( lid, sts, fld_cnt, que, icn, ldt, msg, orgid, cur_sfx, tot_sfx, pnd_cd, clm_ico_typ, lid_alt)  \
+            				values  ( LID_SEQ.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+
+## insert claim into ld_lck table
+insert.into.ld.lck=insert into ld_lck   (ICN,CRT_DTM)   values(?,?)
+
+## delete from ld_lck
+delete.from.ld.lck=delete from ld_lck where icn=?
+
+## check if ICN exists in Ld_LCK table
+check.in.ld.lck=select count(*) from ld_lck where icn=?
+
+##get the total suffixes  loaded for current icn
+select.tot.loaded.clms.from.ld_clm=select cur_sfx,pnd_cd  from ld_clm where icn=?
+
+## update current ICN(the one in thread) with status waiting/or with sts resolved (5) if resolved in item_flat
+update.LdClm.Sts=update ld_clm set sts=? where lid=?
+
+## update current ICN(the one in thread) with status waiting/or with sts resolved (5) if resolved in item_flat
+update.allLdClm.Sts=update ld_clm set sts=? where icn=? and (sts = 1 or sts = 2 or sts =12)
+
+##to get the LID for rowid
+select.lid.ld_clm=select lid from ld_clm where lid_alt=?
+
+
+## to update the icn_sufx table from  sfx pndcd Map
+update.sfx.pndcd.icn_sufx=update  icn_sfx set icn_sfx_cod=? where icn_sfx_icn_id=? and icn_sfx_sfx=? and icn_sfx_sfx_sta = 'PEND'
+							
+							
+## to insert the icn_sufx table from  sfx pndcd Map
+save.sfx.pndcd.icn_sufx=insert into icn_sfx(icn_sfx_iid,icn_sfx_icn_id,icn_sfx_sfx,icn_sfx_cod) values(?,?,?,?)
+							
+## to get the count of all the open claims in itm_flt for orgid, clm_frm_type associated with the current ICN, used for MCT
+select.mct.clm.count=select * from (select count(*) org_frmtyp_cnt from item_flat  where open_or_resolved = 'O' and corg = ? and cfrm_typ = ?) , \
+										(select count(*) org_cnt from item_flat  where open_or_resolved = 'O' and corg = ?)  , \
+											(select count(*) opn_cnt from item_flat  where open_or_resolved = 'O')
+
+##to check if icn suffix already resolved from item_flat_trans_view 
+select.mcf.stat.itmflat=select curstat, curoper, case when count(*) over (partition by icn) = 0 then 'NEW' else 'UPDATE' end case from vw_claims where icn = ?
+
+
+
+
+## insert claim into itm table
+insert.into.itm.flt=insert \
+into item_flat \
+  (\
+    iid,  \
+    clngth,             cpay,            cfln,                cfln_typ,         empid,\
+    cicn,               cicn_rec_typ,    csfx,                cdt_stmp1,        ctm_stmp1,          ceng,\
+    cnum_typ2,          cnum_typ3,       cfrm_typ,            csnd_to,          csnd_cnt,           cnsl_err,\
+    cnsl_err_fill_in,   crsl_clm_typ,    cpnd,                ccmmts,           csq_sts,            csq_rtn_sys,\
+    csq_rtn_dt,         empid_rec_typ,   cnum_typ1,           tinsfx,           cv2_nemp_id,        cv2_npltfrm,\
+    cv2_nemp_pol,       cv2_npat_fnm,    cv2_npat_rel,        cv2_neng,         cv2_nofc,           cptp,    \
+    cv2_trg_rs_cd,      cv2_alt_id,      cv2_mgr_ofc,         cv2_sys_ind,      corg,               ctyp,    \
+    cv2_sq_dsg,         cv2_sfx_amt,     camt,                cv2_pos,          cv2_msvc_cd,        cv2_bll_typ,\
+    cv2_fln_dcc,        crdt,            cedt,                csdt,             relcd,              cv2_pat_dob, \
+    patnm,              cv2_pat_m,       cv2_pat_lnm,         cv2_pat_adr1,     cv2_pat_adr2,       cv2_pat_cty,  \
+    cv2_pat_ste,        cv2_pat_zip,     cv2_ins_dob,         cv2_ins_fnm,      cv2_ins_m,          cv2_ins_lnm,\
+    cv2_ins_adr1,       cv2_ins_adr2,    cv2_ins_cty,         cv2_ins_ste,      cv2_ins_zip,        cv2_ins_id,  \
+    cv2_pol_no,         cpol,            cmkt,                cprd,             cv2_prv_ssn,        provid,    \
+    cv2_prv_dgr,        provname,        cv2_prv_ind_fnm,     cv2_prv_ind_lnm,  cv2_prv_ind_init,   cv2_prv_adr1,\
+    cv2_prv_adr2,       cv2_prv_cty,     cv2_prv_ste,         cv2_prv_zip,      cv2_epd_mtch_cd,    cv2_clm_cmmts,\
+    cpolrstrctcd,       crskdt    \
+  )\
+  values\
+  (\
+    ?, \
+    ?,    ?,    ?,    ?,    ?,\
+    ?,    ?,    ?,    ?,    ?,    ?,\
+    ?,    ?,    ?,    ?,    ?,    ?,\
+    ?,    ?,    ?,    ?,    ?,    ?,\
+    ?,    ?,    ?,    ?,    ?,    ?,\
+    ?,    ?,    ?,    ?,    ?,    ?,\
+    ?,    ?,    ?,    ?,    ?,    ?,\
+    ?,    ?,    ?,    ?,    ?,    ?,\
+    ?,    ?,    ?,    ?,    ?,    ?,\
+    ?,    ?,    ?,    ?,    ?,    ?,\
+    ?,    ?,    ?,    ?,    ?,    ?,\
+    ?,    ?,    ?,    ?,    ?,    ?,\
+    ?,    ?,    ?,    ?,    ?,    ?,\
+    ?,    ?,    ?,    ?,    ?,    ?,\
+    ?,    ?,    ?,    ?,    ?,    ?, \
+    ?,    ?\
+  )
+ 
+ 
+##update item_flat
+update.into.itm.flt=update item_flat \
+set \
+    clngth=?,             cpay=?,            cfln=?,                cfln_typ=?,         empid=?,\
+    cicn_rec_typ=?,       csfx=?,            cdt_stmp1=?,           ctm_stmp1=?,        ceng=?,\
+    cnum_typ2=?,          cnum_typ3=?,       cfrm_typ=?,            csnd_to=?,          csnd_cnt=?,           cnsl_err=?,\
+    cnsl_err_fill_in=?,   crsl_clm_typ=?,    cpnd=?,                ccmmts=?,           csq_sts=?,            csq_rtn_sys=?,\
+    csq_rtn_dt=?,         empid_rec_typ=?,   cnum_typ1=?,           tinsfx=?,           cv2_nemp_id=?,        cv2_npltfrm=?,\
+    cv2_nemp_pol=?,       cv2_npat_fnm=?,    cv2_npat_rel=?,        cv2_neng=?,         cv2_nofc=?,           cptp=?,    \
+    cv2_trg_rs_cd=?,      cv2_alt_id=?,      cv2_mgr_ofc=?,         cv2_sys_ind=?,      corg=?,               ctyp=?,    \
+    cv2_sq_dsg=?,         cv2_sfx_amt=?,     camt=?,                cv2_pos=?,          cv2_msvc_cd=?,        cv2_bll_typ=?,\
+    cv2_fln_dcc=?,        crdt=?,            cedt=?,                csdt=?,             relcd=?,              cv2_pat_dob=?, \
+    patnm=?,              cv2_pat_m=?,       cv2_pat_lnm=?,         cv2_pat_adr1=?,     cv2_pat_adr2=?,       cv2_pat_cty=?,  \
+    cv2_pat_ste=?,        cv2_pat_zip=?,     cv2_ins_dob=?,         cv2_ins_fnm=?,      cv2_ins_m=?,          cv2_ins_lnm=?,\
+    cv2_ins_adr1=?,       cv2_ins_adr2=?,    cv2_ins_cty=?,         cv2_ins_ste=?,      cv2_ins_zip=?,        cv2_ins_id=?,  \
+    cv2_pol_no=?,         cpol=?,            cmkt=?,                cprd=?,             cv2_prv_ssn=?,        provid=?,    \
+    cv2_prv_dgr=?,        provname=?,        cv2_prv_ind_fnm=?,     cv2_prv_ind_lnm=?,  cv2_prv_ind_init=?,   cv2_prv_adr1=?,\
+    cv2_prv_adr2=?,       cv2_prv_cty=?,     cv2_prv_ste=?,         cv2_prv_zip=?,      cv2_epd_mtch_cd=?,    cv2_clm_cmmts=?,\
+    cpolrstrctcd=?,       crskdt=?    \
+  where cicn=?
+ 
+## insert into item_flat_Stage  table
+insert.into.itm.flt.stg=insert \
+ into item_flat_Stage \
+ ( \
+ ITEMID,  IID,	CICN,	CSFX,	MULTISFXIND, \
+ CORG,	CPND,	CAMT,	CPAY,	CENG,	CPOL,	CTYP, \
+ CMKT,	PROVID,	CPOLRSTRCTCD,	UPDATEMSGIND,	EVALWB,	EVALPOINT,\
+ EVALPRIORITY,	STS_UPD_IND  ,ITEMSTATUS ,CRE_OPR ,CRE_DATE \
+ ) \
+values \
+( \
+ITEMFLATSTAGE_ITEMID_SEQ.NEXTVAL,  ?, ?, ?, ?, \
+?, ?, ?, ?, ?, ?,?, \
+?, ?, ?, ?, ?, ?, \
+?, ?, ?, ?, ? \
+) 
+
+## select itemStatus from item_flat_Stage
+select.itemstg.not.processed=select itemstatus from item_flat_Stage where cicn=? and itemstatus = 'In-Progress'
+
+
+
+## Update load claim status to 15 when exception occurred
+update.ldclm.exceptionsts=update ld_clm set sts=15 where lid=?
+
+##insert into release table
+insert.claims.released=insert into claims_released_stage (relitemid, itemstatus, icn, ceng, cre_opr,cre_date) values (comet_mcfmct.gnrt_rlstg_id() , ? , ? , ? , ? , ?)
+
+

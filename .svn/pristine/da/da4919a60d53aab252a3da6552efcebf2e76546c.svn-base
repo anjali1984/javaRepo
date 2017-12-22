@@ -1,0 +1,22 @@
+package com.optum.comet.mctmcf.enums;
+
+public enum CqrcsqStatus {
+	 CQRCSQ_RELEASE_UNCHANGED("R"),//    VALUE 'R '.      00050001
+	 CQRCSQ_CQR_UPDATED("P"),   //       VALUE 'P '.      00050001
+	 CQRCSQ_COM_RELEASE_SQ("RS"),     //  VALUE 'RS'.      00050001
+	 CQRCSQ_COM_TOPS_FINALIZED("TF");  //  VALUE 'TF'.      
+
+	 private String value;
+	 
+	 private CqrcsqStatus(String value)
+	 {
+		 this.value=value;
+	 }
+	 
+	 @Override
+	 public String toString()
+	 {
+		 return this.value;
+	 }
+	 
+}

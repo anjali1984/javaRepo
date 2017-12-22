@@ -1,0 +1,24 @@
+package com.optum.comet.mctmcf.generated.vol04042017;
+
+public class CqrcmEmpId extends com.optum.comet.mctmcf.generator.predefbeans.Definition implements java.io.Serializable {
+
+    public CqrcmEmpId() {
+    }
+
+    private static final long serialVersionUID = 1L;
+    private String cqrcmEmpId1;
+    private String cqrcmEmpSsn;
+
+    public void setCqrcmEmpId1(String cqrcmEmpId1) { 
+        this.cqrcmEmpId1 = cqrcmEmpId1;
+    }
+    public String getCqrcmEmpId1() { 
+        return this.cqrcmEmpId1;
+    }
+    public void setCqrcmEmpSsn(String cqrcmEmpSsn) { 
+        this.cqrcmEmpSsn = cqrcmEmpSsn;
+    }
+    public String getCqrcmEmpSsn() { 
+        return this.cqrcmEmpSsn;
+    }
+}

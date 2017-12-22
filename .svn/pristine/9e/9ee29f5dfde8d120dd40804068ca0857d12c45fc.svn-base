@@ -1,0 +1,47 @@
+package com.optum.comet.mctmcf.aspects;
+
+import org.aopalliance.intercept.MethodInvocation;
+
+import com.optum.comet.mctmcf.daos.impl.LoadClaimDAO;
+import com.optum.comet.mctmcf.exception.CometException;
+import com.optum.comet.mctmcf.exception.vo.CometExceptionBean;
+import com.optum.diff.common.util.logging.LoggingServiceForLog4j;
+
+public class ExceptionHandlerInterceptor implements org.aopalliance.intercept.MethodInterceptor {
+
+	protected LoggingServiceForLog4j advcLogger;
+	protected LoadClaimDAO loadClaimDao;
+
+	public LoggingServiceForLog4j getAdvcLogger() {
+		return advcLogger;
+	}
+
+	public void setAdvcLogger(LoggingServiceForLog4j advcLogger) {
+		this.advcLogger = advcLogger;
+	}
+
+	public LoadClaimDAO getLoadClaimDao() {
+		return loadClaimDao;
+	}
+
+	public void setLoadClaimDao(LoadClaimDAO loadClaimDao) {
+		this.loadClaimDao = loadClaimDao;
+	}
+
+	public Object invoke(MethodInvocation invocation) throws Throwable {
+		Object returnValue;
+		try {
+			
+			returnValue = invocation.proceed();
+		} catch (Throwable th) {
+			if (th instanceof CometException) {
+				CometExceptionBean cb = ((CometException)th).getExceptionVO();
+				Long lid = cb.getLid();
+				String icn = cb.getIcn();
+				loadClaimDao.updateLdClmExceptionSts(lid, icn);
+			} 
+			throw th;
+		}
+		return returnValue;
+	}
+}

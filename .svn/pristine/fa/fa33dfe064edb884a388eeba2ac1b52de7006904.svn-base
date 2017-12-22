@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This file will contain all of the ISA related advisors for application 
+	on services and on dao method executions. we will use the aspectj aop support 
+	by spring to declare the advisors -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+	<bean id="cmt.methodCachingAdvisor" class="com.optum.comet.mctmcf.aspects.MethodCachingAdvisor">
+		<property name="cache" ref="cmt.methodCache" />
+		<property name="advcLogger" ref="cmt.gen.loggingService" />
+	</bean>
+
+	<bean id="cmt.exceptionHandlerAdvice" class="com.optum.comet.mctmcf.aspects.ExceptionHandlerInterceptor">
+		<property name="advcLogger" ref="cmt.gen.loggingService" />
+		<property name="loadClaimDao" ref="cmt.loadclaim" />
+	</bean>
+
+	<bean id="cmt.timingLoggerAdvice"
+		class="com.optum.diff.common.util.logging.TimingLoggingInterceptor">
+		<property name="loggingService" ref="cmt.perfLoggingService" />
+	</bean>
+
+	<bean id="cmt.transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="cmt.datasource" />
+	</bean>
+
+	<tx:advice id="cmt.txAdvice" transaction-manager="cmt.transactionManager">
+		<tx:attributes>
+			<tx:method name="execute" read-only="true" propagation="REQUIRED" />
+			<tx:method name="*" read-only="true" propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+
+	<aop:config>
+
+		<!-- Define Pointcuts -->
+		<!-- for transaction manager can be increased to services if found ok -->
+		<aop:pointcut id="cmt.aopMCFServices" expression="execution(* com.optum.comet.mctmcf.services.impl.MCTMCFService.*(..))"  />
+		
+		<!-- for exception handler and timing logger -->
+		<aop:pointcut id="cmt.aopMCFAll" expression="execution(* com.optum.comet.mctmcf.*.*(..))" />
+		<!-- End of Pointcuts -->
+
+		<!-- Define Advisors -->
+		<aop:advisor advice-ref="cmt.exceptionHandlerAdvice" pointcut-ref="cmt.aopMCFServices" order="3"/>
+		<aop:advisor advice-ref="cmt.txAdvice" pointcut-ref="cmt.aopMCFServices" order="2"/>
+		<aop:advisor advice-ref="cmt.timingLoggerAdvice" pointcut-ref="cmt.aopMCFServices" order="1"/>
+		<!-- End of Advisors -->
+
+	</aop:config>
+	
+</beans>

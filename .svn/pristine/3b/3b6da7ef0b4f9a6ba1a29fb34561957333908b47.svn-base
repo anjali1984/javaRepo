@@ -1,0 +1,59 @@
+package com.optum.comet.mctmcf.constants;
+
+
+public interface CometServiceActionConstants {
+
+
+	public enum ClaimServiceActions {
+		SAVE_MANUAL_MESSAGE("MANUAL"),
+		SAVE_STATUS_UPDT_MESSAGE("STATUS"),
+		OPN_CLMS_FOR_ORG("openClaimsForOrgId"),
+		CHECK_ALL_SFX_LOADED("checkMultiSfx"),
+		GETALL_SFXS_FOR_CLM("getAllSfxsForClm"),
+		PARSE_STSUPDT("parseManualMessage"),
+		SAVE_CLM_ITEM("saveClmItem"),
+		SEND_NOTIFICATION("sendNotification"),
+
+		UPDATE_LID_CLM_ALREADY_RESOLVED("resolveMCF"),
+		RELEASE_CLAIM("releaseClaim"),
+		MCF_MULTI_SUFX("mcfMultiOrSingleSufx"),
+		UPDATE_CLAIMST_UNLOCK_ICN("updateClaimStUnlckIcn"),
+		SAVE_ITEM_STG("saveInItmStg"),
+		PARSE_SU("parseStatusUpdateMessage"),
+		LOCK_ICN("lockIcn"),
+		MCF_LDLCK_EXISTS("ldLckExists"),
+		PARSE_PERSIST_DELETE_ICN_LOCK("parsePersistDeleteIcnLock"),
+		SAVE_ICN_SFX("saveIcnSfx"),
+		CHECK_CURSTAT("itmCurStat"),
+		UPDATE_CLM_ITEM("updateClmItem"),
+		GET_TRANS_DETAILS("getTransDetails"),
+		DELETE_LD_LCK("delete from ld_lck");
+
+
+		private String description;
+		private ClaimServiceActions(String description) {
+			this.description = description;
+		}
+		public String getDescription() {
+			return description;
+		}
+		public void setDescription(String description) {
+			this.description = description;
+		}
+		public static ClaimServiceActions fromValue(String value) throws IllegalArgumentException {
+			if (value == null || value.trim().length() == 0) throw new IllegalArgumentException("Invalid paramater");
+			ClaimServiceActions retVal = null;
+			for (ClaimServiceActions cmAct : ClaimServiceActions.values()) {
+				if (value.equals(cmAct.getDescription()) || value.equals(cmAct.name())) {
+					retVal = cmAct;
+					break;
+				}
+			}
+			if (retVal == null) {
+				throw new  IllegalArgumentException("Invalid ClaimServiceAction value: " + value);
+			}
+			return retVal;
+		}
+	}
+
+}

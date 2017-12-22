@@ -1,0 +1,22 @@
+package com.optum.comet.mctmcf.enums;
+
+public enum CqrcmV2SqDesignation {
+	
+	CQRSL_PROV_SQ("P"),      
+	CQRSL_DEP_SQ("D"),           
+	CQRSL_PROV_DEP_SQ("B");  
+
+	
+	private String value;
+	
+	private CqrcmV2SqDesignation(String value)
+	{
+		this.value=value;
+	}
+	
+	public String toString()
+	{
+		return this.value;
+	}
+
+}

@@ -1,0 +1,12 @@
+package com.optum.comet.mctmcf.daos;
+
+public interface ICometDAO {
+    /**
+     * mandatory for DAO definition
+     * 
+     * @return
+     */
+    String getDescription();
+    
+    
+}

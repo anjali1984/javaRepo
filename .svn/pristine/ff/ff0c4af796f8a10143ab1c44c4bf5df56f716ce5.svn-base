@@ -1,0 +1,27 @@
+package com.optum.comet.mctmcf.converter.si;
+
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.Session;
+
+import org.springframework.jms.support.converter.MessageConversionException;
+import org.springframework.jms.support.converter.MessageConverter;
+
+import com.optum.comet.mctmcf.exception.CometExceptionConstants;
+import com.optum.diff.common.exception.GenericRuntimeException;
+
+public class TOPSMQMessagetoMapConverter implements MessageConverter {
+
+
+	public Object fromMessage(Message jmsMessage) throws JMSException, MessageConversionException {
+		return jmsMessage;
+	}
+
+	public Message toMessage(Object jmsMessage, Session arg1) throws JMSException, MessageConversionException {
+		if (!(jmsMessage instanceof Message )) 
+			throw new GenericRuntimeException(CometExceptionConstants.POSSIBLE_REASONS.UNSUPPORTED_METHOD_INVOCATION.getDescription());
+		else 
+			return (Message) jmsMessage;	
+	}
+		
+}

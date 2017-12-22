@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Greeting!</title>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.11/angular.min.js"></script>
+</head>
+<body ng-app="myApp">
+	<h1>Claim loader stats</h1>
+	<div ng-controller='TimeCtrl' style="position:absolute; right:10px; top:0px;">
+	    <p>{{ clock | date:'medium'}}</p>
+	</div>
+</body>
+</html>
+
+<script>
+var module = angular.module('myApp', []);
+
+module.controller('TimeCtrl', function($scope, $interval) {
+  var tick = function() {
+    $scope.clock = Date.now();
+  }
+  tick();
+  $interval(tick, 1000);
+});
+</script>

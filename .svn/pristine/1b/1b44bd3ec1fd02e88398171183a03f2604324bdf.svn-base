@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="error" monitorInterval="60">
+
+	<Properties>
+		<Property name="loggingroot">/cmttrangtwlogs/app</Property>
+		<Property name="log-path">${loggingroot}/dev</Property>
+		<Property name="archive">${loggingroot}/archive</Property>
+	</Properties>
+
+	<Appenders>
+		<RollingRandomAccessFile name="cmt.mctmcf.logs"
+			fileName="${log-path}/cmt.mctmcf.log" filePattern="${archive}/cmt.mctmcf.log.%d{yyyy-MM-dd-HH-mm}.gz">
+			<PatternLayout
+				pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />
+			<Policies>
+				<SizeBasedTriggeringPolicy size="100 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="30"
+				compressionLevel="5">
+				<Delete basePath="${archive}" maxDepth="1">
+					<IfAny>
+						<IfAccumulatedFileSize exceeds="1500 MB" />
+					</IfAny>
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingRandomAccessFile>
+		
+	</Appenders>
+
+	<Loggers>
+		<AsyncLogger name="cmt.logger" level="info">
+			<AppenderRef ref="cmt.mctmcf.logs" />
+		</AsyncLogger>
+	</Loggers>
+
+</Configuration>

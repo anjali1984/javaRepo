@@ -1,0 +1,101 @@
+package com.optum.comet.mctmcf.generated.vol04042017;
+
+public class CqrcmV2ProviderInfo extends com.optum.comet.mctmcf.generator.predefbeans.Definition implements java.io.Serializable {
+
+    public CqrcmV2ProviderInfo() {
+    }
+
+    private static final long serialVersionUID = 1L;
+    private String cqrcmV2PrvSsnEntered;
+    private String cqrcmV2PrvTinEntered;
+    private String cqrcmV2PrvDegree;
+    private String cqrcmV2PrvGroup;
+    private String cqrcmV2PrvIndFirst;
+    private String cqrcmV2PrvIndLast;
+    private String cqrcmV2PrvIndInit;
+    private String cqrcmV2PrvAdr1;
+    private String cqrcmV2PrvAdr2;
+    private String cqrcmV2PrvCity;
+    private String cqrcmV2PrvState;
+    private String cqrcmV2PrvZip;
+    private String cqrcmV2EpdMatchCode;
+
+    public void setCqrcmV2PrvSsnEntered(String cqrcmV2PrvSsnEntered) { 
+        this.cqrcmV2PrvSsnEntered = cqrcmV2PrvSsnEntered;
+    }
+    public String getCqrcmV2PrvSsnEntered() { 
+        return this.cqrcmV2PrvSsnEntered;
+    }
+    public void setCqrcmV2PrvTinEntered(String cqrcmV2PrvTinEntered) { 
+        this.cqrcmV2PrvTinEntered = cqrcmV2PrvTinEntered;
+    }
+    public String getCqrcmV2PrvTinEntered() { 
+        return this.cqrcmV2PrvTinEntered;
+    }
+    public void setCqrcmV2PrvDegree(String cqrcmV2PrvDegree) { 
+        this.cqrcmV2PrvDegree = cqrcmV2PrvDegree;
+    }
+    public String getCqrcmV2PrvDegree() { 
+        return this.cqrcmV2PrvDegree;
+    }
+    public void setCqrcmV2PrvGroup(String cqrcmV2PrvGroup) { 
+        this.cqrcmV2PrvGroup = cqrcmV2PrvGroup;
+    }
+    public String getCqrcmV2PrvGroup() { 
+        return this.cqrcmV2PrvGroup;
+    }
+    public void setCqrcmV2PrvIndFirst(String cqrcmV2PrvIndFirst) { 
+        this.cqrcmV2PrvIndFirst = cqrcmV2PrvIndFirst;
+    }
+    public String getCqrcmV2PrvIndFirst() { 
+        return this.cqrcmV2PrvIndFirst;
+    }
+    public void setCqrcmV2PrvIndLast(String cqrcmV2PrvIndLast) { 
+        this.cqrcmV2PrvIndLast = cqrcmV2PrvIndLast;
+    }
+    public String getCqrcmV2PrvIndLast() { 
+        return this.cqrcmV2PrvIndLast;
+    }
+    public void setCqrcmV2PrvIndInit(String cqrcmV2PrvIndInit) { 
+        this.cqrcmV2PrvIndInit = cqrcmV2PrvIndInit;
+    }
+    public String getCqrcmV2PrvIndInit() { 
+        return this.cqrcmV2PrvIndInit;
+    }
+    public void setCqrcmV2PrvAdr1(String cqrcmV2PrvAdr1) { 
+        this.cqrcmV2PrvAdr1 = cqrcmV2PrvAdr1;
+    }
+    public String getCqrcmV2PrvAdr1() { 
+        return this.cqrcmV2PrvAdr1;
+    }
+    public void setCqrcmV2PrvAdr2(String cqrcmV2PrvAdr2) { 
+        this.cqrcmV2PrvAdr2 = cqrcmV2PrvAdr2;
+    }
+    public String getCqrcmV2PrvAdr2() { 
+        return this.cqrcmV2PrvAdr2;
+    }
+    public void setCqrcmV2PrvCity(String cqrcmV2PrvCity) { 
+        this.cqrcmV2PrvCity = cqrcmV2PrvCity;
+    }
+    public String getCqrcmV2PrvCity() { 
+        return this.cqrcmV2PrvCity;
+    }
+    public void setCqrcmV2PrvState(String cqrcmV2PrvState) { 
+        this.cqrcmV2PrvState = cqrcmV2PrvState;
+    }
+    public String getCqrcmV2PrvState() { 
+        return this.cqrcmV2PrvState;
+    }
+    public void setCqrcmV2PrvZip(String cqrcmV2PrvZip) { 
+        this.cqrcmV2PrvZip = cqrcmV2PrvZip;
+    }
+    public String getCqrcmV2PrvZip() { 
+        return this.cqrcmV2PrvZip;
+    }
+    public void setCqrcmV2EpdMatchCode(String cqrcmV2EpdMatchCode) { 
+        this.cqrcmV2EpdMatchCode = cqrcmV2EpdMatchCode;
+    }
+    public String getCqrcmV2EpdMatchCode() { 
+        return this.cqrcmV2EpdMatchCode;
+    }
+}

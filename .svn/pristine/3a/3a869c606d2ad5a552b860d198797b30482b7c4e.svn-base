@@ -1,0 +1,26 @@
+package com.optum.comet.mctmcf.daos;
+
+import com.optum.comet.mctmcf.daos.dbos.LookupResults;
+import com.optum.comet.mctmcf.exception.CometException;
+
+/**
+ * Purpose: This dao will house all methods that need to be cached in COMET
+ * Change log: 
+ * @author cmishr4
+ *
+ */
+public interface ILookupDAO extends ICometDAO {
+	
+	/**
+	 * Purpose: Get the count of open claims for a orgId and clm frm type
+	 * @param orgId
+	 * @param clmTyp
+	 * @param logCorrId
+	 * @return
+	 * @throws CometException
+	 */
+	LookupResults openClmsForMCT(String orgId, String clmFrmTyp, String logCorrId) throws CometException;
+	
+	
+	
+}

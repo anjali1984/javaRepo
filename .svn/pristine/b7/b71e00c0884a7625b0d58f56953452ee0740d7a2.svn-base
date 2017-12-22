@@ -1,0 +1,255 @@
+package com.optum.comet.mctmcf.generator;
+
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.tools.ant.BuildException;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.input.SAXBuilder;
+
+import com.optum.comet.mctmcf.exception.CometParsingRuntimeException;
+import com.optum.comet.mctmcf.generator.datastruct.AttributeStructure;
+import com.optum.comet.mctmcf.generator.datastruct.VOStructure;
+import com.optum.comet.mctmcf.parser.impl.CobolCopyBookSpecReaderUtil;
+
+public class CopyBookBeanGenerator extends org.apache.tools.ant.Task implements ICopyBookBeanGenerator {
+
+	private List<VOStructure> voList = new ArrayList<VOStructure>();
+
+	private String srcFolder = null;
+	public String getSrcFolder() {
+		return srcFolder;
+	}
+	public void setSrcFolder(String srcFolder) {
+		this.srcFolder = srcFolder;
+	}
+
+	private String beanPkg = null;
+	public void setBeanPkg(String beanPkg) {
+		this.beanPkg = beanPkg;
+	}
+
+	private String parentBeanName = null;
+	public void setParentBeanName(String parentBeanName) {
+		this.parentBeanName = parentBeanName;
+	}
+
+	private String copyBookXmlPath = null;
+	public void setCopyBookXmlPath(String copyBookXmlPath) {
+		this.copyBookXmlPath = copyBookXmlPath;
+	}
+
+	public CopyBookBeanGenerator () {}
+
+	public CopyBookBeanGenerator (String beanPkg, String srcFolder) {
+		this.beanPkg = beanPkg;
+		this.srcFolder = srcFolder;
+	}
+
+	public void execute () throws BuildException {
+		try {
+
+			this.generate(copyBookXmlPath);
+
+		} catch (Exception ce) {
+			throw new BuildException(ce);
+		}
+	}
+
+	public void generate(String copyBookXmlPath) throws Exception {
+
+		try {
+			InputStream is = this.getClass().getClassLoader().getResourceAsStream(copyBookXmlPath);
+			byte[] bArr = new byte[is.available()];
+			is.read(bArr);
+
+			String xmlConfigString = new String(bArr);
+
+			SAXBuilder saxBuilder = new SAXBuilder();
+			Reader reader = new StringReader(xmlConfigString);
+			Document jdomDocument = saxBuilder.build(reader);
+
+			Element parentNode = jdomDocument.getRootElement();
+			List<Element> children = parentNode.getChildren();
+
+			VOStructure mainVO = new VOStructure(beanPkg, parentBeanName);
+			mainVO.setExtendsClass("com.optum.comet.mctmcf.generator.predefbeans.Definition");
+
+			for (Element childNode : children) {
+				this.generateClassForNode(childNode, parentNode, mainVO);
+			}
+
+			voList.add(mainVO);
+
+			ListDecorator.decorateList(voList, srcFolder);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CometParsingRuntimeException(e);
+		}
+	}
+
+	private void generateClassForNode (Element currNode, Element parentNode, VOStructure parentStruct) throws CometParsingRuntimeException {
+
+		AttributeStructure attStructure = null;
+		String currNodeName = null;
+		String parentNodeName = null;
+		try {
+			parentNodeName = parentNode.getAttributeValue(ATT_NODE_NAME);
+			currNodeName = currNode.getAttributeValue(ATT_NODE_NAME);
+
+			// ignore FILLER nodes which are nor redefinitions
+			if (NODE_TYP_FILLER.equalsIgnoreCase(currNodeName)) {
+				System.out
+				.println("CopyBookBeanGenerator.generateClassForNode(): Ignoring Filler node = " + currNodeName 
+						+ "; Belonging to parent = " + parentNodeName);
+				return;
+			}
+
+			System.out.println("CopyBookBeanGenerator.generateClassForNode(): Starts: currNodeName = " + currNodeName);
+
+			if (CobolCopyBookSpecReaderUtil.hasChildren(currNode)) { // process nodes which has children
+
+				VOStructure currentVOStruct = null;
+				boolean shouldReturn = false;
+				boolean shouldCreateDefn = true;
+
+				System.out.println("CopyBookBeanGenerator.generateClassForNode(): " + currNodeName + " Has Children");
+
+				if (CobolCopyBookSpecReaderUtil.isChoiceNode(currNode)) {
+
+					System.out.println("CopyBookBeanGenerator.generateClassForNode(): " + currNodeName + " is a ChoiceNode");
+					this.generateChoiceNodeAtt(currNode, parentStruct);
+
+					shouldCreateDefn = false;
+					shouldReturn = true;
+				}
+				// read if node has multiple occurrence  
+				else if (currNode.getAttributeValue(ATT_NODE_OCCURS) != null) {
+
+					System.out.println("CopyBookBeanGenerator.generateClassForNode(): " + currNodeName + " is a OccursNode");
+					this.generateOccursNodeAtt(currNode, parentStruct);
+
+					shouldCreateDefn = false;
+					shouldReturn = true;
+				}
+
+				if (shouldCreateDefn) {
+					System.out
+					.println("CopyBookBeanGenerator.generateClassForNode(): Create defn for " + currNodeName);
+					currentVOStruct = new VOStructure(beanPkg, CobolCopyBookSpecReaderUtil.toJavaNodeName(currNodeName, false));
+					currentVOStruct.setExtendsClass("com.optum.comet.mctmcf.generator.predefbeans.Definition");
+					voList.add(currentVOStruct);
+
+					// if parentStruct exists, add an att entry into the parent structure for the current node
+					if (parentStruct != null) {
+						parentStruct.addAttr(new AttributeStructure(CobolCopyBookSpecReaderUtil.toJavaNodeName(currNodeName, true), 
+								beanPkg + "." + CobolCopyBookSpecReaderUtil.toJavaNodeName(currNodeName, false),
+								"$new"));
+					}
+				}
+				if (shouldReturn) return;
+
+				List<Element> children = currNode.getChildren();
+				for (Element childNode : children) {
+					this.generateClassForNode(childNode, currNode, currentVOStruct);
+				}
+
+			} else {
+				System.out
+				.println("CopyBookBeanGenerator.generateClassForNode(): " + currNodeName + " Doesn't have Children");
+				// read if node is redefined
+				if (currNode.getAttributeValue(ATT_NODE_REDEFINED) != null 
+						&& Boolean.valueOf(currNode.getAttributeValue(ATT_NODE_REDEFINED))) {
+
+					System.out.println("CopyBookBeanGenerator.generateClassForNode(): " + currNodeName + " is a RedefinedNode*");
+					this.generateRedefinedNodeAtt(currNode, parentNode, parentStruct);
+				} else {
+
+					System.out.println("CopyBookBeanGenerator.generateClassForNode(): " + currNodeName + " is a LeafNode");
+					attStructure = this.generateLeafNodeAttribute(currNode);
+					parentStruct.addAttr(attStructure);
+				}
+
+				return;
+			}
+		} catch (Exception e) {
+			System.out.println("CopyBookBeanGenerator.generateClassForNode(): Exception: currNodeName = " + currNodeName
+					//+ "; currNodeObjType = " + currNodeObj.getClass().getCanonicalName()
+					+ "; parentNodeName = " + parentNodeName
+					//+ "; parentContainerType = " + parentContainer.getClass().getCanonicalName()
+					);
+			e.printStackTrace();
+			CometParsingRuntimeException ce = null;
+			if (e instanceof CometParsingRuntimeException) {
+				ce = (CometParsingRuntimeException) e;
+			} else {
+				ce = new CometParsingRuntimeException(e);
+			}
+			throw ce;
+		}
+		System.out.println("CopyBookBeanGenerator.generateClassForNode(): Ends");
+	}
+
+	protected void generateChoiceNodeAtt (Element currNode, VOStructure currVoStruct) {
+
+		String currNodeName = currNode.getAttributeValue(ATT_NODE_NAME);
+		String currAttName = CobolCopyBookSpecReaderUtil.toJavaNodeName(currNodeName, true);
+		currVoStruct.addAttr(new AttributeStructure(currAttName, "com.optum.comet.mctmcf.generator.predefbeans.ChoiceRestriction", "$new"));
+	}
+
+	protected void generateOccursNodeAtt (Element currNode, VOStructure currVoStruct) throws CometParsingRuntimeException {
+
+		List<Element> children = currNode.getChildren();
+		// error checking
+		if (children != null && children.size() > 1) {
+			throw new CometParsingRuntimeException("Exception: Invalid occurs node ... more than one inner-type");
+		}
+		Element entryNode = (Element) children.get(0);
+		String entryNodeName = entryNode.getAttributeValue(ATT_NODE_NAME);
+		String entryNodeJavaName = CobolCopyBookSpecReaderUtil.toJavaNodeName(entryNodeName, false);
+
+		String currNodeName = currNode.getAttributeValue(ATT_NODE_NAME);
+		String currAttName = CobolCopyBookSpecReaderUtil.toJavaNodeName(currNodeName, true);
+		currVoStruct.addAttr(new AttributeStructure(currAttName, "java.util.ArrayList<" + beanPkg + "." + entryNodeJavaName + ">", "$new"));
+
+		try {
+			this.generateClassForNode (entryNode, currNode, null);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CometParsingRuntimeException(e);
+		}
+	}
+
+	protected void generateRedefinedNodeAtt (Element currNode, Element parentNode, VOStructure currVoStruct) throws CometParsingRuntimeException {
+
+		try {
+			String currNodeName = currNode.getAttributeValue(ATT_NODE_NAME);
+
+			// find the redefinition node
+			Element redefNode = CobolCopyBookSpecReaderUtil.findRedefinition(parentNode, currNode);
+
+			redefNode = (Element) redefNode.clone();
+			redefNode.setAttribute(ATT_NODE_NAME, currNodeName);
+
+			this.generateClassForNode(redefNode, parentNode, currVoStruct);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CometParsingRuntimeException(e);
+		}
+	}
+
+	protected AttributeStructure generateLeafNodeAttribute (Element currNode) {
+
+		String currNodeName = currNode.getAttributeValue(ATT_NODE_NAME);
+		String currAttName = CobolCopyBookSpecReaderUtil.toJavaNodeName(currNodeName, true);
+
+		return new AttributeStructure(currAttName, "String");
+	}
+}

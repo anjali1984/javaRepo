@@ -1,0 +1,109 @@
+package com.optum.comet.mctmcf.generated.vol04042017;
+
+public class CqrcmV2InboundFields extends com.optum.comet.mctmcf.generator.predefbeans.Definition implements java.io.Serializable {
+
+    public CqrcmV2InboundFields() {
+        this.cqrcmV2PrvTinSufx = new com.optum.comet.mctmcf.generated.vol04042017.CqrcmV2PrvTinSufx();
+    }
+
+    private static final long serialVersionUID = 1L;
+    private com.optum.comet.mctmcf.generated.vol04042017.CqrcmV2PrvTinSufx cqrcmV2PrvTinSufx;
+    private String cqrcmV2NewEmpId;
+    private String cqrcmV2NewEmpPolNo;
+    private String cqrcmV2NewPatFirstName;
+    private String cqrcmV2NewPatRelationship;
+    private String cqrcmV2NewEngine;
+    private String cqrcmV2NewOfc;
+    private String cqrcmV2NewPlatform;
+    private String cqrcmV2PendType;
+    private String cqrcmV2TriggerReasCd;
+    private String cqrcmV2AltId;
+    private String cqrcmV2MgrOfc;
+    private String cqrcmV2SystemInd;
+    private String cqrcmV2Filler1;
+
+    public void setCqrcmV2PrvTinSufx(com.optum.comet.mctmcf.generated.vol04042017.CqrcmV2PrvTinSufx cqrcmV2PrvTinSufx) { 
+        this.cqrcmV2PrvTinSufx = cqrcmV2PrvTinSufx;
+    }
+    public com.optum.comet.mctmcf.generated.vol04042017.CqrcmV2PrvTinSufx getCqrcmV2PrvTinSufx() { 
+        return this.cqrcmV2PrvTinSufx;
+    }
+    public void setCqrcmV2NewEmpId(String cqrcmV2NewEmpId) { 
+        this.cqrcmV2NewEmpId = cqrcmV2NewEmpId;
+    }
+    public String getCqrcmV2NewEmpId() { 
+        return this.cqrcmV2NewEmpId;
+    }
+    public void setCqrcmV2NewEmpPolNo(String cqrcmV2NewEmpPolNo) { 
+        this.cqrcmV2NewEmpPolNo = cqrcmV2NewEmpPolNo;
+    }
+    public String getCqrcmV2NewEmpPolNo() { 
+        return this.cqrcmV2NewEmpPolNo;
+    }
+    public void setCqrcmV2NewPatFirstName(String cqrcmV2NewPatFirstName) { 
+        this.cqrcmV2NewPatFirstName = cqrcmV2NewPatFirstName;
+    }
+    public String getCqrcmV2NewPatFirstName() { 
+        return this.cqrcmV2NewPatFirstName;
+    }
+    public void setCqrcmV2NewPatRelationship(String cqrcmV2NewPatRelationship) { 
+        this.cqrcmV2NewPatRelationship = cqrcmV2NewPatRelationship;
+    }
+    public String getCqrcmV2NewPatRelationship() { 
+        return this.cqrcmV2NewPatRelationship;
+    }
+    public void setCqrcmV2NewEngine(String cqrcmV2NewEngine) { 
+        this.cqrcmV2NewEngine = cqrcmV2NewEngine;
+    }
+    public String getCqrcmV2NewEngine() { 
+        return this.cqrcmV2NewEngine;
+    }
+    public void setCqrcmV2NewOfc(String cqrcmV2NewOfc) { 
+        this.cqrcmV2NewOfc = cqrcmV2NewOfc;
+    }
+    public String getCqrcmV2NewOfc() { 
+        return this.cqrcmV2NewOfc;
+    }
+    public void setCqrcmV2NewPlatform(String cqrcmV2NewPlatform) { 
+        this.cqrcmV2NewPlatform = cqrcmV2NewPlatform;
+    }
+    public String getCqrcmV2NewPlatform() { 
+        return this.cqrcmV2NewPlatform;
+    }
+    public void setCqrcmV2PendType(String cqrcmV2PendType) { 
+        this.cqrcmV2PendType = cqrcmV2PendType;
+    }
+    public String getCqrcmV2PendType() { 
+        return this.cqrcmV2PendType;
+    }
+    public void setCqrcmV2TriggerReasCd(String cqrcmV2TriggerReasCd) { 
+        this.cqrcmV2TriggerReasCd = cqrcmV2TriggerReasCd;
+    }
+    public String getCqrcmV2TriggerReasCd() { 
+        return this.cqrcmV2TriggerReasCd;
+    }
+    public void setCqrcmV2AltId(String cqrcmV2AltId) { 
+        this.cqrcmV2AltId = cqrcmV2AltId;
+    }
+    public String getCqrcmV2AltId() { 
+        return this.cqrcmV2AltId;
+    }
+    public void setCqrcmV2MgrOfc(String cqrcmV2MgrOfc) { 
+        this.cqrcmV2MgrOfc = cqrcmV2MgrOfc;
+    }
+    public String getCqrcmV2MgrOfc() { 
+        return this.cqrcmV2MgrOfc;
+    }
+    public void setCqrcmV2SystemInd(String cqrcmV2SystemInd) { 
+        this.cqrcmV2SystemInd = cqrcmV2SystemInd;
+    }
+    public String getCqrcmV2SystemInd() { 
+        return this.cqrcmV2SystemInd;
+    }
+    public void setCqrcmV2Filler1(String cqrcmV2Filler1) { 
+        this.cqrcmV2Filler1 = cqrcmV2Filler1;
+    }
+    public String getCqrcmV2Filler1() { 
+        return this.cqrcmV2Filler1;
+    }
+}

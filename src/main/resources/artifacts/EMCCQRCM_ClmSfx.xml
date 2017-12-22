@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<copybook filename="EMCCQRCM_ClmSfx.TXT"><!--**************************************************************** --><!--* =============================================================* --><!--* EMCCQRCM CHANGE HISTORY: * --><!--* ======================== * --><!--* ADD NEW WORKFLOW ID(CQRCM-WORKFLOW-ID)IN 
+		THE CQRCM-FIXED * --><!--* AREA FOR RECIPROCITY INITIATIVE(SPRF# 400004492). 
+		* --><!--* * --><!--* 03/15/2003 * --><!--* UPDATED FOR COMET, JUN03 RELEASE * --><!--* 12/13/2002 * --><!--* CREATED FOR THE FEB03 RELEASE * --><!--* ============================================================ 
+		* --><!--* 02/24/2003: INFORMATIONAL UPDATE ONLY: 
+		* --><!--* FEB03 RELEASE: THIS IS A SHARED COPYBOOK 
+		AND RESIDES ON * --><!--* ENDEVOR ON UH1:ENDN1I03/MC001/S5293 AND 
+		* --><!--* UH2:ENDM2M03/ML007/S5141. ANY CHANGES MADE 
+		TO THIS COPYBOOK * --><!--* MUST BE COORDINATED WITH TOPS/FE AND CQR 
+		TEAM IN BSKING RIDGE* --><!--**************************************************************** --><!--* FE0509 06/06/2005 FIELD EXPANSION SPRF# 
+		400001912 CHANGES FOR* --><!--* SEP 2005 RELEASE * --><!--* Q316 06/01/2016 PRJ52637 CHANGES FOR ADDING 
+		NEW POLICY * --><!--* RESTRICTION CODE TO BE SENT TO COMET. * --><!--* Q316 06/01/2016 PRJ31020 CHANGES FOR ADDING 
+		NEW RISK DATE * --><!--* TO BE SENT TO COMET. * --><!--* Q317 07/10/2017 PRJ83023 CHANGES FOR SAV-NBR-SUFFIXES 
+		* --><!--* & CIRE_EDT_HDR_SUB_PND_CD * --><!--* & 10 OCCURS OF CIRE_EDT_RULE_ID * --><!--* TO COMET 986 RECORD - NEW LENGTH 1043 BYTES* --><!--**************************************************************** --><!--**************************************************************** --><!--** --><!--***************************************************************** --><!--** THIS IS THE GENERIC MQ MESSAGE HEADER 
+		FOR ROUTING MESSAGES * --><!--** TO OTHER SYSTEMS. IT IS THE PREFERRED 
+		FORMAT FOR REMOTE * --><!--** SYSTEMS TO SEND MESSAGES BACK TO US TO 
+		TAKE ACTION ON CLAIMS * --><!--** IN THE FRONT END AND UNET SYSTEMS. * --><!--***************************************************************** -->
+	<item display-length="5" level="03" name="CQRCM-LENGTH" numeric="true"
+		picture="9(5)" position="1" storage-length="5" /><!--***************************************************************** --><!--** THE CQRCM-FIXED 
+		AREA IS DESIGNED TO MAP BACK TO THE FIXED * --><!--** KEY AREA OF THE 
+		SAVE FILE. PROCESSES CAN USE THIS AREA TO * --><!--** ACQUIRE ANY INFORMATION 
+		NEEDED TO SYNC CLAIM, OR READ DATA * --><!--** FROM ANOTHER SOURCE. 
+		* --><!--***************************************************************** -->
+	<item display-length="73" level="03" name="CQRCM-FIXED" position="6"
+		storage-length="73">
+		<item display-length="15" level="05" name="CQRCM-FILE-FLN-ALT-KEY"
+			position="6" storage-length="15">
+			<item display-length="3" level="10" name="CQRCM-ADJ-OFFICE"
+				numeric="true" picture="9(03)" position="6" storage-length="3" />
+			<item display-length="11" level="10" name="CQRCM-FLN" numeric="true"
+				picture="9(11)" position="9" redefined="true" storage-length="11" />
+			<item display-length="11" level="10" name="FILLER" position="9"
+				redefines="CQRCM-FLN" storage-length="11">
+				<item display-length="1" level="20" name="FILLER" picture="X(1)"
+					position="9" storage-length="1" />
+				<item display-length="5" level="20" name="CQRCM-FLN-RECEIPT-DT"
+					numeric="true" picture="9(5)" position="10" storage-length="5" />
+				<item display-length="5" level="20" name="CQRCM-FLN-SERIAL-NO"
+					numeric="true" picture="9(5)" position="15" storage-length="5" />
+			</item>
+			<item display-length="1" level="10" name="CQRCM-RECORD-TYPE-FLN-AIX"
+				picture="X(01)" position="20" storage-length="1" />
+		</item>
+		<item display-length="11" level="05" name="CQRCM-FILE-SSN-ALT-KEY"
+			position="21" storage-length="11">
+			<item display-length="10" level="10" name="CQRCM-EMP-ID"
+				position="21" storage-length="10">
+				<item display-length="1" level="20" name="CQRCM-EMP-ID-1"
+					picture="X(1)" position="21" storage-length="1" />
+				<item display-length="9" level="20" name="CQRCM-EMP-SSN"
+					picture="X(09)" position="22" storage-length="9" />
+			</item>
+			<item display-length="1" level="10" name="CQRCM-RECORD-TYPE-AIX"
+				picture="X" position="31" storage-length="1" />
+		</item>
+		<item display-length="15" level="05" name="CQRCM-FILE-KEY"
+			position="32" storage-length="15">
+			<item display-length="11" level="10" name="CQRCM-ICN" numeric="true"
+				picture="9(11)" position="32" storage-length="11" />
+			<item display-length="1" level="10" name="CQRCM-RECORD-TYPE"
+				picture="X(1)" position="43" storage-length="1" />
+			<item display-length="3" level="10" name="CQRCM-ICN-SUFFIX"
+				numeric="true" picture="9(3)" position="44" storage-length="3" />
+		</item><!--****** SAVE CLAIM DATE & TIME STAMP *************************** -->
+		<item display-length="7" level="05" name="CQRCM-CLAIM-DATE-STAMP-1"
+			numeric="false" picture="X(07)" position="47" signed="true"
+			storage-length="7" />
+		<item display-length="9" level="05" name="CQRCM-CLAIM-TIME-STAMP-1"
+			numeric="false" picture="X(09)" position="54" signed="true"
+			storage-length="9" /><!--****** TOPS REGION INDICATOR ********************************** -->
+		<item display-length="1" level="05" name="CQRCM-ENGINE-IND"
+			picture="X" position="63" storage-length="1" /><!--****** NUMBER OF MESSAGES 
+			FOLLOWING THIS ONE FOR EACH TYPE * --><!--****** OF SAVE FILE 
+			RECORDS * -->
+		<item display-length="5" level="05" name="CQRCM-NUMBER-TYP1"
+			numeric="true" picture="9(5)" position="64" storage-length="5" />
+		<item display-length="5" level="05" name="CQRCM-NUMBER-TYP2"
+			numeric="true" picture="9(5)" position="69" storage-length="5" />
+		<item display-length="5" level="05" name="CQRCM-NUMBER-TYP3"
+			numeric="true" picture="9(5)" position="74" storage-length="5" />
+	</item><!--**************************************************************** --><!--****** INFORMATION WITH MESSAGE * --><!--**************************************************************** -->
+	<item display-length="207" level="03" name="CQRCM-VARIABLE"
+		position="79" storage-length="207">
+		<item display-length="193" level="05" name="CQRCM-MSG-OUTBOUND-FIELDS"
+			position="79" storage-length="193">
+			<item display-length="1" level="10" name="CQRCM-TYPE" picture="X(1)"
+				position="79" storage-length="1" />
+			<item display-length="1" level="10" name="CQRCM-SEND-TO"
+				picture="X(1)" position="80" storage-length="1" />
+			<item display-length="1" level="10" name="CQRCM-SEND-CNT"
+				numeric="true" picture="9(1)" position="81" storage-length="1" />
+			<item display-length="109" level="10" name="CQRCM-NONSEL-ERR-AREA"
+				position="82" storage-length="109">
+				<item display-length="5" level="15" name="CQRCM-NONSEL-ERR-ENTRY"
+					occurs="20" position="82" storage-length="5">
+					<item display-length="5" level="20" name="CQRCM-NONSEL-ERR-CODE"
+						position="82" storage-length="5">
+						<item display-length="1" level="25" name="CQRCM-NONSEL-ERR-LIT"
+							picture="X(1)" position="82" storage-length="1" />
+						<item display-length="4" level="25" name="CQRCM-NONSEL-ERR-CD"
+							picture="X(4)" position="83" storage-length="4" />
+					</item>
+				</item><!--*************************************************************** --><!--****** FILL-IN WILL NOT BE USED UNTIL APR 03 AND WILL CONTAIN --><!--****** A VARIABLE 4 CHAR ALPHA CODE, 6 CHARACTER DATE OR 9 --><!--****** CHARACTER AMOUNT THAT WAS FILLED IN BY TOPS ONLINE 
+					IF --><!--****** THE ERROR HAD FILL IN INFO AS PART OF THE MESSAGE TEXT --><!--*************************************************************** -->
+				<item display-length="9" level="15" name="CQRCM-NONSEL-ERR-FILL-IN"
+					picture="X(9)" position="182" storage-length="9" />
+			</item>
+			<item display-length="10" level="10" name="CQRSL-CLAIM-TYPE"
+				picture="X(10)" position="191" redefined="true" storage-length="10">
+				<condition name="CQRSL-UBH">
+					<condition value="&quot;UBH      &quot;" />
+				</condition>
+				<condition name="CQRSL-NONUBH">
+					<condition value="&quot;NONUBH   &quot;" />
+				</condition>
+			</item>
+			<item display-length="10" level="10" name="CQRCM-WORKFLOW-ID"
+				position="191" redefines="CQRSL-CLAIM-TYPE" storage-length="10">
+				<item display-length="2" level="15" name="CQRCM-PAYOR" picture="X(02)"
+					position="191" storage-length="2" />
+				<item display-length="1" level="15" name="CQRCM-PROF-FACILITY"
+					picture="X(01)" position="193" storage-length="1" />
+				<item display-length="1" level="15" name="CQRCM-IN-OUT-PATIENT"
+					picture="X(01)" position="194" storage-length="1" />
+				<item display-length="2" level="15" name="CQRCM-COM-MCARE-MCAIDE"
+					picture="X(02)" position="195" storage-length="2" />
+				<item display-length="1" level="15" name="CQRCM-OPTION-A-B"
+					picture="X(01)" position="197" storage-length="1" />
+				<item display-length="3" level="15" name="CQRCM-WORKFLOW-ID-FILLER"
+					picture="X(03)" position="198" storage-length="3" />
+			</item>
+			<item display-length="3" level="10" name="CQRCM-PSEUDO-PEND-PEND-CODE"
+				picture="X(03)" position="201" storage-length="3" />
+			<item display-length="68" level="10" name="CQRCM-COMMENTS"
+				picture="X(68)" position="204" storage-length="68" />
+		</item>
+		<item display-length="14" level="05" name="CQRCM-MSG-RETURN-FIELDS"
+			position="272" storage-length="14">
+			<item display-length="2" level="10" name="CQRCSQ-STATUS"
+				picture="X(2)" position="272" storage-length="2">
+				<condition name="CQRCSQ-RELEASE-UNCHANGED">
+					<condition value="&quot;R &quot;" />
+				</condition>
+				<condition name="CQRCSQ-CQR-UPDATED">
+					<condition value="&quot;P &quot;" />
+				</condition>
+				<condition name="CQRCSQ-COM-RELEASE-SQ">
+					<condition value="&quot;RS&quot;" />
+				</condition>
+				<condition name="CQRCSQ-COM-TOPS-FINALIZED">
+					<condition value="&quot;TF&quot;" />
+				</condition>
+			</item>
+			<item display-length="4" level="10" name="CQRCSQ-RETURN-SYSTEM"
+				picture="X(4)" position="274" storage-length="4">
+				<condition name="CQRCSQ-TYPE-CQR">
+					<condition value="&quot;A   &quot;" />
+				</condition>
+				<condition name="CQRCSQ-TYPE-COMET">
+					<condition value="&quot;C   &quot;" />
+				</condition>
+			</item>
+			<item display-length="8" level="10" name="CQRCSQ-RETURN-DT"
+				position="278" storage-length="8">
+				<item display-length="4" level="15" name="CQRCSU-RET-DT-YYYY"
+					numeric="true" picture="9999" position="278" storage-length="4" />
+				<item display-length="2" level="15" name="CQRCSU-EXP-DT-MM"
+					numeric="true" picture="99" position="282" storage-length="2" />
+				<item display-length="2" level="15" name="CQRCSU-EXP-DT-DD"
+					numeric="true" picture="99" position="284" storage-length="2" />
+			</item>
+		</item>
+	</item>
+	<item display-length="683" level="03" name="CQRCM-VARIABLE-2"
+		position="286" storage-length="683">
+		<item display-length="69" level="05" name="CQRCM-V2-INBOUND-FIELDS"
+			position="286" storage-length="69">
+			<item display-length="15" level="10" name="CQRCM-V2-PRV-TIN-SUFX"
+				position="286" storage-length="15">
+				<item display-length="1" level="15" name="CQRCM-V2-PRV-TIN-PRFX"
+					picture="X(01)" position="286" storage-length="1" />
+				<item display-length="9" level="15" name="CQRCM-V2-PRV-TIN"
+					picture="X(09)" position="287" storage-length="9" />
+				<item display-length="5" level="15" name="CQRCM-V2-PRV-SUFX"
+					picture="X(05)" position="296" storage-length="5" />
+			</item>
+			<item display-length="10" level="10" name="CQRCM-V2-NEW-EMP-ID"
+				picture="X(10)" position="301" storage-length="10" />
+			<item display-length="6" level="10" name="CQRCM-V2-NEW-EMP-POL-NO"
+				picture="X(06)" position="311" storage-length="6" />
+			<item display-length="10" level="10" name="CQRCM-V2-NEW-PAT-FIRST-NAME"
+				picture="X(10)" position="317" storage-length="10" />
+			<item display-length="2" level="10" name="CQRCM-V2-NEW-PAT-RELATIONSHIP"
+				picture="X(02)" position="327" storage-length="2" />
+			<item display-length="1" level="10" name="CQRCM-V2-NEW-ENGINE"
+				picture="X(01)" position="329" storage-length="1" />
+			<item display-length="3" level="10" name="CQRCM-V2-NEW-OFC"
+				numeric="true" picture="9(03)" position="330" storage-length="3" />
+			<item display-length="1" level="10" name="CQRCM-V2-NEW-PLATFORM"
+				picture="X(01)" position="333" storage-length="1" /><!--**** PEND TYPE 
+				WILL BE USED FOR COMET INBOUND AND OUTBOUND -->
+			<item display-length="1" level="10" name="CQRCM-V2-PEND-TYPE"
+				picture="X(01)" position="334" storage-length="1" />
+			<item display-length="2" level="10" name="CQRCM-V2-TRIGGER-REAS-CD"
+				picture="X(02)" position="335" storage-length="2" />
+			<item display-length="6" level="10" name="CQRCM-V2-ALT-ID"
+				numeric="true" picture="9(06)" position="337" storage-length="6" />
+			<item display-length="2" level="10" name="CQRCM-V2-MGR-OFC"
+				numeric="true" picture="9(02)" position="343" storage-length="2" />
+			<item display-length="4" level="10" name="CQRCM-V2-SYSTEM-IND"
+				picture="X(04)" position="345" storage-length="4" />
+			<item display-length="6" level="10" name="CQRCM-V2-FILLER1"
+				picture="X(06)" position="349" storage-length="6" />
+		</item>
+		<item display-length="614" level="05" name="CQRCM-V2-OUTBOUND-FIELDS"
+			position="355" storage-length="614">
+			<item display-length="5" level="10" name="CQRCM-V2-ORG-ID"
+				picture="X(05)" position="355" storage-length="5" />
+			<item display-length="1" level="10" name="CQRCM-V2-INST-OR-PROF"
+				picture="X(01)" position="360" storage-length="1" />
+			<item display-length="1" level="10" name="CQRCM-V2-SQ-DESIGNATION"
+				picture="X(01)" position="361" storage-length="1">
+				<condition name="CQRSL-PROV-SQ">
+					<condition value="&quot;P&quot;" />
+				</condition>
+				<condition name="CQRSL-DEP-SQ">
+					<condition value="&quot;D&quot;" />
+				</condition>
+				<condition name="CQRSL-PROV-DEP-SQ">
+					<condition value="&quot;B&quot;" />
+				</condition>
+			</item>
+			<item display-length="9" level="10" name="CQRCM-V2-SUFX-TOT-CHARGE"
+				numeric="true" picture="9(07)V99" position="362" scale="2"
+				storage-length="9" />
+			<item display-length="9" level="10" name="CQRCM-V2-CLAIM-TOT-CHARGE"
+				numeric="true" picture="9(07)V99" position="371" scale="2"
+				storage-length="9" />
+			<item display-length="2" level="10" name="CQRCM-V2-PLACE-OF-SERVICE"
+				picture="X(02)" position="380" storage-length="2" />
+			<item display-length="6" level="10" name="CQRCM-V2-MED-SERVICE-CODE"
+				picture="X(06)" position="382" storage-length="6" />
+			<item display-length="3" level="10" name="CQRCM-V2-BILL-TYPE"
+				picture="X(03)" position="388" storage-length="3" />
+			<item display-length="3" level="10" name="CQRCM-V2-FLN-DCC"
+				numeric="true" picture="9(03)" position="391" storage-length="3" />
+			<item display-length="8" level="10" name="CQRCM-V2-CLAIM-RECEIPT-DT"
+				numeric="true" picture="9(08)" position="394" storage-length="8" />
+			<item display-length="8" level="10" name="CQRCM-V2-EARLIEST-DOS"
+				numeric="true" picture="9(08)" position="402" storage-length="8" />
+			<item display-length="8" level="10" name="CQRCM-V2-LATEST-DOS"
+				numeric="true" picture="9(08)" position="410" storage-length="8" />
+			<item display-length="105" level="10" name="CQRCM-V2-PATIENT-INFO"
+				position="418" storage-length="105">
+				<item display-length="2" level="15" name="CQRCM-V2-PAT-RELATIONSHIP"
+					picture="X(02)" position="418" storage-length="2" />
+				<item display-length="8" level="15" name="CQRCM-V2-PAT-DOB"
+					numeric="true" picture="9(08)" position="420" storage-length="8" />
+				<item display-length="10" level="15" name="CQRCM-V2-PAT-FIRST-NAME"
+					picture="X(10)" position="428" storage-length="10" />
+				<item display-length="1" level="15" name="CQRCM-V2-PAT-MID-INIT"
+					picture="X(01)" position="438" storage-length="1" />
+				<item display-length="20" level="15" name="CQRCM-V2-PAT-LAST-NAME"
+					picture="X(20)" position="439" storage-length="20" />
+				<item display-length="18" level="15" name="CQRCM-V2-PAT-ADR1"
+					picture="X(18)" position="459" storage-length="18" />
+				<item display-length="20" level="15" name="CQRCM-V2-PAT-ADR2"
+					picture="X(20)" position="477" storage-length="20" />
+				<item display-length="15" level="15" name="CQRCM-V2-PAT-CITY"
+					picture="X(15)" position="497" storage-length="15" />
+				<item display-length="2" level="15" name="CQRCM-V2-PAT-STATE"
+					picture="X(02)" position="512" storage-length="2" />
+				<item display-length="9" level="15" name="CQRCM-V2-PAT-ZIP"
+					picture="X(09)" position="514" storage-length="5" />
+			</item>
+			<item display-length="170" level="10" name="CQRCM-V2-INSURED-INFO"
+				position="523" storage-length="170">
+				<item display-length="8" level="15" name="CQRCM-V2-INS-DOB"
+					numeric="true" picture="9(08)" position="523" storage-length="8" />
+				<item display-length="10" level="15" name="CQRCM-V2-INS-FIRST-NAME"
+					picture="X(10)" position="531" storage-length="10" />
+				<item display-length="1" level="15" name="CQRCM-V2-INS-MID-INIT"
+					picture="X(01)" position="541" storage-length="1" />
+				<item display-length="20" level="15" name="CQRCM-V2-INS-LAST-NAME"
+					picture="X(20)" position="542" storage-length="20" />
+				<item display-length="30" level="15" name="CQRCM-V2-INS-ADR1"
+					picture="X(30)" position="562" storage-length="30" />
+				<item display-length="30" level="15" name="CQRCM-V2-INS-ADR2"
+					picture="X(30)" position="592" storage-length="30" />
+				<item display-length="15" level="15" name="CQRCM-V2-INS-CITY"
+					picture="X(15)" position="622" storage-length="15" />
+				<item display-length="2" level="15" name="CQRCM-V2-INS-STATE"
+					picture="X(02)" position="637" storage-length="2" />
+				<item display-length="9" level="15" name="CQRCM-V2-INS-ZIP"
+					picture="X(09)" position="639" storage-length="5" />
+				<item display-length="9" level="15" name="CQRCM-V2-ENTERED-INS-ID"
+					picture="X(09)" position="648" storage-length="9" />
+				<item display-length="20" level="15" name="CQRCM-V2-ENTERED-POL-NO"
+					picture="X(20)" position="657" storage-length="20" />
+				<item display-length="6" level="15" name="CQRCM-V2-EMP-POL-NO"
+					picture="X(06)" position="677" storage-length="6" />
+				<item display-length="7" level="15" name="CQRCM-V2-MBR-MARKET"
+					picture="X(07)" position="683" storage-length="7" />
+				<item display-length="3" level="15" name="CQRCM-V2-CCM-PRODUCT"
+					picture="X(03)" position="690" storage-length="3" />
+			</item>
+			<item display-length="173" level="10" name="CQRCM-V2-PROVIDER-INFO"
+				position="693" storage-length="173">
+				<item display-length="9" level="15" name="CQRCM-V2-PRV-SSN-ENTERED"
+					numeric="true" picture="9(09)" position="693" storage-length="9" />
+				<item display-length="9" level="15" name="CQRCM-V2-PRV-TIN-ENTERED"
+					numeric="true" picture="9(09)" position="702" storage-length="9" />
+				<item display-length="4" level="15" name="CQRCM-V2-PRV-DEGREE"
+					picture="X(04)" position="711" storage-length="4" />
+				<item display-length="30" level="15" name="CQRCM-V2-PRV-GROUP"
+					picture="X(30)" position="715" storage-length="30" />
+				<item display-length="10" level="15" name="CQRCM-V2-PRV-IND-FIRST"
+					picture="X(10)" position="745" storage-length="10" />
+				<item display-length="20" level="15" name="CQRCM-V2-PRV-IND-LAST"
+					picture="X(20)" position="755" storage-length="20" />
+				<item display-length="1" level="15" name="CQRCM-V2-PRV-IND-INIT"
+					picture="X(01)" position="775" storage-length="1" />
+				<item display-length="30" level="15" name="CQRCM-V2-PRV-ADR1"
+					picture="X(30)" position="776" storage-length="30" />
+				<item display-length="30" level="15" name="CQRCM-V2-PRV-ADR2"
+					picture="X(30)" position="806" storage-length="30" />
+				<item display-length="15" level="15" name="CQRCM-V2-PRV-CITY"
+					picture="X(15)" position="836" storage-length="15" />
+				<item display-length="2" level="15" name="CQRCM-V2-PRV-STATE"
+					picture="X(02)" position="851" storage-length="2" />
+				<item display-length="9" level="15" name="CQRCM-V2-PRV-ZIP"
+					picture="X(09)" position="853" storage-length="5" />
+				<item display-length="4" level="15" name="CQRCM-V2-EPD-MATCH-CODE"
+					picture="X(04)" position="862" storage-length="4" />
+			</item>
+			<item display-length="103" level="10" name="CQRCM-V2-CLAIM-COMMENTS"
+				picture="X(103)" position="866" storage-length="103" />
+		</item>
+	</item>
+	<item display-length="2" level="03" name="CQRCM-VARIABLE-3"
+		position="969" storage-length="2">
+		<item display-length="2" level="05" name="CQRCM-V3-RESTRICT-CODE"
+			picture="X(02)" position="969" storage-length="2" />
+	</item>
+	<item display-length="8" level="03" name="CQRCM-VARIABLE-4"
+		position="971" storage-length="8">
+		<item display-length="8" level="05" name="CQRCM-V4-RISK-DATE"
+			numeric="true" picture="9(08)" position="971" storage-length="8" />
+	</item>
+	<item display-length="65" level="03" name="CQRCM-VARIABLE-5"
+		position="979" storage-length="65">
+		<item display-length="3" level="05" name="CQRCM-V5-NBR-SUFFIXES"
+			numeric="true" picture="9(03)" position="979" storage-length="3" />
+		<item display-length="2" level="05" name="CQRCM-V5-CIRE-EDIT-SUB-PND-CD"
+			picture="X(02)" position="982" storage-length="2" />
+		<item display-length="6" level="05" name="CQRCM-V5-CIRE-EDIT-RULES"
+			occurs="10" position="984" storage-length="6">
+			<item display-length="6" level="10" name="CQRCM-V5-CIRE-EDIT-RULE-TYPE"
+				position="984" storage-length="6">
+				<item display-length="6" level="15" name="CQRCM-V5-CIRE-EDIT-RULE"
+					picture="X(06)" position="984" storage-length="6" />
+			</item>
+		</item>
+	</item>
+</copybook>

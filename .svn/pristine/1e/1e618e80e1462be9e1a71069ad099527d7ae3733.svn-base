@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation=" http://www.springframework.org/schema/beans 
+							http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- Section declaring common services. if number exceeds, c an be moved 
+		to a different xml -->
+	<!-- general logging -->
+	<bean id="cmt.gen.loggingService"
+		class="com.optum.diff.common.util.logging.LoggingServiceForLog4j"
+		init-method="init" lazy-init="true">
+		<constructor-arg index="0" value="${cmtgen.cat}" />
+		<constructor-arg index="1" value="${cmt.log4jConfig}" />
+		<constructor-arg index="2" value="false" />
+	</bean>
+
+	<!-- mcf messages logging -->
+	<bean id="cmt.mcf.loggingService"
+		class="com.optum.diff.common.util.logging.LoggingServiceForLog4j"
+		init-method="init" lazy-init="true">
+		<constructor-arg index="0" value="${cmtmcf.cat}" />
+		<constructor-arg index="1" value="${cmt.log4jConfig}" />
+		<constructor-arg index="2" value="false" />
+	</bean>
+
+	<!-- performance logger -->
+	<bean id="cmt.perfLoggingService"
+		class="com.optum.diff.common.util.logging.LoggingServiceForLog4j"
+		init-method="init" lazy-init="true">
+		<constructor-arg index="0" value="${AppName}" />
+		<constructor-arg index="1" value="${cmt.log4jConfig}" />
+		<constructor-arg index="2" value="false" />
+	</bean>
+
+	<!-- JMS Queue Template -->
+	<bean id="cmt.qTemplt1" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="cmt.wmq.cachingQConnFact.qmf1" />
+		<property name="defaultDestination" ref="cmt.wmq.clm.interimQ" />
+		<!-- this indicates the the destination would be a queue/topic false in 
+			this property would indicate, that this is a point to point rather than a 
+			publish / subscribe model -->
+		<property name="pubSubDomain" value="false" />
+	</bean>
+
+	<bean id="cmt.qTemplt2" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="cmt.wmq.cachingQConnFact.qmf2" />
+		<property name="defaultDestination" ref="cmt.wmq.clm.interimQ" />
+		<!-- this indicates the the destination would be a queue/topic false in 
+			this property would indicate, that this is a point to point rather than a 
+			publish / subscribe model -->
+		<property name="pubSubDomain" value="false" />
+	</bean>
+
+	<!-- Configure a queue sender -->
+	<bean id="cmt.event.msg.dis.util" class="com.optum.diff.common.util.ToggleLBJMSAdapter"
+		init-method="init">
+		<property name="jmsTemplate1">
+			<ref bean="cmt.qTemplt1" />
+		</property>
+		<property name="jmsTemplate2">
+			<ref bean="cmt.qTemplt2" />
+		</property>
+		<property name="gpCache">
+			<ref bean="cmt.gpCache" />
+		</property>
+
+		<!-- delivery mode can be changed to 2 to send persistent messages -->
+
+		<property name="deliveryMode" value="${cmt.msg.del.mod}"/>
+		<property name="maxRetryTimes" value="${cmt.send.maxRetryTimes}"/>
+		<property name="qpropscpartfct" value="CMTLBJMSToggler"/>
+		<property name="transactedSessionInd" value="${cmt.jms.session.transacted}"/>
+		<property name="sessionAckMode" value="${cmt.jms.session.ackwldgmnt}"/>
+		
+		<!-- 
+		turning this to true would require an additional value to be set to a not null value
+		-->
+		<property name="send2dlqInd" value="false"/>
+		<!-- property name="dlq" value=""/-->
+
+	</bean>
+
+
+	<!-- Section describes setting up of cache manager -->
+	<bean id="cmt.cacheManager"
+		class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<property name="configLocation">
+			<value>classpath:META-INF/spring/com.optum.comet.mctmcf.app.ehcache.mgr.xml
+			</value>
+		</property>
+	</bean>
+
+	<!-- Setting up local cache -->
+	<bean name="cmt.gpCache" id="cmt.gpCache"
+		class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+		<property name="cacheManager">
+			<ref bean="cmt.cacheManager" />
+		</property>
+		<property name="cacheName">
+			<value>com.optum.comet.mctmcf.app.GENP_CACHE</value>
+		</property>
+	</bean>
+
+	<bean name="cmt.methodCache" id="cmt.methodCache"
+		class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+		<property name="cacheManager">
+			<ref bean="cmt.cacheManager" />
+		</property>
+		<property name="cacheName">
+			<value>com.optum.comet.mctmcf.app.METHOD_CACHE</value>
+		</property>
+	</bean>
+
+
+
+</beans>

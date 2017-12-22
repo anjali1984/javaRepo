@@ -1,0 +1,2 @@
+##Default file used by DIFF to load up multiple modules
+CMT.ApplicationContext=META-INF/spring/com.optum.comet.mctmcf.app.cntxt.xml

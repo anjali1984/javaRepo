@@ -1,0 +1,52 @@
+package com.optum.comet.mctmcf.generated.vol04042017;
+
+public class CqrcmWorkflowId extends com.optum.comet.mctmcf.generator.predefbeans.Definition implements java.io.Serializable {
+
+    public CqrcmWorkflowId() {
+    }
+
+    private static final long serialVersionUID = 1L;
+    private String cqrcmPayor;
+    private String cqrcmProfFacility;
+    private String cqrcmInOutPatient;
+    private String cqrcmComMcareMcaide;
+    private String cqrcmOptionAB;
+    private String cqrcmWorkflowIdFiller;
+
+    public void setCqrcmPayor(String cqrcmPayor) { 
+        this.cqrcmPayor = cqrcmPayor;
+    }
+    public String getCqrcmPayor() { 
+        return this.cqrcmPayor;
+    }
+    public void setCqrcmProfFacility(String cqrcmProfFacility) { 
+        this.cqrcmProfFacility = cqrcmProfFacility;
+    }
+    public String getCqrcmProfFacility() { 
+        return this.cqrcmProfFacility;
+    }
+    public void setCqrcmInOutPatient(String cqrcmInOutPatient) { 
+        this.cqrcmInOutPatient = cqrcmInOutPatient;
+    }
+    public String getCqrcmInOutPatient() { 
+        return this.cqrcmInOutPatient;
+    }
+    public void setCqrcmComMcareMcaide(String cqrcmComMcareMcaide) { 
+        this.cqrcmComMcareMcaide = cqrcmComMcareMcaide;
+    }
+    public String getCqrcmComMcareMcaide() { 
+        return this.cqrcmComMcareMcaide;
+    }
+    public void setCqrcmOptionAB(String cqrcmOptionAB) { 
+        this.cqrcmOptionAB = cqrcmOptionAB;
+    }
+    public String getCqrcmOptionAB() { 
+        return this.cqrcmOptionAB;
+    }
+    public void setCqrcmWorkflowIdFiller(String cqrcmWorkflowIdFiller) { 
+        this.cqrcmWorkflowIdFiller = cqrcmWorkflowIdFiller;
+    }
+    public String getCqrcmWorkflowIdFiller() { 
+        return this.cqrcmWorkflowIdFiller;
+    }
+}

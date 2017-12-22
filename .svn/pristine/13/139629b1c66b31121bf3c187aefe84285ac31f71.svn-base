@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This file will contain all of the spring bean declarations required 
+	to setup the required services. This context file also contains a common 
+	service section. -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation=" http://www.springframework.org/schema/beans 
+							http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- Application specific service beans -->
+	<bean id="cmt.baseService" class="com.optum.comet.mctmcf.services.CometBaseService"
+		abstract="true">
+		<property name="logger" ref="cmt.gen.loggingService" />
+	</bean>
+
+	<!-- This service will be used for parsing the entire MCF CobolCopyBook -->
+	<bean id="cmt.mcfParser"
+		class="com.optum.comet.mctmcf.parser.impl.CobolCopyBookMessageParserImpl"
+		init-method="init">
+		<property name="beanPkg" value="com.optum.comet.mctmcf.generated.vol04042017" />
+		<property name="configFilePath" value="artifacts/EMCCQRCM_ClmSfx.xml" />
+		<property name="logger" ref="cmt.gen.loggingService" />
+		<property name="debugMode" value="false" />
+	</bean>
+
+	<!-- This service will be used for parsing the entire SFX CobolCopyBook -->
+	<bean id="cmt.suParser"
+		class="com.optum.comet.mctmcf.parser.impl.CobolCopyBookMessageParserImpl"
+		init-method="init">
+		<property name="beanPkg" value="com.optum.comet.mctmcf.generated.vol04042017" />
+		<property name="configFilePath" value="artifacts/EMCCQRCM_ClmStsUpdt.xml" />
+		<property name="logger" ref="cmt.gen.loggingService" />
+		<property name="debugMode" value="false" />
+	</bean>
+
+	<!-- This service will be used to parse manual and status update messages -->
+	<bean id="cmt.mctmcf" class="com.optum.comet.mctmcf.services.impl.MCTMCFService"
+		parent="cmt.baseService">
+		<property name="manualMessageParser" ref="cmt.mcfParser" />
+		<property name="statUpdtMessageParser" ref="cmt.suParser" />
+		<property name="loadClaimDao" ref="cmt.loadclaim" />
+		<property name="lookupDAO" ref="cmt.lkup" />
+		<property name="itemFlatDAO" ref="cmt.itmFlt" />
+		<property name="mmsLogger" ref="cmt.gen.loggingService" />
+	</bean>
+
+
+	<bean id="cmt.manualclaim.processing"
+		class="com.optum.comet.mctmcf.services.impl.TOPSWMQMessageHandler">
+		<property name="msgTyp" value="${wmq.manual.msgTyp}" />
+		<property name="mctmcfService" ref="cmt.mctmcf" />
+		<property name="msgsRcvdLogger" ref="cmt.mcf.loggingService" />
+		<property name="methodLogger" ref="cmt.gen.loggingService" />
+	</bean>
+
+	<bean id="cmt.stsupdtclaim.processing"
+		class="com.optum.comet.mctmcf.services.impl.TOPSWMQMessageHandler">
+		<property name="msgTyp" value="${wmq.stsupdt.msgTyp}" />
+		<property name="mctmcfService" ref="cmt.mctmcf" />
+		<property name="msgsRcvdLogger" ref="cmt.mcf.loggingService" />
+		<property name="methodLogger" ref="cmt.gen.loggingService" />
+	</bean>
+
+</beans>

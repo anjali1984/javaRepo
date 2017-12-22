@@ -1,0 +1,88 @@
+package com.optum.comet.mctmcf.aspects;
+
+import java.util.Arrays;
+
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+
+import com.optum.diff.common.exception.GenericRuntimeException;
+import com.optum.diff.common.util.logging.LoggingServiceForLog4j;
+
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.Element;
+
+@Aspect
+public class MethodCachingAdvisor {
+    
+    // declare attributes
+    protected Cache  cache;// injected from the spring context
+    protected LoggingServiceForLog4j advcLogger;
+    
+    @Around("execution(* com.optum.comet.mctmcf.daos.impl.LookupDAO.*(..)) && @annotation(cacheable)")
+    public Object cacheDAOMethodResults(ProceedingJoinPoint pjp, Cacheable cacheable) {
+        String MEHTOD_NAME = "MethodCachingAdvisor.cacheDAOMethodResults(String)";
+        String logCorrId = "Generated from cache";
+        Object retVal = null;
+
+        try {
+        	
+            // keep the caching related arguments
+            String specifiedCacheKey = cacheable.cacheKey();
+            
+            this.advcLogger.debug(MEHTOD_NAME, "Starting cache key [" .concat(specifiedCacheKey).concat( "]"), logCorrId);
+            
+            String cacheKey = this.getCacheKey(Arrays.toString(pjp.getArgs()), specifiedCacheKey);
+            
+            Element element = this.cache.get(cacheKey);
+            
+            if (element == null) {
+                this.advcLogger.debug(MEHTOD_NAME, " No cached results found for this method", logCorrId);
+                // invoke method
+                Object result = pjp.proceed();
+                
+                // create cache element
+                element = new Element(cacheKey, result);
+                
+                // register in cache
+                this.advcLogger.debug(MEHTOD_NAME, "Method result cached", logCorrId);
+                this.cache.put(element);
+            
+            } else {
+                // returning from cache
+            	this.advcLogger.debug(MEHTOD_NAME, " Cached result returned ", logCorrId);
+            }
+            retVal = element.getObjectValue();
+
+        } catch (Throwable e) {
+            throw new GenericRuntimeException(e);
+        }
+        this.advcLogger.debug(MEHTOD_NAME, " Ending", logCorrId);
+        return retVal;
+    }
+    
+    // declare setters getters for the cache
+    public Cache getCache() {
+        return this.cache;
+    }
+
+    public void setCache(Cache cachearg) {
+        this.cache = cachearg;
+    }
+    
+    public LoggingServiceForLog4j getAdvcLogger() {
+		return advcLogger;
+	}
+
+	public void setAdvcLogger(LoggingServiceForLog4j advcLogger) {
+		this.advcLogger = advcLogger;
+	}
+
+	// creates cache key: targetName.methodName
+    protected String getCacheKey(String targetName, String methodName) {
+        StringBuffer sb = new StringBuffer();
+        sb.append(targetName).append(".").append(methodName);
+        return sb.toString();
+    }
+    
+}

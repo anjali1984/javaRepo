@@ -1,0 +1,664 @@
+package com.optum.comet.mctmcf.parser.impl;
+
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.beanutils.PropertyUtils;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.input.SAXBuilder;
+
+import com.optum.comet.mctmcf.exception.CometParsingRuntimeException;
+import com.optum.comet.mctmcf.generator.predefbeans.ChoiceRestriction;
+import com.optum.comet.mctmcf.generator.predefbeans.Definition;
+import com.optum.comet.mctmcf.generator.predefbeans.NullDefinition;
+import com.optum.comet.mctmcf.parser.ICobolCopyBookMessageParser;
+import com.optum.diff.common.util.logging.LoggingServiceInterface;
+
+@SuppressWarnings({"unchecked", "unused"})
+public class CobolCopyBookMessageParserImpl implements ICobolCopyBookMessageParser {
+
+	//private String loggingPropsPath = null;
+	private String beanPkg = null;
+	private String configFilePath;
+	private Document mcfConfigJdomDoc;
+	private static final String THIS_CLASS = "CobolCopyBookMessageParserImpl.";
+	private boolean debugMode = false;
+
+	//private LoggingServiceInterface loggingService;
+	//private LogEmitter logger;
+
+	// this is a special variable used to read multi-occurrence nodes
+	//private int occursOffset = 0;
+	private static ThreadLocal<Integer> tsdOccursOffset = new ThreadLocal<Integer>();
+
+	public void setLogger(LoggingServiceInterface logger) {
+		//   this.loggingService = logger;
+	}
+
+	public void setBeanPkg(String beanPkg) {
+		this.beanPkg = beanPkg;
+	}
+
+	public void setConfigFilePath(String configFilePath) {
+		this.configFilePath = configFilePath;
+	}
+
+	/*public void setLoggingPropsPath(String loggingPropsPath) {
+        this.loggingPropsPath = loggingPropsPath;
+    }*/
+
+	public void setDebugMode(boolean debugMode) {
+		this.debugMode = debugMode;
+	}
+
+	private static class LogEmitter {
+
+		private LoggingServiceInterface logger;
+		private boolean debugMode = true;
+		public LogEmitter (LoggingServiceInterface logger, boolean debugMode) {
+			this.logger = logger;
+			this.debugMode = debugMode;
+		}
+
+		public void debug (String methodName, String logMessage, String logCorrealtionId) {
+			//if (debugMode) logger.debug(methodName, logMessage, logCorrealtionId);
+		}
+		public void info (String methodName, String logMessage, String logCorrealtionId) {
+			//logger.info(methodName, logMessage, logCorrealtionId);
+		}
+		public void error (String methodName, String logMessage, String logCorrealtionId) {
+			//logger.error(methodName, logMessage, logCorrealtionId);
+		}
+	}
+
+	public void init() throws Exception {
+
+		InputStream is = this.getClass().getClassLoader().getResourceAsStream(configFilePath);
+		byte[] bArr = new byte[is.available()];
+		is.read(bArr);
+
+		String xmlConfigString = new String(bArr);
+
+		SAXBuilder saxBuilder = new SAXBuilder();
+		Reader reader = new StringReader(xmlConfigString);
+		this.mcfConfigJdomDoc = saxBuilder.build(reader);
+		// this.logger = new LogEmitter(loggingService, this.debugMode);
+	}
+
+	public <T extends Definition> T parseMessage (String message, Class<T> containerClass) throws CometParsingRuntimeException {
+
+		String thisMethod = THIS_CLASS + "parseMessage (String message): "; 
+		//logger.debug(thisMethod, "CobolCopyBookMessageParserImpl.parseMessage(): Starts", "");
+		// set the TSD
+		tsdOccursOffset.set(0);
+
+		Definition container = null;
+		try {
+			container = (Definition) containerClass.newInstance();
+
+			Element parentNode = this.mcfConfigJdomDoc.getRootElement();
+			List<Element> children = parentNode.getChildren();
+
+			for (Element childNode : children) {
+				parseMessageForNode(message, childNode, parentNode, container);
+			}
+		} catch (Exception e) {
+			CometParsingRuntimeException ce = null;
+			if (e instanceof CometParsingRuntimeException) {
+				ce = (CometParsingRuntimeException) e;
+			} else {
+				ce = new CometParsingRuntimeException(e);
+			}
+			throw ce;
+		}
+		//logger.debug(thisMethod, "CobolCopyBookMessageParserImpl.parseMessage(): ends", "");
+		return (T) container;
+	}
+
+	public <T extends Definition> T parseMessage (String message, Class<T> containerClass, String configFilePath) throws CometParsingRuntimeException {
+
+		String thisMethod = THIS_CLASS + "parseMessage (String message, String configFilePath): "; 
+		//logger.debug(thisMethod, "CobolCopyBookMessageParserImpl.parseMessage(): Starts", "");
+
+		Definition container = null;
+		try {
+			container = (Definition) containerClass.newInstance();
+
+			InputStream is = this.getClass().getClassLoader().getResourceAsStream(configFilePath);
+			byte[] bArr = new byte[is.available()];
+			is.read(bArr);
+
+			String xmlConfigString = new String(bArr);
+
+			SAXBuilder saxBuilder = new SAXBuilder();
+			Reader reader = new StringReader(xmlConfigString);
+			Document jdomDocument = saxBuilder.build(reader);
+
+			Element parentNode = jdomDocument.getRootElement();
+			List<Element> children = parentNode.getChildren();
+
+			for (Element childNode : children) {
+				parseMessageForNode(message, childNode, parentNode, container);
+			}
+
+		} catch (Exception e) {
+			//e.printStackTrace();
+			//throw new CometParsingRuntimeException(e);
+			CometParsingRuntimeException ce = null;
+			if (e instanceof CometParsingRuntimeException) {
+				ce = (CometParsingRuntimeException) e;
+			} else {
+				ce = new CometParsingRuntimeException(e);
+			}
+			throw ce;
+		}
+		//logger.debug(thisMethod, "CobolCopyBookMessageParserImpl.parseMessage(): ends", "");
+		return (T) container;
+	}
+
+	protected Object parseMessageForNode(String message, Element currNode, Element parentNode, Definition parentContainer) throws CometParsingRuntimeException {
+
+		String thisMethod = THIS_CLASS + "parseMessageForNode: "; 
+
+		String attValue = null;
+		String currNodeName = null;
+		Object currNodeObj = new NullDefinition();
+		String parentNodeName = null;
+		try {
+			parentNodeName = parentNode.getAttributeValue(ATT_NODE_NAME);
+			currNodeName = currNode.getAttributeValue(ATT_NODE_NAME);
+			// ignore FILLER node
+			if (NODE_TYP_FILLER.equalsIgnoreCase(currNodeName)) {
+				/*logger.debug(thisMethod, "CobolCopyBookMessageParserImpl.parseMessageForNode(): Ignoring Filler node = " + currNodeName 
+															+ "; Belonging to parent = " + parentNodeName, "");*/
+				return currNodeObj;
+			}
+			// ignore redefining node
+			if (currNode.getAttributeValue(ATT_NODE_REDEFINES) != null) {
+				/*logger.debug(thisMethod, "CobolCopyBookMessageParserImpl.parseMessageForNode(): Ignoring Redefining node = " + currNodeName 
+													+ "; Belonging to parent = " + parentNodeName, "");*/
+				return currNodeObj;
+			}
+
+			if (parentContainer == null) {
+				throw new CometParsingRuntimeException("Exception: Object for node " + parentNodeName + " isn't initialized in the respective parent");
+			}
+
+			try {
+				currNodeObj = PropertyUtils.getProperty(parentContainer, CobolCopyBookSpecReaderUtil.toJavaNodeName(currNodeName, true));
+			} catch (NoSuchMethodException nsme) {
+				try {
+					currNodeObj = Class.forName(beanPkg + "." + CobolCopyBookSpecReaderUtil.toJavaNodeName(currNodeName, false)).newInstance();
+				} catch (ClassNotFoundException cnfe) {
+					throw new CometParsingRuntimeException(thisMethod + "Invalid java datastructure encountered for element: " + currNodeName);
+				}
+			}
+			//logger.debug(thisMethod, "CobolCopyBookMessageParserImpl.parseMessageForNode(): Starts: currNodeName = " + currNodeName, "");
+			if (currNodeObj instanceof Definition) {
+				this.setNodeMetadata(currNode, (Definition) currNodeObj);
+			}
+
+			if (CobolCopyBookSpecReaderUtil.hasChildren(currNode)) { // process nodes which has children
+
+				//logger.debug(thisMethod, "CobolCopyBookMessageParserImpl.parseMessageForNode(): " + currNodeName + " Has Children", "");
+				if (CobolCopyBookSpecReaderUtil.isChoiceNode(currNode) 
+						&& currNode.getAttributeValue(ATT_NODE_REDEFINED) != null 
+						&& Boolean.valueOf(currNode.getAttributeValue(ATT_NODE_REDEFINED))) {
+
+					//logger.debug(thisMethod, "CobolCopyBookMessageParserImpl.parseMessageForNode(): " + currNodeName + " is a Redefined ChoiceNode", "");
+					this.readRedefinedNode(message, parentNode, currNode, parentContainer);
+					return currNodeObj;
+				} else if (CobolCopyBookSpecReaderUtil.isChoiceNode(currNode)) {
+
+					//logger.debug(thisMethod, "CobolCopyBookMessageParserImpl.parseMessageForNode(): " + currNodeName + " is a ChoiceNode", "");
+					this.readChoiceNode(message, currNode, (Definition) currNodeObj);
+					return currNodeObj;
+				}
+				// read if node has multiple occurrence  
+				else if (currNode.getAttributeValue(ATT_NODE_OCCURS) != null) {
+
+					//logger.debug(thisMethod, "CobolCopyBookMessageParserImpl.parseMessageForNode(): " + currNodeName + " is a OccursNode", "");
+					this.readOccursNode(message, parentNode, currNode, parentContainer);
+					return currNodeObj;
+				}
+
+				List<Element> children = currNode.getChildren();
+				for (Element childNode : children) {
+					parseMessageForNode(message, childNode, currNode, (Definition) currNodeObj);
+				}
+
+			} else {
+				//logger.debug(thisMethod, currNodeName + "Doesn't have Children", "");
+				// read if node is redefined
+				if (currNode.getAttributeValue(ATT_NODE_REDEFINED) != null 
+						&& Boolean.valueOf(currNode.getAttributeValue(ATT_NODE_REDEFINED))) {
+
+					//logger.debug(thisMethod, "CobolCopyBookMessageParserImpl.parseMessageForNode(): " + currNodeName + " is a RedefinedNode*", "");
+					this.readRedefinedNode(message, parentNode, currNode, parentContainer);
+				} else {
+
+					//logger.debug(thisMethod, "CobolCopyBookMessageParserImpl.parseMessageForNode(): " + currNodeName + " is a LeafNode", "");
+					attValue = this.readLeafNodeData(message, currNode);
+					this.setNodeData(parentContainer, currNode, attValue);
+					
+				}
+				return currNodeObj;
+			}
+
+
+		} catch (Exception e) {
+			/*logger.error(thisMethod, "CobolCopyBookMessageParserImpl.parseMessageForNode(): Exception: " + e + "\n\tcurrNodeName = " + currNodeName
+																	+ "; parentNodeName = " + parentNodeName, ""
+																	);*/
+			//e.printStackTrace();
+			CometParsingRuntimeException ce = null;
+			if (e instanceof CometParsingRuntimeException) {
+				ce = (CometParsingRuntimeException) e;
+			} else {
+				ce = new CometParsingRuntimeException(e);
+			}
+			throw ce;
+		}
+		//logger.debug(thisMethod, "CobolCopyBookMessageParserImpl.parseMessageForNode(): Ends", "");
+		return currNodeObj;
+	}
+
+	/**
+	 * 
+	 * Sample: 1 
+	 * 	
+	 * 	<item display-length="11" level="10" name="CQRCM-FLN"
+			numeric="true" picture="9(11)" position="9" redefined="true"
+			storage-length="11" />
+		<item display-length="11" level="10" name="FILLER"
+			position="9" redefines="CQRCM-FLN" storage-length="11">
+			<item display-length="1" level="20" name="FILLER"
+				picture="X(1)" position="9" storage-length="1" />
+			<item display-length="5" level="20"
+				name="CQRCM-FLN-RECEIPT-DT" numeric="true" picture="9(5)"
+				position="10" storage-length="5" />
+			<item display-length="5" level="20"
+				name="CQRCM-FLN-SERIAL-NO" numeric="true" picture="9(5)"
+				position="15" storage-length="5" />
+		</item>
+	 * 
+	 * Sample: 2
+	 * 
+	 * 	<item display-length="10" level="10" name="CQRSL-CLAIM-TYPE"
+			picture="X(10)" position="191" redefined="true"
+			storage-length="10">
+			<condition name="CQRSL-UBH">
+				<condition value="UBH" />
+			</condition>
+			<condition name="CQRSL-NONUBH">
+				<condition value="NONUBH" />
+			</condition>
+		</item>
+		<item display-length="10" level="10"
+			name="CQRCM-WORKFLOW-ID" position="191" redefines="CQRSL-CLAIM-TYPE"
+			storage-length="10">
+			<item display-length="2" level="15" name="CQRCM-PAYOR"
+				picture="X(02)" position="191" storage-length="2" />
+			<item display-length="1" level="15"
+				name="CQRCM-PROF-FACILITY" picture="X(01)" position="193"
+				storage-length="1" />
+			<item display-length="1" level="15"
+				name="CQRCM-IN-OUT-PATIENT" picture="X(01)" position="194"
+				storage-length="1" />
+			<item display-length="2" level="15"
+				name="CQRCM-COM-MCARE-MCAIDE" picture="X(02)" position="195"
+				storage-length="2" />
+			<item display-length="1" level="15"
+				name="CQRCM-OPTION-A-B" picture="X(01)" position="197"
+				storage-length="1" />
+			<item display-length="3" level="15"
+				name="CQRCM-WORKFLOW-ID-FILLER" picture="X(03)" position="198"
+				storage-length="3" />
+		</item>
+	 * 
+	 * @param message
+	 * @param parentNode
+	 * @param currNode
+	 * @param container
+	 * @throws Exception
+	 */
+	protected void readRedefinedNode (String message, Element parentNode, Element currNode, Definition parentContainer) throws Exception {
+
+		String thisMethod = THIS_CLASS + "readRedefinedNode: "; 
+
+		// Redefinition would depend whether the redefinition simply redefines a node or depends on a data condition
+		// 1. data is simply redefined in terms of another definition (thru FILLER)
+		// 2. if data doesn't match one of the condition-values, redefine
+
+		boolean needRedefinition = true;
+		Definition redefinedObj = null;
+		String currNodeName = currNode.getAttributeValue(ATT_NODE_NAME);
+		//logger.debug(thisMethod, "CobolCopyBookMessageParserImpl.readRedefinedNode(): Starts ... currNodeName = " + currNodeName, "");
+		
+		if (CobolCopyBookSpecReaderUtil.isChoiceNode (currNode)) { // 2.
+			Definition currNodeObj = (Definition) PropertyUtils.getProperty(parentContainer, CobolCopyBookSpecReaderUtil.toJavaNodeName(currNodeName, true));
+			if ((currNodeObj instanceof ChoiceRestriction) == false) {
+				throw new CometParsingRuntimeException("Exception: Invalid java datastructure for node " + currNodeName);
+			}
+			try {
+				this.readChoiceNode(message, currNode, currNodeObj);
+				//this.setNodeData(parentContainer, currNode, currNodeObj);
+				needRedefinition = false;
+
+			} catch (CometParsingRuntimeException ce) {
+				//logger.error(thisMethod, "CobolCopyBookMessageParserImpl.readRedefinedNode(): Exception: " + ce, "");
+			}
+		}
+
+		if (needRedefinition) {
+
+			// find the redefinition node
+			Element redefNode = CobolCopyBookSpecReaderUtil.findRedefinition(parentNode, currNode);
+			String redefNodeName = redefNode.getAttributeValue(ATT_NODE_NAME);
+			// if redefinition is with a FILLER, use the current node name or else use the redefined node name
+			redefNodeName = NODE_TYP_FILLER.equalsIgnoreCase(redefNodeName) ? currNodeName : redefNodeName;
+
+			//logger.debug(thisMethod, "CobolCopyBookMessageParserImpl.readRedefinedNode(): Redef is needed, Redef obj name = " + redefNodeName, "");
+			redefinedObj = (Definition) PropertyUtils.getProperty(parentContainer, CobolCopyBookSpecReaderUtil.toJavaNodeName(redefNodeName, true));
+
+			List<Element> childrenOfRedefNode = redefNode.getChildren();
+			for (Element element : childrenOfRedefNode) {
+
+				if (NODE_TYP_FILLER.equalsIgnoreCase(element.getAttributeValue(ATT_NODE_NAME))) continue;
+
+				String attValue = this.readLeafNodeData(message, element);
+				this.setNodeData(redefinedObj, element, attValue);
+
+			}
+			this.setNodeMetadata(redefNode, redefinedObj);
+			//redefinedObj.setRedefined(true);
+			//logger.debug(thisMethod, "CobolCopyBookMessageParserImpl.readRedefinedNode(): Redef is completed", "");
+			//this.setNodeData(parentContainer, currNode, redefinedObj);
+		}
+
+		//logger.debug(thisMethod, "CobolCopyBookMessageParserImpl.readRedefinedNode(): Ends", "");
+	}
+
+	/*protected boolean isChoiceNode (Element currNode) {
+
+		boolean isChoiceNode = false;
+		List<Element> children = currNode.getChildren();
+		for (Element element : children) {
+			isChoiceNode = NODE_TYP_COND.equalsIgnoreCase(element.getName());
+			if (!isChoiceNode) break;
+		}
+
+		return isChoiceNode;
+	}*/
+
+	/**
+	 * 	Sample: 1
+	 * 	<item display-length="10" level="10" name="CQRSL-CLAIM-TYPE"
+			picture="X(10)" position="191" redefined="true"
+			storage-length="10">
+			<condition name="CQRSL-UBH">
+				<condition value="UBH" />
+			</condition>
+			<condition name="CQRSL-NONUBH">
+				<condition value="NONUBH" />
+			</condition>
+		</item>
+	 * 
+	 * 	Sample 2
+	 * 
+	 * 	<item display-length="2" level="10" name="CQRCSQ-STATUS"
+			picture="X(2)" position="272" storage-length="2">
+			<condition name="CQRCSQ-RELEASE-UNCHANGED">
+				<condition value="R" />
+			</condition>
+			<condition name="CQRCSQ-CQR-UPDATED">
+				<condition value="P" />
+			</condition>
+			<condition name="CQRCSQ-COM-RELEASE-SQ">
+				<condition value="RS" />
+			</condition>
+			<condition name="CQRCSQ-COM-TOPS-FINALIZED">
+				<condition value="TF" />
+			</condition>
+		</item>
+	 * 
+	 * @param message
+	 * @param currNode
+	 * @param container
+	 * @throws Exception
+	 */
+	protected void readChoiceNode (String message, Element currNode, Definition container) throws Exception {
+
+		String attValue = this.readLeafNodeData(message, currNode);
+		//this.setNodeData(container, currNode, attValue);
+		((ChoiceRestriction) container).setChoiceValue(attValue);
+
+		//set if redefined
+		container.setRedefined(currNode.getAttributeValue(ATT_NODE_REDEFINED) != null 
+				? Boolean.valueOf(currNode.getAttributeValue(ATT_NODE_REDEFINED))
+						: false);
+	}
+
+	/**
+	 * <item display-length="5" level="15"
+			name="CQRCM-NONSEL-ERR-ENTRY" occurs="20" position="82"
+			storage-length="5">
+			<item display-length="5" level="20"
+				name="CQRCM-NONSEL-ERR-CODE" position="82" storage-length="5">
+				<item display-length="1" level="25"
+					name="CQRCM-NONSEL-ERR-LIT" picture="X(1)" position="82"
+					storage-length="1" />
+				<item display-length="4" level="25"
+					name="CQRCM-NONSEL-ERR-CD" picture="X(4)" position="83"
+					storage-length="4" />
+			</item>
+		</item>
+	 * 
+	 * 
+	 * @param message
+	 * @param currNode
+	 * @param parentContainer
+	 * @throws Exception
+	 */
+
+	protected void readOccursNode (String message, Element parentNode, Element currNode, Definition parentContainer) throws Exception {
+
+		String thisMethod = THIS_CLASS + "readOccursNode: "; 
+
+		List<Element> children = currNode.getChildren();
+		// error checking
+		if (children != null && children.size() > 1) {
+			throw new CometParsingRuntimeException("Exception: Invalid occurs node ... more than one inner-type");
+		}
+
+		String occursNodeName = currNode.getAttributeValue(ATT_NODE_NAME);
+		String occursNodeJavaName = CobolCopyBookSpecReaderUtil.toJavaNodeName(occursNodeName, true);
+		Class<?> type = PropertyUtils.getPropertyType(parentContainer, occursNodeJavaName);
+		//logger.debug(thisMethod, "CobolCopyBookMessageParserImpl.readOccursNode(): Starts: nodeName = " + occursNodeName + "; nodeType = " + type, "");
+		if (type.equals(ArrayList.class) == false) {
+			throw new CometParsingRuntimeException("Exception: Invalid java datastructure for " + occursNodeName);
+		}
+		int occurenceNum = Integer.parseInt(currNode.getAttributeValue(ATT_NODE_OCCURS));
+
+		Element entryNode = (Element) children.get(0);
+		String entryNodeName = entryNode.getAttributeValue(ATT_NODE_NAME);
+		Class<?> entryNodeClass = Class.forName(this.beanPkg + "." + CobolCopyBookSpecReaderUtil.toJavaNodeName(entryNodeName, false));
+		//logger.debug(thisMethod, "CobolCopyBookMessageParserImpl.readOccursNode(): InnerType = " + entryNodeClass.getCanonicalName(), "");
+
+		List<Definition> entries = (List<Definition>) PropertyUtils.getProperty(parentContainer, occursNodeJavaName);
+		for (int i = 0; i < occurenceNum; i++) {
+
+			// set the offset for repeating elements
+			//this.occursOffset = i * Integer.parseInt(currNode.getAttributeValue(ATT_NODE_STORAGE_LENGTH));
+			tsdOccursOffset.set(i * Integer.parseInt(currNode.getAttributeValue(ATT_NODE_STORAGE_LENGTH)));
+			Definition entryNodeObj = (Definition) this.parseMessageForNode(message, entryNode, currNode, parentContainer);
+			entries.add(entryNodeObj);
+		}
+		// reset offset
+		//this.occursOffset = 0;
+		tsdOccursOffset.set(0);
+
+		//logger.debug(thisMethod, "CobolCopyBookMessageParserImpl.readOccursNode(): Ends", "");
+	}
+
+	protected String readLeafNodeData (String message, Element currNode) {
+
+		//int readStartIx = Integer.parseInt(currNode.getAttributeValue(ATT_NODE_POS)) + this.occursOffset;
+		int readStartIx = Integer.parseInt(currNode.getAttributeValue(ATT_NODE_POS)) + tsdOccursOffset.get();
+		int storageLen = Integer.parseInt(currNode.getAttributeValue(ATT_NODE_STORAGE_LENGTH));
+
+		String data = message.substring(readStartIx - 1, readStartIx + storageLen - 1);
+
+		return data.trim();
+	}
+
+	protected String readOccursEntryNodeData (String message, Element currNode, int startIx) {
+
+		int readStartIx = startIx;
+		int storageLen = Integer.parseInt(currNode.getAttributeValue(ATT_NODE_STORAGE_LENGTH));
+		String data = message.substring(readStartIx - 1, readStartIx + storageLen - 1);
+
+		return data;
+	}
+
+	protected void setNodeData (Definition container, Element att, Object attValue) throws Exception {
+
+		String thisMethod = THIS_CLASS + "setNodeData: "; 
+
+		String attName = null;
+		try {
+			attName = att.getAttributeValue(ATT_NODE_NAME);
+
+			if (CobolCopyBookSpecReaderUtil.isDecimal(att) || CobolCopyBookSpecReaderUtil.isNumeric(att)) {
+								if (!CobolCopyBookSpecReaderUtil.isValidNumber((String) attValue)) throw new CometParsingRuntimeException(thisMethod + "NaN " + attName + ": " + attValue);
+			}
+			if (CobolCopyBookSpecReaderUtil.isDecimal(att)) {
+				attValue = CobolCopyBookSpecReaderUtil.formatDecimal(att, (String) attValue);
+			}
+
+			PropertyUtils.setProperty(container, CobolCopyBookSpecReaderUtil.toJavaNodeName(attName, true), attValue);
+			/*logger.debug(thisMethod, "CobolCopyBookMessageParserImpl.setNodeData(): container " + container.getClass().getCanonicalName()
+													+ "; NodeName = " + attName + "; value = " + attValue, "");*/
+
+		} catch (Exception e) {
+			/*logger.error(thisMethod, "CobolCopyBookMessageParserImpl.setNodeData(): Exception: " + e
+											+ "\nWhile setting " + attName 
+											+ "; value = " + attValue
+											+ "; position = " + att.getAttributeValue(ATT_NODE_POS)
+											+ "; storage-length = " + att.getAttributeValue(ATT_NODE_STORAGE_LENGTH)
+											+ "; BeanType = " + container.getClass().getCanonicalName(), "");*/
+			
+			throw e;
+
+		}
+	}
+
+	protected void setNodeMetadata (Element currNode, Definition container) {
+
+		container.setLevel(currNode.getAttributeValue(ATT_NODE_LEVEL));
+		container.setName(currNode.getAttributeValue(ATT_NODE_NAME));
+		container.setPosition(currNode.getAttributeValue(ATT_NODE_POS));
+		container.setStorageLength(Integer.parseInt(currNode.getAttributeValue(ATT_NODE_STORAGE_LENGTH)));
+
+		container.setPicture(currNode.getAttributeValue(ATT_NODE_PIC));
+		container.setNumeric(currNode.getAttributeValue(ATT_NODE_TYP_NUMERIC) != null ? Boolean.valueOf(currNode.getAttributeValue(ATT_NODE_TYP_NUMERIC)) : false);
+		container.setSigned(currNode.getAttributeValue(ATT_NODE_SIGNED) != null ? Boolean.valueOf(currNode.getAttributeValue(ATT_NODE_SIGNED)) : false);
+
+		container.setOccurs(currNode.getAttributeValue(ATT_NODE_OCCURS) != null ? Integer.parseInt(currNode.getAttributeValue(ATT_NODE_OCCURS)) : -1);
+
+		container.setRedefined(currNode.getAttributeValue(ATT_NODE_REDEFINED) != null ? Boolean.valueOf(currNode.getAttributeValue(ATT_NODE_REDEFINED)) : false);
+		container.setRedefines(currNode.getAttributeValue(ATT_NODE_REDEFINES));
+	}
+
+	protected void setOccurrenceNodeMetadata (Element currNode, Definition container, int calcPos) {
+		this.setNodeMetadata(currNode, container);
+		container.setPosition(calcPos + "");
+	}
+
+	/*protected boolean hasChildren (Element currNode) {
+
+		List<Element> children = currNode.getChildren();
+		return children != null && children.size() > 0;
+	}
+
+	protected boolean isNumeric (Element currNode) {
+		return currNode.getAttributeValue(ATT_NODE_TYP_NUMERIC) != null 
+				&& Boolean.valueOf(currNode.getAttributeValue(ATT_NODE_TYP_NUMERIC));
+	}
+
+	protected boolean isValidNumber(String data) {
+	    return CobolCopyBookSpecReaderUtil.validateToken (data, "^([0-9]*|\\d*\\.\\d{1}?\\d*)$");
+	}
+
+	protected boolean isDecimal (Element currNode) {
+		return currNode.getAttributeValue(ATT_NODE_TYP_NUMERIC) != null 
+					&& Boolean.valueOf(currNode.getAttributeValue(ATT_NODE_TYP_NUMERIC))
+					&& (currNode.getAttributeValue(ATT_NODE_PIC).indexOf("V") != -1 
+						|| currNode.getAttributeValue(ATT_NODE_PIC).indexOf(".") != -1);
+	}
+
+	protected String formatDecimal (Element currNode, String data) {
+
+		String formattedData = "";
+		String picture = currNode.getAttributeValue(ATT_NODE_PIC);
+		int placesAfterDecimal = picture.indexOf("V") != -1 
+									? picture.substring(picture.indexOf("V") + 1).length()
+											: picture.indexOf(".") != -1 
+													? picture.substring(picture.indexOf(".") + 1).length() : 0; 
+
+		formattedData = data.substring(0, data.length() - placesAfterDecimal) 
+							+ (placesAfterDecimal > 0 ? "." + data.substring(data.length() - placesAfterDecimal) : "");
+		return formattedData;
+	}
+
+	protected String toJavaNodeName (String cobolNodeName, boolean varOrClassName) { // CQRCM-FILE-FLN-ALT-KEY to cqrcmFileFlnAltKey
+
+		String javaName = "";
+		String restSyllables = null;
+
+		if (varOrClassName) { // java variable name
+			if (cobolNodeName.indexOf("-") != -1) {
+				// get first syllable
+				javaName = cobolNodeName.substring(0, cobolNodeName.indexOf("-")).toLowerCase();
+				restSyllables = cobolNodeName.substring(cobolNodeName.indexOf("-") + 1);
+			} else {
+				restSyllables = cobolNodeName;
+			}
+
+		} else { // java Class name
+			restSyllables = cobolNodeName;
+		}
+		String[] tokens = restSyllables.split("-");
+		for (String token : tokens) {
+			javaName += token.substring(0, 1).toUpperCase();
+			javaName += token.substring(1).toLowerCase();
+		}
+		//System.out.println("CobolCopyBookMessageParserImpl.toJavaNodeName(): " + cobolNodeName 
+		//								+ " Converted to Java" + (varOrClassName ? "VarName = " : "ClassName = ")
+		//								+ javaName);
+		return javaName;
+	}*/
+
+	/*protected Element findRedefinition (Element parentNode, Element currNode) throws Exception {
+
+		Element redefinedNode = null;
+		String currNodeName = currNode.getAttributeValue(ATT_NODE_NAME);
+
+		List<Element> children = parentNode.getChildren();
+		for (Element element : children) {
+
+			String redefinedNodeName = null;
+			if ((redefinedNodeName = element.getAttributeValue(ATT_NODE_REDEFINES)) != null
+					&& currNodeName.equalsIgnoreCase(redefinedNodeName)) {
+				redefinedNode =  element;
+				break;
+			}
+		}
+
+		return redefinedNode;
+	}*/
+}

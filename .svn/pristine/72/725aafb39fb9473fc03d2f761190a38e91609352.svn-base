@@ -1,0 +1,678 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.optum.comet</groupId>
+	<artifactId>mctmcf</artifactId>
+	<name>cmt.mctmcf</name>
+	<description>MCT MCF implementation for COMET</description>
+
+	<properties>
+		<spring.version>4.3.5.RELEASE</spring.version>
+		<org.springframework.integration>4.3.5.RELEASE</org.springframework.integration>
+		<ext.lib.path>${basedir}/../lib</ext.lib.path>
+		<start-class>com.optum.comet.mctmcf.MCTMCFMain</start-class>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.7</java.version>
+	</properties>
+
+	<repositories>
+		<repository>
+			<releases />
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>fusesource</id>
+			<url>http://repo.fusesource.com/nexus/content/groups/public/</url>
+		</repository>
+
+		<repository>
+			<releases />
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>jboss-ga-repository</id>
+			<url>http://maven.repository.redhat.com/ga</url>
+		</repository>
+
+		<repository>
+			<releases />
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>jboss-techpreview-repository</id>
+			<url>http://repository.jboss.org/nexus/content/groups/ea</url>
+		</repository>
+
+		<repository>
+			<releases />
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>jboss-public-repository</id>
+			<url>http://repository.jboss.org/nexus/content/repositories/public/</url>
+		</repository>
+
+		<repository>
+			<releases>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+				<updatePolicy>daily</updatePolicy>
+			</snapshots>
+			<id>redhat-techpreview-all-repository</id>
+			<name>Red Hat Tech Preview repository (all)</name>
+			<url>http://maven.repository.redhat.com/techpreview/all/</url>
+		</repository>
+
+		<repository>
+			<id>repo1.uhc.com</id>
+			<url>http://repo1.uhc.com/artifactory/repo</url>
+		</repository>
+
+		<repository>
+			<id>central</id>
+			<url>http://central.maven.org/maven2/</url>
+		</repository>
+
+		<repository>
+			<id>atlassian</id>
+			<url>https://maven.atlassian.com/3rdparty/</url>
+		</repository>
+
+		<repository>
+			<id>public_apache</id>
+			<url>https://repository.apache.org/content/repositories/releases/</url>
+		</repository>
+
+
+		<repository>
+			<id>local_repo</id>
+			<url>file:/${ext.lib.path}/</url>
+		</repository>
+
+	</repositories>
+	<build>
+
+		<finalName>${project.artifactId}</finalName>
+
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/webapp</directory>
+				<filtering>false</filtering>
+			</resource>
+		</resources>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.12</version>
+				<executions>
+					<execution>
+						<id>add-test-resource</id>
+						<phase>generate-test-sources</phase>
+						<goals>
+							<goal>add-test-resource</goal>
+						</goals>
+						<configuration>
+							<resources>
+								<resource>
+									<directory>src/main/webapp/WEB-INF/lib</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.jboss.as.plugins</groupId>
+				<artifactId>jboss-as-maven-plugin</artifactId>
+				<version>7.7.Final</version>
+			</plugin>
+
+			<!--plugin> <artifactId>maven-assembly-plugin</artifactId> <configuration> 
+				<archive> <manifest> <mainClass>com.optum.comet.mctmcf.MCTMCFMain</mainClass> 
+				</manifest> </archive> <descriptorRefs> <descriptorRef>jar-with-dependencies</descriptorRef> 
+				</descriptorRefs> </configuration> <executions> <execution> <id>make-assembly</id> 
+				<phase>package</phase> <goals> <goal>single</goal> </goals> </execution> 
+				</executions> </plugin -->
+
+
+			<!--plugin> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-maven-plugin</artifactId> 
+				<version>1.4.3.RELEASE</version> <configuration> <mainClass>com.optum.comet.mctmcf.MCTMCFMain</mainClass> 
+				<classifier>jetty</classifier> <requiresUnpack> <dependency> <groupId>com.optum.comet</groupId> 
+				<artifactId>mctmcf</artifactId> </dependency> </requiresUnpack> <addResources>true</addResources> 
+				</configuration> <executions> <execution> <goals> <goal>repackage</goal> 
+				</goals> </execution> </executions> </plugin -->
+
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>1.4.3.RELEASE</version>
+				<configuration>
+					<mainClass>com.optum.comet.mctmcf.MCTMCFMain</mainClass>
+					<requiresUnpack>
+						<dependency>
+							<groupId>com.optum.comet</groupId>
+							<artifactId>mctmcf</artifactId>
+						</dependency>
+					</requiresUnpack>
+					<includeSystemScope>true</includeSystemScope>
+					<resources>
+						<resource>
+							<directory>src/main/webapp/WEB-INF/lib</directory>
+							<directory>${ext.lib.path}</directory>
+						</resource>
+					</resources>
+					<addResources>true</addResources>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+
+		</plugins>
+	</build>
+
+	<dependencies>
+		<!-- for spring core -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>4.3.5.RELEASE</version>
+		</dependency>
+
+
+		<!-- for spring integration core -->
+		<dependency>
+			<groupId>org.springframework.integration</groupId>
+			<artifactId>spring-integration-core</artifactId>
+			<version>4.3.5.RELEASE</version>
+		</dependency>
+
+		<!-- for spring integration jms -->
+		<dependency>
+			<groupId>org.springframework.integration</groupId>
+			<artifactId>spring-integration-jms</artifactId>
+			<version>4.3.5.RELEASE</version>
+		</dependency>
+
+		<!-- for spring integration http -->
+		<dependency>
+			<groupId>org.springframework.integration</groupId>
+			<artifactId>spring-integration-http</artifactId>
+			<version>4.3.5.RELEASE</version>
+		</dependency>
+
+		<!-- for spring integration jdbc -->
+		<dependency>
+			<groupId>org.springframework.integration</groupId>
+			<artifactId>spring-integration-jdbc</artifactId>
+			<version>4.3.5.RELEASE</version>
+		</dependency>
+
+		<!-- for spring integration file -->
+		<dependency>
+			<groupId>org.springframework.integration</groupId>
+			<artifactId>spring-integration-file</artifactId>
+			<version>4.3.5.RELEASE</version>
+		</dependency>
+
+		<!-- for spring integration stream -->
+		<dependency>
+			<groupId>org.springframework.integration</groupId>
+			<artifactId>spring-integration-stream</artifactId>
+			<version>4.3.5.RELEASE</version>
+		</dependency>
+
+		<!-- for spring web -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>4.3.5.RELEASE</version>
+		</dependency>
+
+		<!-- for spring JUNIT -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>4.3.5.RELEASE</version>
+		</dependency>
+
+		<!-- Spring context support -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>4.3.5.RELEASE</version>
+		</dependency>
+
+		<!-- camel Unused at this point in time -->
+		<!-- dependency> <groupId>org.apache.camel</groupId> <artifactId>camel-core</artifactId> 
+			<version>2.18.1.redhat-000005</version> </dependency> <dependency> <groupId>org.apache.camel</groupId> 
+			<artifactId>camel-spring</artifactId> <version>2.18.1.redhat-000005</version> 
+			</dependency> <dependency> <groupId>org.apache.camel</groupId> <artifactId>camel-jms</artifactId> 
+			<version>2.18.1.redhat-000005</version> </dependency -->
+
+		<!-- json to object -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.8.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.13</version>
+		</dependency>
+
+		<!-- cxf https -->
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-core</artifactId>
+			<version>3.1.9</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-transports-http</artifactId>
+			<version>3.1.9</version>
+		</dependency>
+
+		<!-- apache -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.2.1</version>
+		</dependency>
+
+		<!-- GSON -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.8.0</version>
+		</dependency>
+
+		<!-- JDOM -->
+		<dependency>
+			<groupId>org.jdom</groupId>
+			<artifactId>jdom</artifactId>
+			<version>2.0.2</version>
+		</dependency>
+
+		<!-- Beanutils -->
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>1.9.3</version>
+		</dependency>
+
+		<!-- Aspect J -->
+		<!-- Pointcut evaluation fails against AbstractHandlerMethodMapping$MappingRegistry 
+			with AspectJ 1.8.10, rollback AspectJ 1.8.9 -->
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+			<version>1.8.9</version>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>1.8.9</version>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjtools</artifactId>
+			<version>1.8.9</version>
+		</dependency>
+
+		<!-- Commons DBCP -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-dbcp2</artifactId>
+			<version>2.1.1</version>
+		</dependency>
+
+		<!-- EH Cache -->
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache</artifactId>
+			<version>2.10.3</version>
+		</dependency>
+
+		<!-- logging -->
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+		</dependency>
+
+		<!-- PERF 4J -->
+		<dependency>
+			<groupId>org.perf4j</groupId>
+			<artifactId>perf4j</artifactId>
+			<version>0.9.16</version>
+		</dependency>
+
+		<!-- oracle jdbc -->
+		<!-- dependency> <groupId>com.oracle</groupId> <artifactId>ojdbc6</artifactId> 
+			<version>12.1.0.1-atlassian-hosted</version> </dependency -->
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc6</artifactId>
+			<version>12.1.0.2</version>
+		</dependency>
+
+		<!-- Testing -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- mq libs -->
+		<dependency>
+			<groupId>com.ibm</groupId>
+			<artifactId>com.ibm.mqjms</artifactId>
+			<version>7.5</version>
+			<scope>system</scope>
+			<systemPath>${ext.lib.path}/com.ibm.mqjms-7.5.jar</systemPath>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ibm</groupId>
+			<artifactId>com.ibm.mq</artifactId>
+			<version>.7.5</version>
+			<optional>true</optional>
+			<scope>system</scope>
+			<systemPath>${ext.lib.path}/com.ibm.mq-7.5.jar</systemPath>
+		</dependency>
+
+		<!-- CL3Export jar -->
+		<dependency>
+			<groupId>com.ibm</groupId>
+			<artifactId>CL3Export</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${ext.lib.path}/CL3Export.jar</systemPath>
+			<optional>true</optional>
+		</dependency>
+
+
+		<!-- CL3Nonexport jar -->
+		<dependency>
+			<groupId>com.ibm</groupId>
+			<artifactId>CL3Nonexport</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${ext.lib.path}/CL3Nonexport.jar</systemPath>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- com.ibm.mq.axis2 jar -->
+		<dependency>
+			<groupId>com.ibm</groupId>
+			<artifactId>com.ibm.mq.axis2</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${ext.lib.path}/com.ibm.mq.axis2.jar</systemPath>
+			<optional>true</optional>
+		</dependency>
+
+
+		<!-- com.ibm.mq.commonservices jar -->
+		<dependency>
+			<groupId>com.ibm</groupId>
+			<artifactId>com.ibm.mq.commonservices</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${ext.lib.path}/com.ibm.mq.commonservices.jar</systemPath>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- com.ibm.mq.headers jar -->
+		<dependency>
+			<groupId>com.ibm</groupId>
+			<artifactId>com.ibm.mq.headers</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${ext.lib.path}/com.ibm.mq.headers.jar</systemPath>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- com.ibm.mq.jmqi jar -->
+		<dependency>
+			<groupId>com.ibm</groupId>
+			<artifactId>com.ibm.mq.jmqi</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${ext.lib.path}/com.ibm.mq.jmqi.jar</systemPath>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- com.ibm.mq.jms.Nojndi jar -->
+		<dependency>
+			<groupId>com.ibm</groupId>
+			<artifactId>com.ibm.mq.jms.Nojndi</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${ext.lib.path}/com.ibm.mq.jms.Nojndi.jar</systemPath>
+			<optional>true</optional>
+		</dependency>
+
+
+		<!-- com.ibm.mq.jms.Nojndi jar -->
+		<dependency>
+			<groupId>com.ibm</groupId>
+			<artifactId>com.ibm.mq.jms.Nojndi</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${ext.lib.path}/com.ibm.mq.jms.Nojndi.jar</systemPath>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- com.ibm.mq.pcf jar -->
+		<dependency>
+			<groupId>com.ibm</groupId>
+			<artifactId>com.ibm.mq.pcf</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${ext.lib.path}/com.ibm.mq.pcf.jar</systemPath>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- com.ibm.mq.soap jar -->
+		<dependency>
+			<groupId>com.ibm</groupId>
+			<artifactId>com.ibm.mq.soap</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${ext.lib.path}/com.ibm.mq.soap.jar</systemPath>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- com.ibm.mq.tools.ras jar -->
+		<dependency>
+			<groupId>com.ibm</groupId>
+			<artifactId>com.ibm.mq.tools.ras</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${ext.lib.path}/com.ibm.mq.tools.ras.jar</systemPath>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- dhbcore jar -->
+		<dependency>
+			<groupId>com.ibm</groupId>
+			<artifactId>dhbcore</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${ext.lib.path}/dhbcore.jar</systemPath>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- fscontext jar -->
+		<dependency>
+			<groupId>com.sun</groupId>
+			<artifactId>fscontext</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${ext.lib.path}/fscontext.jar</systemPath>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- connector jar -->
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>connector</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${ext.lib.path}/connector.jar</systemPath>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- copybook to xml -->
+		<dependency>
+			<groupId>net.sf.cb2xml</groupId>
+			<artifactId>cb2xml</artifactId>
+			<version>0.95.7</version>
+			<scope>system</scope>
+			<systemPath>${ext.lib.path}/cb2xml-0.95.7.jar</systemPath>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- jta jar -->
+		<dependency>
+			<groupId>javax.transaction</groupId>
+			<artifactId>jta</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${ext.lib.path}/jta.jar</systemPath>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- jms jar -->
+		<dependency>
+			<groupId>javax.jms</groupId>
+			<artifactId>jms</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${ext.lib.path}/jms.jar</systemPath>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- jndi jar -->
+		<dependency>
+			<groupId>com.sun</groupId>
+			<artifactId>jndi</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${ext.lib.path}/jndi.jar</systemPath>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- ldap jar -->
+		<dependency>
+			<groupId>com.sun</groupId>
+			<artifactId>ldap</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${ext.lib.path}/ldap.jar</systemPath>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- providerutil jar -->
+		<dependency>
+			<groupId>com.sun</groupId>
+			<artifactId>providerutil</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${ext.lib.path}/providerutil.jar</systemPath>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- rmm jar -->
+		<dependency>
+			<groupId>com.ibm</groupId>
+			<artifactId>rmm</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${ext.lib.path}/rmm.jar</systemPath>
+			<optional>true</optional>
+		</dependency>
+
+
+		<!-- ant jar -->
+		<dependency>
+			<groupId>org.apache.tools.ant</groupId>
+			<artifactId>ant</artifactId>
+			<version>.1.0</version>
+			<scope>system</scope>
+			<systemPath>${ext.lib.path}/ant-1.0.jar</systemPath>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- diff jar -->
+		<dependency>
+			<groupId>com.optum</groupId>
+			<artifactId>diff-1.0.0</artifactId>
+			<version>.1.0.0</version>
+			<scope>system</scope>
+			<systemPath>${ext.lib.path}/diff-1.0.0.jar</systemPath>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- spring boot dependencies -->
+		<!-- hot swapping, disable cache for template, enable live reload -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- Optional, for bootstrap -->
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>bootstrap</artifactId>
+			<version>3.3.7</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+	</dependencies>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.4.3.RELEASE</version>
+	</parent>
+
+	<version>1.0.1</version>
+</project>

@@ -1,0 +1,42 @@
+package com.optum.comet.mctmcf.generator.datastruct;
+
+public class AttributeStructure {
+    private String attrName;
+    private String attrType;
+    private String initVal; 
+    
+	public AttributeStructure(){ 
+        
+    }
+    
+    public AttributeStructure(String name, String type){ 
+        this.attrName = name;
+        this.attrType = type;
+    }
+
+    public AttributeStructure(String name, String type, String initVal){ 
+        this.attrName = name;
+        this.attrType = type;
+        this.initVal = initVal;
+    }
+    
+    public String getAttrName() {
+        return attrName;
+    }
+    public void setAttrName(String attrName) {
+        this.attrName = attrName;
+    }
+    public String getAttrType() { 
+        return attrType;
+    }
+    public void setAttrType(String attrType) {
+        this.attrType = attrType;
+    }
+    public String getInitVal() {
+		return initVal;
+	}
+
+	public void setInitVal(String initVal) {
+		this.initVal = initVal;
+	}
+}

@@ -1,0 +1,30 @@
+package com.optum.comet.mctmcf.generator;
+
+import java.io.File;
+import java.io.FileOutputStream;
+
+import net.sf.cb2xml.Cb2Xml;
+
+public class CB2XML {
+	public static void main(String[] args) throws Exception {
+		
+		//start of convert copy book to XML
+		File in = new File("./src/main/resources/artifacts/EMCCQRCM_ClmSfx.TXT");
+		String outStr = Cb2Xml.convertToXMLString(in, true);
+		FileOutputStream out = new FileOutputStream("./src/main/resources/artifacts/EMCCQRCM_ClmSfx.xml");
+		out.write(outStr.getBytes());
+		out.close();
+		//end of convert copy book to XML
+		
+		//start of convert copy book to XML
+		in = new File("./src/main/resources/artifacts/EMCCQRCM_ClmStsUpdt.TXT");
+		outStr = Cb2Xml.convertToXMLString(in, true);
+		out = new FileOutputStream("./src/main/resources/artifacts/EMCCQRCM_ClmStsUpdt.xml");
+		out.write(outStr.getBytes());
+		out.close();
+		//end of convert copy book to XML
+		
+		
+	}
+
+}

@@ -1,0 +1,14 @@
+package com.optum.comet.mctmcf.exception;
+
+public class NoWorkException extends CometParsingRuntimeException {
+
+	public NoWorkException(String msg) {
+		super(msg);
+	}
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+}

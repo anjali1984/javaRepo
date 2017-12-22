@@ -1,0 +1,126 @@
+package com.optum.comet.mctmcf.generated.vol04042017;
+
+public class CqrcmV2OutboundFields extends com.optum.comet.mctmcf.generator.predefbeans.Definition implements java.io.Serializable {
+
+    public CqrcmV2OutboundFields() {
+        this.cqrcmV2SqDesignation = new com.optum.comet.mctmcf.generator.predefbeans.ChoiceRestriction("P,P,B,");
+        this.cqrcmV2PatientInfo = new com.optum.comet.mctmcf.generated.vol04042017.CqrcmV2PatientInfo();
+        this.cqrcmV2InsuredInfo = new com.optum.comet.mctmcf.generated.vol04042017.CqrcmV2InsuredInfo();
+        this.cqrcmV2ProviderInfo = new com.optum.comet.mctmcf.generated.vol04042017.CqrcmV2ProviderInfo();
+    }
+
+    private static final long serialVersionUID = 1L;
+    private String cqrcmV2OrgId;
+    private String cqrcmV2InstOrProf;
+    private com.optum.comet.mctmcf.generator.predefbeans.ChoiceRestriction cqrcmV2SqDesignation;
+    private String cqrcmV2SufxTotCharge;
+    private String cqrcmV2ClaimTotCharge;
+    private String cqrcmV2PlaceOfService;
+    private String cqrcmV2MedServiceCode;
+    private String cqrcmV2BillType;
+    private String cqrcmV2FlnDcc;
+    private String cqrcmV2ClaimReceiptDt;
+    private String cqrcmV2EarliestDos;
+    private String cqrcmV2LatestDos;
+    private com.optum.comet.mctmcf.generated.vol04042017.CqrcmV2PatientInfo cqrcmV2PatientInfo;
+    private com.optum.comet.mctmcf.generated.vol04042017.CqrcmV2InsuredInfo cqrcmV2InsuredInfo;
+    private com.optum.comet.mctmcf.generated.vol04042017.CqrcmV2ProviderInfo cqrcmV2ProviderInfo;
+    private String cqrcmV2ClaimComments;
+
+    public void setCqrcmV2OrgId(String cqrcmV2OrgId) { 
+        this.cqrcmV2OrgId = cqrcmV2OrgId;
+    }
+    public String getCqrcmV2OrgId() { 
+        return this.cqrcmV2OrgId;
+    }
+    public void setCqrcmV2InstOrProf(String cqrcmV2InstOrProf) { 
+        this.cqrcmV2InstOrProf = cqrcmV2InstOrProf;
+    }
+    public String getCqrcmV2InstOrProf() { 
+        return this.cqrcmV2InstOrProf;
+    }
+    public void setCqrcmV2SqDesignation(com.optum.comet.mctmcf.generator.predefbeans.ChoiceRestriction cqrcmV2SqDesignation) { 
+        this.cqrcmV2SqDesignation = cqrcmV2SqDesignation;
+    }
+    public com.optum.comet.mctmcf.generator.predefbeans.ChoiceRestriction getCqrcmV2SqDesignation() { 
+        return this.cqrcmV2SqDesignation;
+    }
+    public void setCqrcmV2SufxTotCharge(String cqrcmV2SufxTotCharge) { 
+        this.cqrcmV2SufxTotCharge = cqrcmV2SufxTotCharge;
+    }
+    public String getCqrcmV2SufxTotCharge() { 
+        return this.cqrcmV2SufxTotCharge;
+    }
+    public void setCqrcmV2ClaimTotCharge(String cqrcmV2ClaimTotCharge) { 
+        this.cqrcmV2ClaimTotCharge = cqrcmV2ClaimTotCharge;
+    }
+    public String getCqrcmV2ClaimTotCharge() { 
+        return this.cqrcmV2ClaimTotCharge;
+    }
+    public void setCqrcmV2PlaceOfService(String cqrcmV2PlaceOfService) { 
+        this.cqrcmV2PlaceOfService = cqrcmV2PlaceOfService;
+    }
+    public String getCqrcmV2PlaceOfService() { 
+        return this.cqrcmV2PlaceOfService;
+    }
+    public void setCqrcmV2MedServiceCode(String cqrcmV2MedServiceCode) { 
+        this.cqrcmV2MedServiceCode = cqrcmV2MedServiceCode;
+    }
+    public String getCqrcmV2MedServiceCode() { 
+        return this.cqrcmV2MedServiceCode;
+    }
+    public void setCqrcmV2BillType(String cqrcmV2BillType) { 
+        this.cqrcmV2BillType = cqrcmV2BillType;
+    }
+    public String getCqrcmV2BillType() { 
+        return this.cqrcmV2BillType;
+    }
+    public void setCqrcmV2FlnDcc(String cqrcmV2FlnDcc) { 
+        this.cqrcmV2FlnDcc = cqrcmV2FlnDcc;
+    }
+    public String getCqrcmV2FlnDcc() { 
+        return this.cqrcmV2FlnDcc;
+    }
+    public void setCqrcmV2ClaimReceiptDt(String cqrcmV2ClaimReceiptDt) { 
+        this.cqrcmV2ClaimReceiptDt = cqrcmV2ClaimReceiptDt;
+    }
+    public String getCqrcmV2ClaimReceiptDt() { 
+        return this.cqrcmV2ClaimReceiptDt;
+    }
+    public void setCqrcmV2EarliestDos(String cqrcmV2EarliestDos) { 
+        this.cqrcmV2EarliestDos = cqrcmV2EarliestDos;
+    }
+    public String getCqrcmV2EarliestDos() { 
+        return this.cqrcmV2EarliestDos;
+    }
+    public void setCqrcmV2LatestDos(String cqrcmV2LatestDos) { 
+        this.cqrcmV2LatestDos = cqrcmV2LatestDos;
+    }
+    public String getCqrcmV2LatestDos() { 
+        return this.cqrcmV2LatestDos;
+    }
+    public void setCqrcmV2PatientInfo(com.optum.comet.mctmcf.generated.vol04042017.CqrcmV2PatientInfo cqrcmV2PatientInfo) { 
+        this.cqrcmV2PatientInfo = cqrcmV2PatientInfo;
+    }
+    public com.optum.comet.mctmcf.generated.vol04042017.CqrcmV2PatientInfo getCqrcmV2PatientInfo() { 
+        return this.cqrcmV2PatientInfo;
+    }
+    public void setCqrcmV2InsuredInfo(com.optum.comet.mctmcf.generated.vol04042017.CqrcmV2InsuredInfo cqrcmV2InsuredInfo) { 
+        this.cqrcmV2InsuredInfo = cqrcmV2InsuredInfo;
+    }
+    public com.optum.comet.mctmcf.generated.vol04042017.CqrcmV2InsuredInfo getCqrcmV2InsuredInfo() { 
+        return this.cqrcmV2InsuredInfo;
+    }
+    public void setCqrcmV2ProviderInfo(com.optum.comet.mctmcf.generated.vol04042017.CqrcmV2ProviderInfo cqrcmV2ProviderInfo) { 
+        this.cqrcmV2ProviderInfo = cqrcmV2ProviderInfo;
+    }
+    public com.optum.comet.mctmcf.generated.vol04042017.CqrcmV2ProviderInfo getCqrcmV2ProviderInfo() { 
+        return this.cqrcmV2ProviderInfo;
+    }
+    public void setCqrcmV2ClaimComments(String cqrcmV2ClaimComments) { 
+        this.cqrcmV2ClaimComments = cqrcmV2ClaimComments;
+    }
+    public String getCqrcmV2ClaimComments() { 
+        return this.cqrcmV2ClaimComments;
+    }
+}

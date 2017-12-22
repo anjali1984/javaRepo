@@ -1,0 +1,43 @@
+package com.optum.comet.mctmcf.loadque;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import com.optum.diff.common.util.ToggleLBJMSAdapter;
+
+public class LoadQueMain {
+
+	public static void main(String[] args) {
+
+		ClassPathXmlApplicationContext apcntxt = new ClassPathXmlApplicationContext(
+				"classpath:/META-INF/spring/com.optum.comet.mctmcf.loadque.app.cntxt.xml");
+		String clmSfxMsg;
+
+		ToggleLBJMSAdapter toggle = (ToggleLBJMSAdapter) apcntxt.getBean("cmt.event.msg.dis.util");
+		try {
+			InputStream is = new FileInputStream("/home/tgusr/clmldr/loadque-manual.txt");
+
+			System.out.println("test setup");
+			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			String entireText = "";
+
+			while ((entireText = br.readLine()) != null) {
+				clmSfxMsg = entireText;
+				toggle.postMessageInQueue(clmSfxMsg, "wmq.clm.loc.manualQ.name");
+			}
+			br.close();
+			apcntxt.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+}

@@ -1,0 +1,33 @@
+package com.optum.comet.mctmcf.vo;
+
+public class IcnSufxVO extends CometBaseVO {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	String icn;
+	String sfx;
+	String pndcd;
+
+	
+	public String getIcn() {
+		return icn;
+	}
+	public void setIcn(String icn) {
+		this.icn = icn;
+	}
+	public String getSfx() {
+		return sfx;
+	}
+	public void setSfx(String sfx) {
+		this.sfx = sfx;
+	}
+	public String getPndcd() {
+		return pndcd;
+	}
+	public void setPndcd(String pndcd) {
+		this.pndcd = pndcd;
+	}
+
+}

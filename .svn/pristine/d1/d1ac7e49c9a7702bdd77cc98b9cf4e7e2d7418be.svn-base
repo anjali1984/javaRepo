@@ -1,0 +1,464 @@
+package com.optum.comet.mctmcf.daos.impl;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+
+import com.optum.comet.mctmcf.constants.CometConstants;
+import com.optum.comet.mctmcf.daos.ILoadClaimDAO;
+import com.optum.comet.mctmcf.daos.dbos.StagedClmSfxMessage;
+import com.optum.comet.mctmcf.exception.CometException;
+import com.optum.comet.mctmcf.exception.vo.CometExceptionBean;
+import com.optum.diff.common.dao.AbstractJDBCDAOSupport;
+import com.optum.diff.common.util.DateUtil;
+import com.optum.diff.common.util.PropertiesHelper;
+import com.optum.diff.common.util.StringUtil;
+
+/**
+ * 
+ * This DAO would has methods defined to work on claim suffix message received
+ * from TOPS
+ * 
+ * @author cmishr4
+ *
+ *
+ */
+public class LoadClaimDAO extends AbstractJDBCDAOSupport implements ILoadClaimDAO {
+
+	public String getDescription() {
+		// TODO Auto-generated method stub
+		return null;
+
+	}
+
+	String saveintoLdClmSql;
+	String checkLdClmStsSql;
+	String updateLdClmStsSql;
+	String updateAllLdClmStsSql;
+	String updateLdClmInprocSts;
+	String updateLdClmExceptionStsSql;
+	String retrieveLidSql;
+	String retrieveICNSql;
+	String retrieveSfxPndcdSql;
+	String selectClmProps;
+	// To be removed:Shivanjali
+	String checkIfMultiSfx;
+
+	String totLoadedClmsNo;
+	String insIntoLdLck;
+	String deleteFromLdLck;
+	String checkInLdLck;
+	String saveIcnSfx;
+	String updateICNSfx;
+
+	void init() {
+		final String location = "com.optum.comet.mctmcf.daos.impl.LoadClaimDAO.init()";
+		try {
+			saveintoLdClmSql = PropertiesHelper.getProperty("cmt-queries", "insert.into.ld_clm");
+			checkLdClmStsSql = PropertiesHelper.getProperty("cmt-queries", "select.from.ld_clm");
+			updateLdClmStsSql = PropertiesHelper.getProperty("cmt-queries", "update.LdClm.Sts");
+			updateAllLdClmStsSql = PropertiesHelper.getProperty("cmt-queries", "update.allLdClm.Sts");
+			updateLdClmExceptionStsSql = PropertiesHelper.getProperty("cmt-queries", "update.ldclm.exceptionsts");
+			retrieveLidSql = PropertiesHelper.getProperty("cmt-queries", "select.lid.ld_clm");
+			// To be removed:Shivanjali
+
+			retrieveICNSql = PropertiesHelper.getProperty("cmt-queries", "select.icn.ld_clm");
+			//selectClmProps = PropertiesHelper.getProperty("cmt-queries", "select.clm.props.updt.message");
+
+			// To be removed:Shivanjali
+			checkIfMultiSfx = PropertiesHelper.getProperty("cmt-queries", "select.tot.sfx.from.ld_clm");
+
+			totLoadedClmsNo = PropertiesHelper.getProperty("cmt-queries", "select.tot.loaded.clms.from.ld_clm");
+			insIntoLdLck = PropertiesHelper.getProperty("cmt-queries", "insert.into.ld.lck");
+			deleteFromLdLck = PropertiesHelper.getProperty("cmt-queries", "delete.from.ld.lck");
+			checkInLdLck = PropertiesHelper.getProperty("cmt-queries", "check.in.ld.lck");
+
+			saveIcnSfx = PropertiesHelper.getProperty("cmt-queries", "save.sfx.pndcd.icn_sufx");
+			updateICNSfx = PropertiesHelper.getProperty("cmt-queries", "update.sfx.pndcd.icn_sufx");
+		} catch (Throwable th) {
+
+			CometExceptionBean ceb = new CometExceptionBean(th, CometConstants.ACTORS.SERVICE, location);
+			throw new CometException(ceb);
+
+		}
+	}
+
+	/*
+	 * @see
+	 * com.optum.comet.mctmcf.daos.ILoadClaimDAO#saveClmMsg(com.optum.comet.
+	 * mctmcf.daos.dbos.StagedClmSfxMessage, java.lang.String)
+	 */
+	public StagedClmSfxMessage saveClmMsg(StagedClmSfxMessage dbo, String logCorrId) throws CometException {
+
+		final String location = "com.optum.comet.mctmcf.daos.impl.LoadClaimDAO.saveClmMsg(CometBaseDBO, String)";
+		try {
+
+			KeyHolder pkHolder = new GeneratedKeyHolder();
+
+			final int sts = dbo.getStatus();
+			final int initFldCnt = 0;
+			final String queue = dbo.getQueue();
+			final String icn = dbo.getIcn();
+			final String ldt = DateUtil.getStringFromDate(Calendar.getInstance().getTime(), false);
+			final String completeMessage = dbo.getCompleteMesage();
+			final String orgid = dbo.getOrgid();
+			final int currSfx = dbo.getCurrSfx();
+			final int totalSfx = dbo.getTotSfx();
+			final String pendCd = dbo.getPendcd();
+			final String icoTyp = dbo.getIcoType();
+
+			String lidAltTemp = logCorrId.concat(icn).concat(String.valueOf(currSfx))
+					.concat(String.valueOf(sts).concat(String.valueOf(System.currentTimeMillis())));
+
+			// column length of ALTLID is 200 char
+			final String lidAlt = lidAltTemp.substring(0, lidAltTemp.length() > 199 ? 199 : lidAltTemp.length() - 1);
+			final Connection conn = this.getConnection();
+
+			this.getJdbcTemplate().update(new PreparedStatementCreator() {
+				public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+					PreparedStatement ps = conn.prepareStatement(saveintoLdClmSql, Statement.RETURN_GENERATED_KEYS);
+					ps.setInt(1, sts);
+					ps.setInt(2, initFldCnt);
+					ps.setString(3, queue);
+					ps.setString(4, icn);
+					ps.setString(5, ldt);
+					ps.setString(6, completeMessage);
+					ps.setString(7, orgid);
+					ps.setInt(8, currSfx);
+					ps.setInt(9, totalSfx);
+					ps.setString(10, pendCd);
+					ps.setString(11, icoTyp);
+					ps.setString(12, lidAlt);
+					return ps;
+				}
+
+			}, pkHolder);
+			Long lid = this.getJdbcTemplate().query(retrieveLidSql, new Object[] { lidAlt },
+					new ResultSetExtractor<Long>() {
+
+						public Long extractData(ResultSet rs) throws SQLException, DataAccessException {
+							rs.next();
+							return rs.getLong(1);
+						}
+
+					});
+			dbo.setLid(lid);
+			return dbo;
+
+		} catch (Throwable th) {
+			this.getLogger().error(location,
+					"Exception while inserting into ld_clm : icn [".concat(dbo.getIcn()).concat("]"), logCorrId);
+			CometExceptionBean ceb = new CometExceptionBean(th, CometConstants.ACTORS.SERVICE, logCorrId, dbo.getLid(),
+					dbo.getIcn());
+			throw new CometException(ceb);
+
+		}
+	}
+
+	/*
+	 * @see
+	 * com.optum.comet.mctmcf.daos.ILoadClaimDAO#updateLdClmSts(com.optum.comet.
+	 * mctmcf.daos.dbos.StagedClmSfxMessage, java.lang.String)
+	 */
+	public StagedClmSfxMessage updateLdClmSts(StagedClmSfxMessage dbo, String logCorrId) throws CometException {
+
+		final String location = "com.optum.comet.mctmcf.daos.impl.LoadClaimDAO.updateLdClmSts(CometBaseDBO, String)";
+		try {
+
+			this.getLogger().info(location, "ICN :: LID :: STATUS ".concat(dbo.getIcn()).concat(" :: ")
+					.concat(Long.toString(dbo.getLid())).concat(" :: ").concat(Integer.toString(dbo.getStatus())),
+					logCorrId);
+			if (dbo.getStatus() != 3) {
+				this.getJdbcTemplate().update(this.updateLdClmStsSql, new Object[] { dbo.getStatus(), dbo.getLid() });
+			} else {
+
+				if (dbo.isMultiSfx()) {
+					this.getJdbcTemplate().update(this.updateAllLdClmStsSql,
+							new Object[] { dbo.getStatus(), dbo.getIcn() });
+				} else
+					this.getJdbcTemplate().update(this.updateLdClmStsSql,
+							new Object[] { dbo.getStatus(), dbo.getLid() });
+
+			}
+
+			if (dbo.isLdLckExists()) {
+				this.getLogger().info(location, "Delete load Lock for icn :  ", logCorrId);
+				// delete load lock
+				this.getJdbcTemplate().update(this.deleteFromLdLck, new Object[] { dbo.getIcn() });
+				// To be deleted
+				// dbo.setLdLckExists(false);
+			}
+			return dbo;
+		} catch (Throwable th) {
+			this.getLogger().error(location,
+					"Exception while updating Sts into ld_clm : icn [".concat(dbo.getIcn()).concat("]"), logCorrId);
+			CometExceptionBean ceb = new CometExceptionBean(th, CometConstants.ACTORS.SERVICE, logCorrId, dbo.getLid(),
+					dbo.getIcn());
+			throw new CometException(ceb);
+		}
+	}
+	/*
+	 * @see
+	 * com.optum.comet.mctmcf.daos.ILoadClaimDAO#multiSfxWaitCheck(com.optum.
+	 * comet.mctmcf.daos.dbos.StagedClmSfxMessage, java.lang.String)
+	 */
+
+	public StagedClmSfxMessage multiSfxWaitCheck(StagedClmSfxMessage dbo, String logCorrId) throws CometException {
+
+		final String location = "com.optum.comet.mctmcf.daos.impl.LoadClaimDAO.multiSfxWaitCheck(CometBaseDBO, String)";
+		try {
+
+			final StagedClmSfxMessage dboTemp;
+
+			dboTemp = this.getJdbcTemplate().query(totLoadedClmsNo, new Object[] { dbo.getIcn() },
+					new ResultSetExtractor<StagedClmSfxMessage>() {
+
+						public StagedClmSfxMessage extractData(ResultSet stsRs)
+								throws SQLException, DataAccessException {
+
+							Map<String, String> sfxPendcd = new HashMap<String, String>();
+							final StagedClmSfxMessage dboTemp = new StagedClmSfxMessage();
+							while (stsRs.next()) {
+
+								sfxPendcd.put(stsRs.getString(1), stsRs.getString(2));
+
+							}
+
+							dboTemp.setSfxPendcd(sfxPendcd);
+							return dboTemp;
+
+						}
+					});
+
+			dbo.setSfxPendcd(dboTemp.getSfxPendcd());
+
+			// log multi suffix wait flag
+			this.getLogger().info(location,
+					"ICN  ".concat(dbo.getIcn()).concat(" , SfxPendcdMap=: ").concat(dbo.getSfxPendcd().toString()),
+					logCorrId);
+
+			return dbo;
+
+		} catch (Throwable th) {
+			this.getLogger().error(location,
+					"Exception while multiSfxWaitCheck : icn [".concat(dbo.getIcn()).concat("]"), logCorrId);
+			CometExceptionBean ceb = new CometExceptionBean(th, CometConstants.ACTORS.SERVICE, logCorrId, dbo.getLid(),
+					dbo.getIcn());
+			throw new CometException(ceb);
+		}
+
+	}
+	/*
+	 * @see com.optum.comet.mctmcf.daos.ILoadClaimDAO#insertIntoLdLck
+	 * (com.optum.comet.mctmcf.daos.dbos.StagedClmSfxMessage, java.lang.String)
+	 */
+
+	
+	private static String SECOND_LOCK = "SECOND_LOCK";
+	
+	public StagedClmSfxMessage insertIntoLdLck(StagedClmSfxMessage dbo, String logCorrId) throws CometException {
+		final String location = "com.optum.comet.mctmcf.daos.impl.LoadClaimDAO.insertIntoLdLck(CometBaseDBO, String)";
+		try {
+			
+			boolean ifldLckExists = false;
+			
+			synchronized (dbo.getIcn()) {
+				
+				ifldLckExists = this.getJdbcTemplate().query(this.checkInLdLck, new Object[] { dbo.getIcn() },
+						new ResultSetExtractor<Boolean>() {
+
+							public Boolean extractData(ResultSet rs) throws SQLException, DataAccessException {
+								Boolean count = false;
+								while (rs.next()) {
+									count = rs.getInt(1) > 0;
+								}
+								return count;
+							}
+						});
+				
+				synchronized (SECOND_LOCK) {
+					this.getLogger().info(location,
+							"ICN  ".concat(dbo.getIcn()).concat(" , is already locked =: ") + ifldLckExists, logCorrId);
+					if (!ifldLckExists) {
+						this.getJdbcTemplate().update(this.insIntoLdLck,
+								new Object[] { dbo.getIcn(), Calendar.getInstance().getTime() });
+						this.getLogger().info(location, "ICN  ".concat(dbo.getIcn()).concat(" , inserted in ld_lck "),
+								logCorrId);
+					}
+				}
+			}
+
+			dbo.setLdLckExists(ifldLckExists);
+
+			return dbo;
+		} catch (Throwable th) {
+			this.getLogger().error(location,
+					"Exception while inserting into ld_lck : icn [".concat(dbo.getIcn()).concat("]"), logCorrId);
+			CometExceptionBean ceb = new CometExceptionBean(th, CometConstants.ACTORS.SERVICE, logCorrId, dbo.getLid(),
+					dbo.getIcn());
+			throw new CometException(ceb);
+		}
+	}
+
+	/*
+	 * @see com.optum.comet.mctmcf.daos.ILoadClaimDAO#saveICNSfx
+	 * (com.optum.comet.mctmcf.daos.dbos.StagedClmSfxMessage, java.lang.String)
+	 */
+	public StagedClmSfxMessage saveICNSfx(StagedClmSfxMessage dbo, String logCorrId) throws CometException {
+
+		final String location = "com.optum.comet.mctmcf.daos.impl.LoadClaimDAO.saveICNSfx(CometBaseDBO, String)";
+		/*
+		 * this method will read the sufx pndcd map and insert sufx and pendcd
+		 * in the icn_sufx table , if the claim is new or update claim in
+		 * item_flat
+		 * 
+		 */
+		// for singleSfx claims,Map will not be populated
+		try {
+			if (dbo.getSfxPendcd() == null || dbo.getSfxPendcd().size() == 0) {
+
+				this.getLogger().info(location,
+						"Insert Single Suffix ICN [".concat(dbo.getIcn()).concat(" ] Suffix [ ")
+								.concat(String.valueOf(dbo.getCurrSfx())).concat("]  Pendcode [")
+								.concat(dbo.getPendcd()).concat("]"),
+						logCorrId);
+				try {
+					this.getJdbcTemplate()
+							.update(saveIcnSfx,
+									new Object[] {
+											StringUtil.decimal2Base36Str(Long.valueOf(dbo.getIcn()))
+													.concat(DateUtil.getStringFromDate2(
+															Calendar.getInstance().getTime(), true)),
+											dbo.getIcn(), dbo.getCurrSfx(), dbo.getPendcd() });
+				} catch (DuplicateKeyException e) {
+					// TODO Auto-generated catch block
+					// dbo.getStatus()..sts to be fixed
+					this.getLogger().info(location,
+							"Update Suffix ICN [".concat(dbo.getIcn()).concat(" ] Suffix [ ")
+									.concat(String.valueOf(dbo.getCurrSfx())).concat("]  Pendcode [")
+									.concat(dbo.getPendcd()).concat("]"),
+							logCorrId);
+
+					this.getJdbcTemplate().update(updateICNSfx,
+							new Object[] { dbo.getPendcd(), dbo.getIcn(), dbo.getCurrSfx() });
+
+					// put log for icn_sfx update
+				}
+			}
+			// map will be populated only for multiSfx claims
+			else {
+				for (Map.Entry<String, String> entry : dbo.getSfxPendcd().entrySet()) {
+					String sfxKey = entry.getKey();
+					String pendcdValue = entry.getValue();
+					try {
+						this.getLogger()
+								.info(location, "Insert Multi Suffix ICN [ ".concat(dbo.getIcn()).concat(" ] Suffix [ ")
+										.concat(sfxKey).concat(" ] Pendcode  [ ").concat(pendcdValue).concat("]"),
+										logCorrId);
+
+						this.getJdbcTemplate()
+								.update(saveIcnSfx,
+										new Object[] {
+												StringUtil.decimal2Base36Str(Long.valueOf(dbo.getIcn()))
+														.concat(DateUtil.getStringFromDate2(
+																Calendar.getInstance().getTime(), true)),
+												dbo.getIcn(), Integer.valueOf(sfxKey), pendcdValue });
+
+					} catch (DuplicateKeyException e) {
+						this.getLogger()
+								.info(location, "Insert Multi Suffix ICN [ ".concat(dbo.getIcn()).concat(" ] Suffix [ ")
+										.concat(sfxKey).concat(" ] Pendcode  [ ").concat(pendcdValue).concat("]"),
+										logCorrId);
+						this.getJdbcTemplate().update(updateICNSfx,
+								new Object[] { pendcdValue, dbo.getIcn(), Integer.valueOf(sfxKey) });
+					}
+				}
+			}
+
+			return dbo;
+
+		} catch (Throwable th) {
+			this.getLogger().error(location,
+					"Exception while insert/update icn_sfx : icn [".concat(dbo.getIcn()).concat("]"), logCorrId);
+			CometExceptionBean ceb = new CometExceptionBean(th, CometConstants.ACTORS.SERVICE, logCorrId, dbo.getLid(),
+					dbo.getIcn());
+			throw new CometException(ceb);
+		}
+
+	}
+	/*
+	 * To update System exception status in load claim
+	 */
+
+	public void updateLdClmExceptionSts(final Long lid, final String icn) {
+
+		final String location = "com.optum.comet.mctmcf.daos.impl.LoadClaimDAO.updateLdClmExceptionSts(String)";
+		try {
+
+			final Connection conn = this.getConnection();
+
+			this.getJdbcTemplate().update(new PreparedStatementCreator() {
+				public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+					PreparedStatement ps = conn.prepareStatement(updateLdClmExceptionStsSql);
+					ps.setLong(1, lid);
+					return ps;
+				}
+			});
+
+			conn.commit();
+
+			this.getJdbcTemplate().update(new PreparedStatementCreator() {
+				public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+					PreparedStatement ps = conn.prepareStatement(deleteFromLdLck);
+					ps.setString(1, icn);
+					return ps;
+				}
+			});
+			
+			conn.commit();
+		} catch (Throwable th) {
+			this.getLogger().error(location, "Exception while updating System Exception Sts into ld_clm  ", "");
+		}
+	}
+
+
+	public String getRandomIcn()
+	{
+		String claim = this.getJdbcTemplate().query(retrieveICNSql, new ResultSetExtractor<String>() {
+
+			public String extractData(ResultSet rs) throws SQLException, DataAccessException {
+				rs.next();
+				return rs.getString(1);
+			}
+
+		});
+	
+		return claim;
+
+
+	}
+	/*
+	 * @see
+	 * com.optum.comet.mctmcf.daos.ILoadClaimDAO#retrieveClaimsForReprocessing(
+	 * java.lang.String)
+	 */
+	@Override
+	public List<StagedClmSfxMessage> retrieveClaimsForReprocessing(String logCorrId) throws CometException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

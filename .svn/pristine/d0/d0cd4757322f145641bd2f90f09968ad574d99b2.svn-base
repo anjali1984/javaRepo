@@ -1,0 +1,34 @@
+package com.optum.comet.mctmcf.generated.vol04042017;
+
+public class CqrcmMsgReturnFields extends com.optum.comet.mctmcf.generator.predefbeans.Definition implements java.io.Serializable {
+
+    public CqrcmMsgReturnFields() {
+        this.cqrcsqStatus = new com.optum.comet.mctmcf.generator.predefbeans.ChoiceRestriction("R,P,RS,TF,");
+        this.cqrcsqReturnSystem = new com.optum.comet.mctmcf.generator.predefbeans.ChoiceRestriction("A,C,");
+        this.cqrcsqReturnDt = new com.optum.comet.mctmcf.generated.vol04042017.CqrcsqReturnDt();
+    }
+
+    private static final long serialVersionUID = 1L;
+    private com.optum.comet.mctmcf.generator.predefbeans.ChoiceRestriction cqrcsqStatus;
+    private com.optum.comet.mctmcf.generator.predefbeans.ChoiceRestriction cqrcsqReturnSystem;
+    private com.optum.comet.mctmcf.generated.vol04042017.CqrcsqReturnDt cqrcsqReturnDt;
+
+    public void setCqrcsqStatus(com.optum.comet.mctmcf.generator.predefbeans.ChoiceRestriction cqrcsqStatus) { 
+        this.cqrcsqStatus = cqrcsqStatus;
+    }
+    public com.optum.comet.mctmcf.generator.predefbeans.ChoiceRestriction getCqrcsqStatus() { 
+        return this.cqrcsqStatus;
+    }
+    public void setCqrcsqReturnSystem(com.optum.comet.mctmcf.generator.predefbeans.ChoiceRestriction cqrcsqReturnSystem) { 
+        this.cqrcsqReturnSystem = cqrcsqReturnSystem;
+    }
+    public com.optum.comet.mctmcf.generator.predefbeans.ChoiceRestriction getCqrcsqReturnSystem() { 
+        return this.cqrcsqReturnSystem;
+    }
+    public void setCqrcsqReturnDt(com.optum.comet.mctmcf.generated.vol04042017.CqrcsqReturnDt cqrcsqReturnDt) { 
+        this.cqrcsqReturnDt = cqrcsqReturnDt;
+    }
+    public com.optum.comet.mctmcf.generated.vol04042017.CqrcsqReturnDt getCqrcsqReturnDt() { 
+        return this.cqrcsqReturnDt;
+    }
+}

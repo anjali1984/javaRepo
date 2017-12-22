@@ -1,0 +1,32 @@
+package com.optum.comet.mctmcf.generated.vol04042017;
+
+public class CqrcmVariable5 extends com.optum.comet.mctmcf.generator.predefbeans.Definition implements java.io.Serializable {
+
+    public CqrcmVariable5() {
+        this.cqrcmV5CireEditRules = new java.util.ArrayList<com.optum.comet.mctmcf.generated.vol04042017.CqrcmV5CireEditRuleType>();
+    }
+
+    private static final long serialVersionUID = 1L;
+    private String cqrcmV5NbrSuffixes;
+    private String cqrcmV5CireEditSubPndCd;
+    private java.util.ArrayList<com.optum.comet.mctmcf.generated.vol04042017.CqrcmV5CireEditRuleType> cqrcmV5CireEditRules;
+
+    public void setCqrcmV5NbrSuffixes(String cqrcmV5NbrSuffixes) { 
+        this.cqrcmV5NbrSuffixes = cqrcmV5NbrSuffixes;
+    }
+    public String getCqrcmV5NbrSuffixes() { 
+        return this.cqrcmV5NbrSuffixes;
+    }
+    public void setCqrcmV5CireEditSubPndCd(String cqrcmV5CireEditSubPndCd) { 
+        this.cqrcmV5CireEditSubPndCd = cqrcmV5CireEditSubPndCd;
+    }
+    public String getCqrcmV5CireEditSubPndCd() { 
+        return this.cqrcmV5CireEditSubPndCd;
+    }
+    public void setCqrcmV5CireEditRules(java.util.ArrayList<com.optum.comet.mctmcf.generated.vol04042017.CqrcmV5CireEditRuleType> cqrcmV5CireEditRules) { 
+        this.cqrcmV5CireEditRules = cqrcmV5CireEditRules;
+    }
+    public java.util.ArrayList<com.optum.comet.mctmcf.generated.vol04042017.CqrcmV5CireEditRuleType> getCqrcmV5CireEditRules() { 
+        return this.cqrcmV5CireEditRules;
+    }
+}

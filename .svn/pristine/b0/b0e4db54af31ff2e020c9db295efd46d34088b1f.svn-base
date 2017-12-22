@@ -1,0 +1,32 @@
+package com.optum.comet.mctmcf.daos.dbos;
+
+public class LookupResults extends CometBaseDBO {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1694738065019469907L;
+	//used for MCT
+	private Long openClmCount;
+	private Long openClmCountForOrgId;
+	private Long openClmCountForOrgIdClmFrmTyp;
+	
+	//accessors and getters
+	public Long getOpenClmCount() {
+		return openClmCount;
+	}
+	public void setOpenClmCount(Long openClmCount) {
+		this.openClmCount = openClmCount;
+	}
+	public Long getOpenClmCountForOrgId() {
+		return openClmCountForOrgId;
+	}
+	public void setOpenClmCountForOrgId(Long openClmCountForOrgId) {
+		this.openClmCountForOrgId = openClmCountForOrgId;
+	}
+	public Long getOpenClmCountForOrgIdClmFrmTyp() {
+		return openClmCountForOrgIdClmFrmTyp;
+	}
+	public void setOpenClmCountForOrgIdClmFrmTyp(Long openClmCountForOrgIdClmFrmTyp) {
+		this.openClmCountForOrgIdClmFrmTyp = openClmCountForOrgIdClmFrmTyp;
+	}
+}

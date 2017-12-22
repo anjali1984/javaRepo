@@ -1,0 +1,206 @@
+**********************************************************************
+******* -------------------------------------------------------------*
+******* EMCCQRCM CHANGE HISTORY:                                     *
+******* ========================                                     *
+HT0405* ADD NEW WORKFLOW ID(CQRCM-WORKFLOW-ID)IN THE CQRCM-FIXED     *
+HT0405* AREA FOR RECIPROCITY INITIATIVE(SPRF# 400004492).            *
+HT0405*                                                              *
+******* 03/15/2003                                                   *
+******* UPDATED FOR COMET, JUN03 RELEASE                             *
+******* 12/13/2002                                                   *
+******* CREATED FOR THE FEB03 RELEASE                                *
+FEB03 * ------------------------------------------------------------ *
+FEB03 * 02/24/2003: INFORMATIONAL UPDATE ONLY:                       *
+FEB03 * FEB03 RELEASE: THIS IS A SHARED COPYBOOK AND RESIDES ON      *
+FEB03 * ENDEVOR ON UH1:ENDN1I03/MC001/S5293 AND                      *
+FEB03 * UH2:ENDM2M03/ML007/S5141. ANY CHANGES MADE TO THIS COPYBOOK  *
+FEB03 * MUST BE COORDINATED WITH TOPS/FE AND CQR TEAM IN BSKING RIDGE*
+**********************************************************************
+FE0509* FE0509 06/06/2005 FIELD EXPANSION SPRF# 400001912 CHANGES FOR*
+FE0509*                   SEP 2005 RELEASE                           *
+A52637* Q316   06/01/2016 PRJ52637 CHANGES FOR ADDING NEW POLICY     *
+A52637*                   RESTRICTION CODE TO BE SENT TO COMET.      *
+A31020* Q316   06/01/2016 PRJ31020 CHANGES FOR ADDING NEW RISK DATE  *
+AXXXXX*                   TO BE SENT TO COMET.                       *
+A83023* Q317   07/10/2017 PRJ83023 CHANGES FOR SAV-NBR-SUFFIXES      *
+A83023*                   & CIRE_EDT_HDR_SUB_PND_CD                  *
+A83023*                   & 10 OCCURS OF CIRE_EDT_RULE_ID            *
+A83023*                   TO COMET 986 RECORD - NEW LENGTH 1043 BYTES*
+**********************************************************************
+**********************************************************************
+********
+***********************************************************************
+******** THIS IS THE GENERIC MQ MESSAGE HEADER FOR ROUTING MESSAGES   *
+******** TO OTHER SYSTEMS. IT IS THE PREFERRED FORMAT FOR REMOTE      *
+******** SYSTEMS TO SEND MESSAGES BACK TO US TO TAKE ACTION ON CLAIMS *
+******** IN THE FRONT END AND UNET SYSTEMS.                           *
+***********************************************************************
+           03  CQRCM-LENGTH                     PIC 9(5).               EMC6SAV1
+***********************************************************************
+******** THE CQRCM-FIXED AREA IS DESIGNED TO MAP BACK TO THE FIXED    *
+******** KEY AREA OF THE SAVE FILE. PROCESSES CAN USE THIS AREA TO    *
+******** ACQUIRE ANY INFORMATION NEEDED TO SYNC CLAIM, OR READ DATA   *
+******** FROM ANOTHER SOURCE.                                         *
+***********************************************************************
+           03  CQRCM-FIXED.                                             EMC6SAV1
+005200         05  CQRCM-FILE-FLN-ALT-KEY.
+005300             10  CQRCM-ADJ-OFFICE         PIC 9(03).
+005400             10  CQRCM-FLN                PIC 9(11).
+JUN03              10  FILLER REDEFINES CQRCM-FLN.
+JUN03                  20  FILLER                    PIC X(1).
+JUN03                  20  CQRCM-FLN-RECEIPT-DT      PIC 9(5).
+JUN03                  20  CQRCM-FLN-SERIAL-NO       PIC 9(5).
+005500             10  CQRCM-RECORD-TYPE-FLN-AIX PIC X(01).
+005600         05  CQRCM-FILE-SSN-ALT-KEY.
+005700             10  CQRCM-EMP-ID.
+005800                 20  CQRCM-EMP-ID-1            PIC X(1).
+005900                 20  CQRCM-EMP-SSN             PIC X(09).
+006000             10  CQRCM-RECORD-TYPE-AIX         PIC X.
+006100         05  CQRCM-FILE-KEY.
+006200             10  CQRCM-ICN                     PIC 9(11).
+006300             10  CQRCM-RECORD-TYPE             PIC X(1).
+006800             10  CQRCM-ICN-SUFFIX              PIC 9(3).
+006900******  SAVE CLAIM DATE & TIME STAMP ***************************
+007000         05  CQRCM-CLAIM-DATE-STAMP-1  PIC S9(07).
+007100         05  CQRCM-CLAIM-TIME-STAMP-1  PIC S9(09).
+007200******  TOPS REGION INDICATOR **********************************
+007300         05  CQRCM-ENGINE-IND          PIC X.
+007200******  NUMBER OF MESSAGES FOLLOWING THIS ONE FOR EACH TYPE    *
+007200******  OF SAVE FILE RECORDS                                   *
+007300         05  CQRCM-NUMBER-TYP1         PIC 9(5).
+007300         05  CQRCM-NUMBER-TYP2         PIC 9(5).
+007300         05  CQRCM-NUMBER-TYP3         PIC 9(5).
+**********************************************************************
+007200******  INFORMATION WITH MESSAGE                               *
+**********************************************************************
+           03  CQRCM-VARIABLE.                                          EMC6SAV1
+               05  CQRCM-MSG-OUTBOUND-FIELDS.
+                   10  CQRCM-TYPE              PIC X(1).                EMC6SAV1
+                   10  CQRCM-SEND-TO           PIC X(1).                EMC6SAV1
+                   10  CQRCM-SEND-CNT          PIC 9(1).                EMC6SAV1
+                   10  CQRCM-NONSEL-ERR-AREA.                           EMC6SAV1
+                       15 CQRCM-NONSEL-ERR-ENTRY OCCURS 20 TIMES.       EMC6SAV1
+JR0203                     20 CQRCM-NONSEL-ERR-CODE.                    EMC6SAV1
+JR0203                        25 CQRCM-NONSEL-ERR-LIT    PIC X(1).      EMC6SAV1
+JR0203                        25 CQRCM-NONSEL-ERR-CD     PIC X(4).      EMC6SAV1
+*********************************************************************
+      ****** FILL-IN WILL NOT BE USED UNTIL APR 03 AND WILL CONTAIN
+      ****** A VARIABLE 4 CHAR ALPHA CODE, 6 CHARACTER DATE OR 9
+      ****** CHARACTER AMOUNT THAT WAS FILLED IN BY TOPS ONLINE IF
+      ****** THE ERROR HAD FILL IN INFO AS PART OF THE MESSAGE TEXT
+*********************************************************************
+                      15 CQRCM-NONSEL-ERR-FILL-IN    PIC X(9).          EMC6SAV1
+                   10  CQRSL-CLAIM-TYPE             PIC X(10).          EMC6SAV1
+                       88  CQRSL-UBH                VALUE 'UBH      '.  EMC6SAV1
+                       88  CQRSL-NONUBH             VALUE 'NONUBH   '.  EMC6SAV1
+HT0405             10 CQRCM-WORKFLOW-ID REDEFINES CQRSL-CLAIM-TYPE.
+HT0405                 15 CQRCM-PAYOR               PIC X(02).
+HT0405                 15 CQRCM-PROF-FACILITY       PIC X(01).
+HT0405                 15 CQRCM-IN-OUT-PATIENT      PIC X(01).
+HT0405                 15 CQRCM-COM-MCARE-MCAIDE
+HT0405                                              PIC X(02).
+HT0405                 15 CQRCM-OPTION-A-B          PIC X(01).
+HT0405                 15 CQRCM-WORKFLOW-ID-FILLER
+HT0405                                              PIC X(03).
+FE0509             10  CQRCM-PSEUDO-PEND-PEND-CODE  PIC X(03).          EMC6SAV1
+                   10  CQRCM-COMMENTS               PIC X(68).          EMC6SAV1
+               05  CQRCM-MSG-RETURN-FIELDS.
+                  10  CQRCSQ-STATUS            PIC X(2).                00050001
+JUN03                   88 CQRCSQ-RELEASE-UNCHANGED    VALUE 'R '.      00050001
+JUN03                   88 CQRCSQ-CQR-UPDATED          VALUE 'P '.      00050001
+JUN03                   88 CQRCSQ-COM-RELEASE-SQ       VALUE 'RS'.      00050001
+JUN03                   88 CQRCSQ-COM-TOPS-FINALIZED   VALUE 'TF'.      00050001
+005200            10  CQRCSQ-RETURN-SYSTEM     PIC X(4).                00060001
+005300                  88 CQRCSQ-TYPE-CQR       VALUE 'A   '.          00070001
+005400                  88 CQRCSQ-TYPE-COMET     VALUE 'C   '.          00080001
+005500            10  CQRCSQ-RETURN-DT.                                 00090001
+005600                15 CQRCSU-RET-DT-YYYY    PIC 9999.                00100001
+005700                15 CQRCSU-EXP-DT-MM      PIC 99.                  00110001
+005800                15 CQRCSU-EXP-DT-DD      PIC 99.                  00120001
+JUN03      03  CQRCM-VARIABLE-2.                                        EMC6SAV1
+JUN03          05  CQRCM-V2-INBOUND-FIELDS.
+JUN03              10  CQRCM-V2-PRV-TIN-SUFX.                           EMC6SAV1
+JUN03                  15  CQRCM-V2-PRV-TIN-PRFX     PIC X(01).         EMC6SAV1
+JUN03                  15  CQRCM-V2-PRV-TIN          PIC X(09).         EMC6SAV1
+FE0509                 15  CQRCM-V2-PRV-SUFX         PIC X(05).         EMC6SAV1
+JUN03              10  CQRCM-V2-NEW-EMP-ID           PIC X(10).         EMC6SAV1
+JUN03              10  CQRCM-V2-NEW-EMP-POL-NO       PIC X(06).         EMC6SAV1
+JUN03              10  CQRCM-V2-NEW-PAT-FIRST-NAME   PIC X(10).         EMC6SAV1
+JUN03              10  CQRCM-V2-NEW-PAT-RELATIONSHIP PIC X(02).         EMC6SAV1
+JUN03              10  CQRCM-V2-NEW-ENGINE           PIC X(01).         EMC6SAV1
+JUN03              10  CQRCM-V2-NEW-OFC              PIC 9(03).         EMC6SAV1
+JUN03              10  CQRCM-V2-NEW-PLATFORM         PIC X(01).         EMC6SAV1
+JUN03***** PEND TYPE WILL BE USED FOR COMET INBOUND AND OUTBOUND
+JUN03              10  CQRCM-V2-PEND-TYPE            PIC X(01).         EMC6SAV1
+JUN03              10  CQRCM-V2-TRIGGER-REAS-CD      PIC X(02).         EMC6SAV1
+JUN03              10  CQRCM-V2-ALT-ID               PIC 9(06).         EMC6SAV1
+JUN03              10  CQRCM-V2-MGR-OFC              PIC 9(02).         EMC6SAV1
+JUN03              10  CQRCM-V2-SYSTEM-IND           PIC X(04).         EMC6SAV1
+JUN03              10  CQRCM-V2-FILLER1              PIC X(06).         EMC6SAV1
+JUN03          05  CQRCM-V2-OUTBOUND-FIELDS.
+JUN03              10  CQRCM-V2-ORG-ID               PIC X(05).         EMC6SAV1
+JUN03              10  CQRCM-V2-INST-OR-PROF         PIC X(01).         EMC6SAV1
+JUN03              10  CQRCM-V2-SQ-DESIGNATION       PIC X(01).         EMC6SAV1
+JUN03                  88  CQRSL-PROV-SQ            VALUE 'P'.          EMC6SAV1
+JUN03                  88  CQRSL-DEP-SQ             VALUE 'D'.          EMC6SAV1
+JUN03                  88  CQRSL-PROV-DEP-SQ        VALUE 'B'.          EMC6SAV1
+JUN03              10  CQRCM-V2-SUFX-TOT-CHARGE      PIC 9(07)V99.      EMC6SAV1
+JUN03              10  CQRCM-V2-CLAIM-TOT-CHARGE     PIC 9(07)V99.      EMC6SAV1
+JUN03              10  CQRCM-V2-PLACE-OF-SERVICE     PIC X(02).         EMC6SAV1
+JUN03              10  CQRCM-V2-MED-SERVICE-CODE     PIC X(06).         EMC6SAV1
+JUN03              10  CQRCM-V2-BILL-TYPE            PIC X(03).         EMC6SAV1
+JUN03              10  CQRCM-V2-FLN-DCC              PIC 9(03).         EMC6SAV1
+JUN03              10  CQRCM-V2-CLAIM-RECEIPT-DT     PIC 9(08).         EMC6SAV1
+JUN03              10  CQRCM-V2-EARLIEST-DOS         PIC 9(08).         EMC6SAV1
+JUN03              10  CQRCM-V2-LATEST-DOS           PIC 9(08).         EMC6SAV1
+JUN03              10  CQRCM-V2-PATIENT-INFO.                           EMC6SAV1
+JUN03                  15  CQRCM-V2-PAT-RELATIONSHIP PIC X(02).         EMC6SAV1
+JUN03                  15  CQRCM-V2-PAT-DOB          PIC 9(08).         EMC6SAV1
+JUN03                  15  CQRCM-V2-PAT-FIRST-NAME   PIC X(10).         EMC6SAV1
+JUN03                  15  CQRCM-V2-PAT-MID-INIT     PIC X(01).         EMC6SAV1
+JUN03                  15  CQRCM-V2-PAT-LAST-NAME    PIC X(20).         EMC6SAV1
+JUN03                  15  CQRCM-V2-PAT-ADR1         PIC X(18).         EMC6SAV1
+JUN03                  15  CQRCM-V2-PAT-ADR2         PIC X(20).         EMC6SAV1
+JUN03                  15  CQRCM-V2-PAT-CITY         PIC X(15).         EMC6SAV1
+JUN03                  15  CQRCM-V2-PAT-STATE        PIC X(02).         EMC6SAV1
+JUN03                  15  CQRCM-V2-PAT-ZIP          PIC X(09).         EMC6SAV1
+JUN03              10  CQRCM-V2-INSURED-INFO.                           EMC6SAV1
+JUN03                  15  CQRCM-V2-INS-DOB          PIC 9(08).         EMC6SAV1
+JUN03                  15  CQRCM-V2-INS-FIRST-NAME   PIC X(10).         EMC6SAV1
+JUN03                  15  CQRCM-V2-INS-MID-INIT     PIC X(01).         EMC6SAV1
+JUN03                  15  CQRCM-V2-INS-LAST-NAME    PIC X(20).         EMC6SAV1
+JUN03                  15  CQRCM-V2-INS-ADR1         PIC X(30).         EMC6SAV1
+JUN03                  15  CQRCM-V2-INS-ADR2         PIC X(30).         EMC6SAV1
+JUN03                  15  CQRCM-V2-INS-CITY         PIC X(15).         EMC6SAV1
+JUN03                  15  CQRCM-V2-INS-STATE        PIC X(02).         EMC6SAV1
+JUN03                  15  CQRCM-V2-INS-ZIP          PIC X(09).         EMC6SAV1
+JUN03                  15  CQRCM-V2-ENTERED-INS-ID   PIC X(09).         EMC6SAV1
+JUN03                  15  CQRCM-V2-ENTERED-POL-NO   PIC X(20).         EMC6SAV1
+JUN03                  15  CQRCM-V2-EMP-POL-NO       PIC X(06).         EMC6SAV1
+JUN03                  15  CQRCM-V2-MBR-MARKET       PIC X(07).         EMC6SAV1
+JUN03                  15  CQRCM-V2-CCM-PRODUCT      PIC X(03).         EMC6SAV1
+JUN03              10  CQRCM-V2-PROVIDER-INFO.                          EMC6SAV1
+JUN03                  15  CQRCM-V2-PRV-SSN-ENTERED  PIC 9(09).         EMC6SAV1
+JUN03                  15  CQRCM-V2-PRV-TIN-ENTERED  PIC 9(09).         EMC6SAV1
+JUN03                  15  CQRCM-V2-PRV-DEGREE       PIC X(04).         EMC6SAV1
+JUN03                  15  CQRCM-V2-PRV-GROUP        PIC X(30).         EMC6SAV1
+JUN03                  15  CQRCM-V2-PRV-IND-FIRST    PIC X(10).         EMC6SAV1
+JUN03                  15  CQRCM-V2-PRV-IND-LAST     PIC X(20).         EMC6SAV1
+JUN03                  15  CQRCM-V2-PRV-IND-INIT     PIC X(01).         EMC6SAV1
+JUN03                  15  CQRCM-V2-PRV-ADR1         PIC X(30).         EMC6SAV1
+JUN03                  15  CQRCM-V2-PRV-ADR2         PIC X(30).         EMC6SAV1
+JUN03                  15  CQRCM-V2-PRV-CITY         PIC X(15).         EMC6SAV1
+JUN03                  15  CQRCM-V2-PRV-STATE        PIC X(02).         EMC6SAV1
+JUN03                  15  CQRCM-V2-PRV-ZIP          PIC X(09).         EMC6SAV1
+JUN03                  15  CQRCM-V2-EPD-MATCH-CODE   PIC X(04).         EMC6SAV1
+JUN03              10  CQRCM-V2-CLAIM-COMMENTS       PIC X(103).        EMC6SAV1
+A52637     03  CQRCM-VARIABLE-3.                                        EMC6SAV1
+A52637         05  CQRCM-V3-RESTRICT-CODE            PIC X(02).
+AXXXXX     03  CQRCM-VARIABLE-4.                                        EMC6SAV1
+AXXXXX         05  CQRCM-V4-RISK-DATE                PIC 9(08).
+A83023     03  CQRCM-VARIABLE-5.                                        EMC6SAV1
+A83023         05  CQRCM-V5-NBR-SUFFIXES             PIC 9(03).
+A83023         05  CQRCM-V5-CIRE-EDIT-SUB-PND-CD     PIC X(02).
+A83023         05  CQRCM-V5-CIRE-EDIT-RULES OCCURS 10 TIMES.
+A83023             10  CQRCM-V5-CIRE-EDIT-RULE-TYPE.
+A83023                 15  CQRCM-V5-CIRE-EDIT-RULE   PIC X(06).

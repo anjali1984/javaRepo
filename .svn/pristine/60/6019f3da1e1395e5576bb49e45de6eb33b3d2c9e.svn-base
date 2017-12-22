@@ -1,0 +1,239 @@
+package com.optum.comet.mctmcf.services.impl;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.optum.comet.mctmcf.constants.CometServiceActionConstants;
+import com.optum.comet.mctmcf.services.ICometService;
+import com.optum.comet.mctmcf.vo.InboundClaimMessage;
+import com.optum.diff.common.vo.ServiceParamVO;
+
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={"/META-INF/spring/com.optum.comet.mctmcf.app.cntxt.xml"})
+public class MCTMCFServiceTest {
+
+	@Autowired
+	@Qualifier(value = "cmt.mctmcf")
+	ICometService mctMCFService;
+	private String clmSfxMsg;
+
+
+
+	@Before
+	public void setUp() throws Exception {
+		InputStream is = this.getClass().getClassLoader().getResourceAsStream("test-artifacts/MCF_1020493280_01.txt");
+		System.out.println("test setup");
+		BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		String entireText = "";
+		String line;
+		for(; (line = br.readLine()) != null; entireText = entireText + line);
+		this.clmSfxMsg = entireText;
+		br.close();
+
+	}
+
+	@After
+	public void tearDown() throws Exception {
+	}
+
+	@Test
+	public void testExecuteLoadManualMessage() {
+		ServiceParamVO serviceObj = new ServiceParamVO();
+		InboundClaimMessage cm = new InboundClaimMessage();
+
+		cm.setMsg(clmSfxMsg);
+		cm.setQueue("MANUAL");
+		cm.setLoadClaimSts(InboundClaimMessage.LOAD_CLAIM_STATUS.NEW);
+		serviceObj.setBpmBaseVO(cm);
+		try
+		{
+			serviceObj = mctMCFService.execute(CometServiceActionConstants.ClaimServiceActions.SAVE_MANUAL_MESSAGE.getDescription(), serviceObj, "Sample-Corr-ID#");
+		}
+		catch(Throwable th)
+		{
+			System.out.println("Found Invalid Manul Message");
+		}
+
+		long id = ((InboundClaimMessage)serviceObj.getBpmBaseVO()).getLoadId();
+		System.out.println("id [" + id +"]");
+	}
+	/*
+	@Test
+	public void testExecuteOpenClaimsOrg() {
+		ServiceParamVO serviceObj = new ServiceParamVO();
+		InboundClaimMessage cm = new InboundClaimMessage();
+
+		cm.setMsg(clmSfxMsg);
+		cm.setQueue("STATUS");
+		cm.setLoadClaimSts(InboundClaimMessage.LOAD_CLAIM_STATUS.NEW);
+		cm.setOrgId("UHCI2");
+		serviceObj.setBpmBaseVO(cm);
+
+		for(int cnt =0; cnt < 5; cnt++) {
+			serviceObj = mctMCFService.execute(CometServiceActionConstants.ClaimServiceActions.OPN_CLMS_FOR_ORG.getDescription(), serviceObj, "Sample-Corr-ID#");
+			InboundClaimMessage icm = (InboundClaimMessage) serviceObj.getBpmBaseVO();
+			System.out.println(" number of claims for orgid [" + icm.getOpenClmsforOrgId() +"]");
+		}
+	}*/
+
+	@Test
+	public void testExecutealreadyresolved() {
+		ServiceParamVO serviceObj = new ServiceParamVO();
+		InboundClaimMessage cm = new InboundClaimMessage();
+
+		cm.setMsg(clmSfxMsg);
+		cm.setQueue("MANUAL");
+		cm.setLoadClaimSts(InboundClaimMessage.LOAD_CLAIM_STATUS.NEW);
+		cm.setIcn("6367131430");
+		cm.setLoadId(78786);
+		serviceObj.setBpmBaseVO(cm);
+
+		System.out.println("lid in test"+cm.getLoadId());
+		serviceObj = mctMCFService.execute(CometServiceActionConstants.ClaimServiceActions.GET_TRANS_DETAILS.getDescription(), serviceObj, "Sample-Corr-ID#");
+
+
+
+		long id = ((InboundClaimMessage)serviceObj.getBpmBaseVO()).getLoadId();
+		System.out.println("lid in test :"+id);
+
+		serviceObj = mctMCFService.execute(CometServiceActionConstants.ClaimServiceActions.UPDATE_LID_CLM_ALREADY_RESOLVED.getDescription(), serviceObj, "Sample-Corr-ID#");
+		InboundClaimMessage icm = (InboundClaimMessage) serviceObj.getBpmBaseVO();
+		System.out.println("already resolved or not [" + icm.isClaimAlreadyResolved() +"]");
+
+	}
+
+	@Test
+	public void testExecuteMcfMultiSfx() {
+		ServiceParamVO serviceObj = new ServiceParamVO();
+		InboundClaimMessage cm = new InboundClaimMessage();
+
+		//cm.setMsg(clmSfxMsg);
+		cm.setQueue("MANUAL");
+		cm.setIcn("3304534290");
+		cm.setTotalSfx(3);
+		cm.setLoadId(74612);
+		serviceObj.setBpmBaseVO(cm);
+
+		serviceObj = mctMCFService.execute(CometServiceActionConstants.ClaimServiceActions.MCF_MULTI_SUFX.getDescription(), serviceObj, "Sample-Corr-ID#");
+		InboundClaimMessage icm = (InboundClaimMessage) serviceObj.getBpmBaseVO();
+		System.out.println("if multisufx to persist "+icm.isMultiSfxWait());
+
+		/*if(icm.isMultiSfxWait())
+		{
+			System.out.println("inside hold");
+			serviceObj = mctMCFService.execute(CometServiceActionConstants.ClaimServiceActions.UPDATE_CLAIMST_UNLOCK_ICN.getDescription(), serviceObj, "Sample-Corr-ID#");
+		}
+		else
+		{
+			System.out.println("inside inproc");
+			serviceObj = mctMCFService.execute(CometServiceActionConstants.ClaimServiceActions.PARSE_PERSIST_DELETE_ICN_LOCK.getDescription(), serviceObj, "Sample-Corr-ID#");
+		}*/
+
+
+	}
+
+
+
+	@Test
+	public void testExecuteLockICN() {
+		ServiceParamVO serviceObj = new ServiceParamVO();
+		InboundClaimMessage cm = new InboundClaimMessage();
+		cm.setIcn("3500224353");
+		serviceObj.setBpmBaseVO(cm);
+		serviceObj = mctMCFService.execute(CometServiceActionConstants.ClaimServiceActions.LOCK_ICN.getDescription(), serviceObj, "Sample-Corr-ID#");
+		cm = (InboundClaimMessage) serviceObj.getBpmBaseVO();
+		System.out.println("TESTER Added lock and ldlock "+cm.isAddedLock()+cm.isLdLckExists()	);	
+	}
+
+
+	@Test
+	public void testExecuteCheckLdLck() {
+		ServiceParamVO serviceObj = new ServiceParamVO();
+		InboundClaimMessage cm = new InboundClaimMessage();
+
+		cm.setIcn("3500224353");
+		serviceObj.setBpmBaseVO(cm);
+
+		serviceObj = mctMCFService.execute(CometServiceActionConstants.ClaimServiceActions.MCF_LDLCK_EXISTS.getDescription(), serviceObj, "Sample-Corr-ID#");
+		InboundClaimMessage icm = (InboundClaimMessage) serviceObj.getBpmBaseVO();
+		if(icm.isLdLckExists())
+		{
+			System.out.println("end flow ..exists in ld_lck");
+		}
+		else
+		{
+			System.out.println("doesnt exists in ld_lck");
+			serviceObj = mctMCFService.execute(CometServiceActionConstants.ClaimServiceActions.MCF_MULTI_SUFX.getDescription(), serviceObj, "Sample-Corr-ID#");
+		}
+	}
+
+
+
+	@Test
+	public void testExecuteOnholdandDeleteICNLock() {
+		ServiceParamVO serviceObj = new ServiceParamVO();
+		InboundClaimMessage cm = new InboundClaimMessage();
+
+		cm.setIcn("3500224353");
+		cm.setLoadId(78704);
+		cm.setLdLckExists(true);
+		serviceObj.setBpmBaseVO(cm);
+		serviceObj = mctMCFService.execute(CometServiceActionConstants.ClaimServiceActions.UPDATE_CLAIMST_UNLOCK_ICN.getDescription(), serviceObj, "Sample-Corr-ID#");
+
+	}
+
+
+
+	/*@Test
+	public void testExecuteparsePersistandDeleteICNLock() {
+		ServiceParamVO serviceObj = new ServiceParamVO();
+		InboundClaimMessage cm = new InboundClaimMessage();
+
+		cm.setIcn("3500224353");
+		cm.setLdLckExists(true);
+		serviceObj.setBpmBaseVO(cm);
+		serviceObj = mctMCFService.execute(CometServiceActionConstants.ClaimServiceActions.PARSE_PERSIST_DELETE_ICN_LOCK.getDescription(), serviceObj, "Sample-Corr-ID#");
+
+	}*/
+
+
+	/*@Test
+	public void testExecuteSaveItemFlat() {
+		ServiceParamVO serviceObj = new ServiceParamVO();
+		InboundClaimMessage icm = new InboundClaimMessage();
+		//InboundClaimMessage icm ;
+		icm.setMsg(clmSfxMsg);
+		System.out.println("clmSfxMsg"+clmSfxMsg);
+
+		icm.setQueue("MANUAL");
+		icm.setLoadClaimSts(InboundClaimMessage.LOAD_CLAIM_STATUS.NEW);
+		icm.setIcn("6367131430");
+
+		//set to test multisfx
+		icm.setTotalSfx(3);
+		serviceObj.setBpmBaseVO(icm);
+		serviceObj = mctMCFService.execute(CometServiceActionConstants.ClaimServiceActions.MCF_MULTI_SUFX.getDescription(), serviceObj, "Sample-Corr-ID#");
+		icm = (InboundClaimMessage) serviceObj.getBpmBaseVO();
+		System.out.println("TOTAL Suffix test  "+icm.getTotalSfx());
+		serviceObj = mctMCFService.execute(CometServiceActionConstants.ClaimServiceActions.PARSE_PERSIST_DELETE_ICN_LOCK.getDescription(), serviceObj, "Sample-Corr-ID#");
+		icm = (InboundClaimMessage) serviceObj.getBpmBaseVO();
+		System.out.println("TOTAL before save   "+icm.getTotalSfx());
+		serviceObj = mctMCFService.execute(CometServiceActionConstants.ClaimServiceActions.UPDATE_CLM_ITEM.getDescription(), serviceObj, "Sample-Corr-ID#");
+		//serviceObj = mctMCFService.execute(CometServiceActionConstants.ClaimServiceActions.SAVE_CLM_ITEM.getDescription(), serviceObj, "Sample-Corr-ID#");
+		icm = (InboundClaimMessage) serviceObj.getBpmBaseVO();
+		serviceObj = mctMCFService.execute(CometServiceActionConstants.ClaimServiceActions.SAVE_ITEM_STG.getDescription(), serviceObj, "Sample-Corr-ID#");
+
+	}*/
+
+}

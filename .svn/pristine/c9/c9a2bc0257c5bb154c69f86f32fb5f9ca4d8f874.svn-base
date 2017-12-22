@@ -1,0 +1,60 @@
+package com.optum.comet.mctmcf.generator.datastruct;
+
+import java.util.ArrayList;
+
+public class VOStructure {
+	
+	private String packageName;
+    private String className;
+    private String extendsClass;
+    private String implementsClass;
+    private ArrayList<AttributeStructure> attrs = new ArrayList<AttributeStructure>();
+    
+    public VOStructure(){
+    }
+    
+    public VOStructure(String packageName, String className){
+    	this.packageName = packageName;
+    	this.className = className;
+    }
+    
+    public String getClassName() { 
+        return className;
+    }
+    public void setClassName(String className) {
+        this.className = className;
+    }
+    
+    public ArrayList<AttributeStructure> getAttrs() {
+        return attrs; 
+    }
+    public void setAttrs(ArrayList<AttributeStructure> attrs) {
+        this.attrs = attrs;
+    }
+    public void addAttr(AttributeStructure attStructure) {
+        this.attrs.add(attStructure);
+    }
+    
+	public String getPackageName() {
+		return packageName;
+	}
+	public void setPackageName(String packageName) {
+		this.packageName = packageName;
+	}
+
+	public String getExtendsClass() {
+		return extendsClass;
+	}
+
+	public void setExtendsClass(String extendsClass) {
+		this.extendsClass = extendsClass;
+	}
+
+	public String getImplementsClass() {
+		return implementsClass;
+	}
+
+	public void setImplementsClass(String implementsClass) { // could be a CSV too
+		this.implementsClass = implementsClass;
+	}
+}

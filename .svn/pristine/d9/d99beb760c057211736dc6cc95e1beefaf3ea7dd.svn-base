@@ -1,0 +1,19 @@
+package com.optum.comet.mctmcf.enums;
+
+public enum CqrslClaimType {
+	
+	CQRSL_UBH("UBH"),  
+    CQRSL_NONUBH("NONUBH");  //        VALUE 'NONUBH   '.  EMC6SAV1
+	
+	private String value;
+	private CqrslClaimType(String value)
+	{
+		this.value=value;
+	}
+	
+	@Override
+	public String toString(){
+		return this.value;
+	}
+
+}

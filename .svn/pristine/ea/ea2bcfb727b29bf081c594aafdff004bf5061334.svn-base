@@ -1,0 +1,31 @@
+package com.optum.comet.mctmcf.generated.vol04042017;
+
+public class CqrcmV2PrvTinSufx extends com.optum.comet.mctmcf.generator.predefbeans.Definition implements java.io.Serializable {
+
+    public CqrcmV2PrvTinSufx() {
+    }
+
+    private static final long serialVersionUID = 1L;
+    private String cqrcmV2PrvTinPrfx;
+    private String cqrcmV2PrvTin;
+    private String cqrcmV2PrvSufx;
+
+    public void setCqrcmV2PrvTinPrfx(String cqrcmV2PrvTinPrfx) { 
+        this.cqrcmV2PrvTinPrfx = cqrcmV2PrvTinPrfx;
+    }
+    public String getCqrcmV2PrvTinPrfx() { 
+        return this.cqrcmV2PrvTinPrfx;
+    }
+    public void setCqrcmV2PrvTin(String cqrcmV2PrvTin) { 
+        this.cqrcmV2PrvTin = cqrcmV2PrvTin;
+    }
+    public String getCqrcmV2PrvTin() { 
+        return this.cqrcmV2PrvTin;
+    }
+    public void setCqrcmV2PrvSufx(String cqrcmV2PrvSufx) { 
+        this.cqrcmV2PrvSufx = cqrcmV2PrvSufx;
+    }
+    public String getCqrcmV2PrvSufx() { 
+        return this.cqrcmV2PrvSufx;
+    }
+}

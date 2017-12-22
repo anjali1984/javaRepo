@@ -1,0 +1,22 @@
+package com.optum.comet.mctmcf;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jms.JmsAutoConfiguration;
+import org.springframework.context.annotation.ImportResource;
+
+
+@SpringBootApplication(exclude = JmsAutoConfiguration.class)
+@ImportResource("classpath:/META-INF/spring/com.optum.comet.mctmcf.app.cntxt.xml")
+public class MCTMCFMain {
+	
+	final static String TOMCAT_PORT_KEY = "server.port";
+	final static String TOMCAT_PORT_VAL = "1080";
+	
+	public static void main(String[] args) {
+		
+		System.setProperty(TOMCAT_PORT_KEY, TOMCAT_PORT_VAL);
+		SpringApplication.run(MCTMCFMain.class, args);
+	}
+
+}

@@ -1,0 +1,17 @@
+package com.optum.comet.mctmcf.generated.vol04042017;
+
+public class CqrcmVariable4 extends com.optum.comet.mctmcf.generator.predefbeans.Definition implements java.io.Serializable {
+
+    public CqrcmVariable4() {
+    }
+
+    private static final long serialVersionUID = 1L;
+    private String cqrcmV4RiskDate;
+
+    public void setCqrcmV4RiskDate(String cqrcmV4RiskDate) { 
+        this.cqrcmV4RiskDate = cqrcmV4RiskDate;
+    }
+    public String getCqrcmV4RiskDate() { 
+        return this.cqrcmV4RiskDate;
+    }
+}

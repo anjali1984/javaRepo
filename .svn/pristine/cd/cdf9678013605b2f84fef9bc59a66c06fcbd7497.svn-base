@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This file will contain all of the spring bean declarations required 
+	to setup the required dao for the services. -->
+
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+			http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+	<!-- JDBC template -->
+	<bean id="cmt.jdbcDaoSupport" class="org.springframework.jdbc.core.support.JdbcDaoSupport"
+		abstract="true">
+		<property name="dataSource" ref="cmt.datasource" />
+	</bean>
+
+	<bean id="cmt.abstractJDBCDaoSupport" class="com.optum.diff.common.dao.AbstractJDBCDAOSupport"
+		parent="cmt.jdbcDaoSupport" abstract="true">
+		<property name="logger" ref="cmt.gen.loggingService" />
+	</bean>
+
+	<!-- dao to work on load claim table -->
+	<bean id="cmt.loadclaim" class="com.optum.comet.mctmcf.daos.impl.LoadClaimDAO"
+		parent="cmt.abstractJDBCDaoSupport" init-method="init" />
+
+	<!-- dao on lookup and cache data -->
+	<bean id="cmt.lkup" class="com.optum.comet.mctmcf.daos.impl.LookupDAO"
+		parent="cmt.abstractJDBCDaoSupport" init-method="init" />
+
+	<bean id="cmt.itmFlt" class="com.optum.comet.mctmcf.daos.impl.ItemFlatDAO"
+		parent="cmt.abstractJDBCDaoSupport" init-method="init" />
+
+
+</beans>

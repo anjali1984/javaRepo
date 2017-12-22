@@ -1,0 +1,409 @@
+package com.optum.comet.mctmcf.vo;
+
+import java.util.Map;
+
+import com.optum.comet.mctmcf.generated.vol04042017.ClaimStatusUpadteMessage;
+import com.optum.comet.mctmcf.generated.vol04042017.ClaimSuffixMessage;
+
+public class InboundClaimMessage extends CometBaseVO {
+
+	public enum LOAD_CLAIM_STATUS {
+
+		NEW(1), WAITING_MLTSFX(2), COMPLETE(3), MCF_RESOLVED_CLAIM_EXCEPTION(5), STATUS_UPDATE_RESOLVED_CLAIM_EXCEPTION(6), MCT_FAILED_EXCEPTION(13), INPROC(12),SYSTEM_EXCEPTION(15),INVALID_MESSAGE_LENGTH_EXCEPTION(10),
+		MCT_RELEASED(14);
+		int value;
+
+		private LOAD_CLAIM_STATUS(int val) {
+			value = val;
+		}
+
+		public int getValue() {
+			return value;
+		}
+
+		public static LOAD_CLAIM_STATUS fromValue(int value) throws IllegalArgumentException {
+			if (value <= 0)
+				throw new IllegalArgumentException("Invalid paramater");
+			LOAD_CLAIM_STATUS retVal = null;
+			for (LOAD_CLAIM_STATUS lcs : LOAD_CLAIM_STATUS.values()) {
+				if (value == lcs.getValue()) {
+					retVal = lcs;
+					break;
+				}
+			}
+			if (retVal == null) {
+				throw new IllegalArgumentException("Invalid LOAD_CLAIM_STATUS value: " + value);
+			}
+			return retVal;
+		}
+	}
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String icn;
+	private String iid;
+	private ClaimSuffixMessage csm;
+	private ClaimStatusUpadteMessage csupdtm;
+	private int currSfx;
+	private int totalSfx;
+	private int countOfLoadedSfxs;
+	private boolean MultiSfx;
+	private boolean multiSfxWait;
+	private String msg;
+	private String queue;
+	private String orgId;
+	private boolean clmSfxUpdate;
+	private long loadId;
+	private String icoType;
+
+	private long openClaims;
+	private long openClaimsForOrgId;
+	private long openClaimsForOrgIdClmFrmTyp;
+
+	private boolean loadEligible;
+	private boolean claimAlreadyResolved;
+	private boolean claimAlreadyExists;
+	private boolean addedLock;
+	private String corrId;
+	private String engId;
+	private String orgIdClaimIcoTypeMCTKEY;
+	private String loadDate;
+	private String pendCode;
+	private boolean ldLckExists;
+	private int failedCnt;
+	private boolean itmCurStatNull;
+	private Map<String, String> associatedSfxs;
+	private LOAD_CLAIM_STATUS loadClaimSts;
+	private boolean pickedUpByBatch;
+	private long retryCnt;
+	private boolean noRowsAvailableInPoller;
+	private boolean ItmStgNotProcessedVo;
+	private boolean invalidLength;
+
+
+
+	//Current Status
+	private String curStat;
+	//Current operator
+	private String curOper;
+
+
+	public String getEngId() {
+		return engId;
+	}
+
+	public void setEngId(String engId) {
+		this.engId = engId;
+	}
+
+	public String getMsg() {
+		return msg;
+	}
+
+	public void setMsg(String msg) {
+		this.msg = msg;
+	}
+
+	public String getQueue() {
+		return queue;
+	}
+
+	public void setQueue(String queue) {
+		this.queue = queue;
+	}
+
+	public LOAD_CLAIM_STATUS getLoadClaimSts() {
+		return loadClaimSts;
+	}
+
+	public void setLoadClaimSts(LOAD_CLAIM_STATUS loadClaimSts) {
+		this.loadClaimSts = loadClaimSts;
+	}
+
+	public boolean isClmSfxUpdate() {
+		return clmSfxUpdate;
+	}
+
+	public void setClmSfxUpdate(boolean clmSfxUpdate) {
+		this.clmSfxUpdate = clmSfxUpdate;
+	}
+
+	public long getLoadId() {
+		return loadId;
+	}
+
+	public void setLoadId(long loadId) {
+		this.loadId = loadId;
+	}
+
+	public boolean isLoadEligible() {
+		return loadEligible;
+	}
+
+	public void setLoadEligible(boolean loadEligible) {
+		this.loadEligible = loadEligible;
+	}
+
+	public String getIcn() {
+		return icn;
+	}
+
+	public void setIcn(String icn) {
+		this.icn = icn;
+	}
+
+	public boolean isMultiSfx() {
+		return MultiSfx;
+	}
+
+	public void setMultiSfx(boolean MultiSfx) {
+		this.MultiSfx = MultiSfx;
+	}
+
+	public String getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(String orgId) {
+		this.orgId = orgId;
+	}
+
+	public Map<String, String> getAssociatedSfxs() {
+		return associatedSfxs;
+	}
+
+	public void setAssociatedSfxs(Map<String, String> associatedSfxs) {
+		this.associatedSfxs = associatedSfxs;
+	}
+
+	public int getCurrSfx() {
+		return currSfx;
+	}
+
+	public void setCurrSfx(int currSfx) {
+		this.currSfx = currSfx;
+	}
+
+	public int getTotalSfx() {
+		return totalSfx;
+	}
+
+	public void setTotalSfx(int totalSfx) {
+		this.totalSfx = totalSfx;
+	}
+
+	public int getCountOfLoadedSfxs() {
+		return countOfLoadedSfxs;
+	}
+
+	public void setCountOfLoadedSfxs(int countOfLoadedSfxs) {
+		this.countOfLoadedSfxs = countOfLoadedSfxs;
+	}
+
+	public ClaimSuffixMessage getCsm() {
+		return csm;
+	}
+
+	public void setCsm(ClaimSuffixMessage csm) {
+		this.csm = csm;
+	}
+
+	public String getCorrId() {
+		return corrId;
+	}
+
+	public void setCorrId(String corrId) {
+		this.corrId = corrId;
+	}
+
+	public boolean isClaimAlreadyResolved() {
+		return claimAlreadyResolved;
+	}
+
+	public void setClaimAlreadyResolved(boolean claimAlreadyResolved) {
+		this.claimAlreadyResolved = claimAlreadyResolved;
+	}
+
+	public boolean isClaimAlreadyExists() {
+		return claimAlreadyExists;
+	}
+
+	public void setClaimAlreadyExists(boolean claimAlreadyExists) {
+		this.claimAlreadyExists = claimAlreadyExists;
+	}
+
+	public boolean isMultiSfxWait() {
+		return multiSfxWait;
+	}
+
+	public void setMultiSfxWait(boolean multiSfxWait) {
+		this.multiSfxWait = multiSfxWait;
+	}
+
+	public String getOrgIdClaimIcoTypeMCTKEY() {
+		return orgIdClaimIcoTypeMCTKEY;
+	}
+
+	public void setOrgIdClaimIcoTypeMCTKEY(String orgIdClaimIcoTypeMCTKEY) {
+		this.orgIdClaimIcoTypeMCTKEY = orgIdClaimIcoTypeMCTKEY;
+	}
+
+	public ClaimStatusUpadteMessage getCsupdtm() {
+		return csupdtm;
+	}
+
+	public void setCsupdtm(ClaimStatusUpadteMessage csupdtm) {
+		this.csupdtm = csupdtm;
+	}
+
+	public boolean isAddedLock() {
+		return addedLock;
+	}
+
+	public void setAddedLock(boolean addedLock) {
+		this.addedLock = addedLock;
+	}
+
+	public boolean isLdLckExists() {
+		return ldLckExists;
+	}
+
+	public void setLdLckExists(boolean ldLckExists) {
+		this.ldLckExists = ldLckExists;
+	}
+
+	public String getLoadDate() {
+		return loadDate;
+	}
+
+	public void setLoadDate(String loadDate) {
+		this.loadDate = loadDate;
+	}
+
+	public String getPendCode() {
+		return pendCode;
+	}
+
+	public void setPendCode(String pendCode) {
+		this.pendCode = pendCode;
+	}
+
+	public int getFailedCnt() {
+		return failedCnt;
+	}
+
+	public void setFailedCnt(int failedCnt) {
+		this.failedCnt = failedCnt;
+	}
+
+	public boolean isItmCurStatNull() {
+		return itmCurStatNull;
+	}
+
+	public void setItmCurStatNull(boolean itmCurStatNull) {
+		this.itmCurStatNull = itmCurStatNull;
+	}
+
+	public long getOpenClaims() {
+		return openClaims;
+	}
+
+	public void setOpenClaims(long openClaims) {
+		this.openClaims = openClaims;
+	}
+
+	public String getIcoType() {
+		return icoType;
+	}
+
+	public void setIcoType(String icoType) {
+		this.icoType = icoType;
+	}
+
+	public long getOpenClaimsForOrgId() {
+		return openClaimsForOrgId;
+	}
+
+	public void setOpenClaimsForOrgId(long openClaimsForOrgId) {
+		this.openClaimsForOrgId = openClaimsForOrgId;
+	}
+
+	public long getOpenClaimsForOrgIdClmFrmTyp() {
+		return openClaimsForOrgIdClmFrmTyp;
+	}
+
+	public void setOpenClaimsForOrgIdClmFrmTyp(long openClaimsForOrgIdClmFrmTyp) {
+		this.openClaimsForOrgIdClmFrmTyp = openClaimsForOrgIdClmFrmTyp;
+	}
+
+	public String getCurOper() {
+		return curOper;
+	}
+
+	public void setCurOper(String curOper) {
+		this.curOper = curOper;
+	}
+
+	public String getCurStat() {
+		return curStat;
+	}
+
+	public void setCurStat(String curStat) {
+		this.curStat = curStat;
+	}
+
+	public boolean isPickedUpByBatch() {
+		return pickedUpByBatch;
+	}
+
+	public void setPickedUpByBatch(boolean pickedUpByBatch) {
+		this.pickedUpByBatch = pickedUpByBatch;
+	}
+
+	public long getRetryCnt() {
+		return retryCnt;
+	}
+
+	public void setRetryCnt(long retryCnt) {
+		this.retryCnt = retryCnt;
+	}
+
+	public boolean isNoRowsAvailableInPoller() {
+		return noRowsAvailableInPoller;
+	}
+
+	public void setNoRowsAvailableInPoller(boolean noRowsAvailableInPoller) {
+		this.noRowsAvailableInPoller = noRowsAvailableInPoller;
+	}
+
+	public boolean isItmStgNotProcessedVo() {
+		return ItmStgNotProcessedVo;
+	}
+
+	public void setItmStgNotProcessedVo(boolean itmStgNotProcessedVo) {
+		ItmStgNotProcessedVo = itmStgNotProcessedVo;
+	}
+
+	public boolean isInvalidLength() {
+		return invalidLength;
+	}
+
+	public void setInvalidLength(boolean invalidLength) {
+		this.invalidLength = invalidLength;
+	}
+<<<<<<< .mine
+
+=======
+
+	public String getIid() {
+		return iid;
+	}
+
+	public void setIid(String iid) {
+		this.iid = iid;
+	}
+>>>>>>> .r393
+}

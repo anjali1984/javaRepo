@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This file will contain all of the spring bean declarations required 
+	to setup the initial environment -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+						   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+						   http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<!-- property place-holder to hold key value pairs for the application -->
+	<bean id="cmt.bridgePropertyPlaceholder"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:META-INF/com.optum.comet.mct.mcf.app.properties</value>
+				<value>file:/home/tgusr/clmldr/com.optum.comet.mct.mcf.app.properties</value>
+			</list>
+		</property>
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="searchSystemEnvironment" value="true" />
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		
+	</bean>
+
+
+	<!-- processing for standard spring annotations are enabled -->
+	<context:annotation-config />
+
+
+	<!-- enabling automatic evaluation and translation of advices defined on 
+		pointcuts -->
+	<aop:aspectj-autoproxy />
+
+
+	<!-- define the data source used for the application -->
+	<bean id="cmt.datasource" class="org.apache.commons.dbcp2.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName">
+			<value>${db.connection.driver_class}</value>
+		</property>
+		<property name="url" value="${db.connection.url}" />
+		<property name="username" value="${db.connection.username}" />
+		<property name="password" value="${db.connection.password}" />
+		<property name="poolPreparedStatements" value="true" />
+		<property name="initialSize" value="${db.connection.initialSize}" />
+		<property name="defaultAutoCommit" value="false" />
+		<property name="maxIdle" value="${db.connection.maxIdle}" />
+		<property name="maxTotal" value="${db.connection.maxTotal}" />
+		<property name="cacheState" value="true" />
+		<property name="minIdle" value="${db.connection.minIdle}" />
+		<property name="minEvictableIdleTimeMillis" value="${db.connection.minEvictableIdleTimeMillis}" />
+		<property name="timeBetweenEvictionRunsMillis"
+			value="${db.connection.timeBetweenEvictionRunsMillis}" />
+		<property name="testOnBorrow" value="true" />
+		<property name="testWhileIdle" value="true" />
+		<property name="validationQuery"
+			value="select 1 from dual" />
+		<property name="numTestsPerEvictionRun" value="${db.connection.numTestsPerEvictionRun}" />
+	</bean>
+
+
+	<!-- Queue connection factory for interim queue -->
+	<!-- lb leg1 -->
+	<bean class="com.ibm.mq.jms.MQConnectionFactory" id="cmt.wmq.qConnFact.qmf1">
+		<property name="channel" value="${wmq.channel.qmf1}" />
+		<property name="hostName" value="${wmq.hostName.qmf1}" />
+		<property name="port" value="${wmq.port.qmf1}" />
+		<property name="queueManager" value="${wmq.queueManager.qmf1}" />
+		<property name="transportType" value="${wmq.transportType.qmf1}" />
+	</bean>
+	<bean id="cmt.wmq.cachingQConnFact.qmf1"
+		class="org.springframework.jms.connection.CachingConnectionFactory">
+		<property name="targetConnectionFactory" ref="cmt.wmq.qConnFact.qmf1" />
+		<property name="sessionCacheSize" value="${wmq.session.cache.size.qmf1}" />
+	</bean>
+
+	<!-- lb leg2 -->
+	<bean class="com.ibm.mq.jms.MQConnectionFactory" id="cmt.wmq.qConnFact.qmf2">
+		<property name="channel" value="${wmq.channel.qmf2}" />
+		<property name="hostName" value="${wmq.hostName.qmf2}" />
+		<property name="port" value="${wmq.port.qmf2}" />
+		<property name="queueManager" value="${wmq.queueManager.qmf2}" />
+		<property name="transportType" value="${wmq.transportType.qmf2}" />
+	</bean>
+	<bean id="cmt.wmq.cachingQConnFact.qmf2"
+		class="org.springframework.jms.connection.CachingConnectionFactory">
+		<property name="targetConnectionFactory" ref="cmt.wmq.qConnFact.qmf2" />
+		<property name="sessionCacheSize" value="${wmq.session.cache.size.qmf2}" />
+	</bean>
+
+	<!-- Queue connection factory for manual and status update queue -->
+	<!-- lb leg1 -->
+	<bean class="com.ibm.mq.jms.MQConnectionFactory" id="cmt.wmq.qConnFact.mnlStsQcf1">
+		<property name="channel" value="${wmq.channel.topsqmf1}" />
+		<property name="hostName" value="${wmq.hostName.topsqmf1}" />
+		<property name="port" value="${wmq.port.topsqmf1}" />
+		<property name="queueManager" value="${wmq.queueManager.topsqmf1}" />
+		<property name="transportType" value="${wmq.transportType.topsqmf1}" />
+	</bean>
+	<bean id="cmt.wmq.cachingQConnFact.mnlStsQcf1"
+		class="org.springframework.jms.connection.CachingConnectionFactory">
+		<property name="targetConnectionFactory" ref="cmt.wmq.qConnFact.mnlStsQcf1" />
+		<property name="sessionCacheSize" value="${wmq.session.cache.size.topsqmf1}" />
+	</bean>
+	
+	<!-- lb leg2 -->
+	<bean class="com.ibm.mq.jms.MQConnectionFactory" id="cmt.wmq.qConnFact.mnlStsQcf2">
+		<property name="channel" value="${wmq.channel.topsqmf2}" />
+		<property name="hostName" value="${wmq.hostName.topsqmf2}" />
+		<property name="port" value="${wmq.port.topsqmf2}" />
+		<property name="queueManager" value="${wmq.queueManager.topsqmf2}" />
+		<property name="transportType" value="${wmq.transportType.topsqmf2}" />
+	</bean>
+	<bean id="cmt.wmq.cachingQConnFact.mnlStsQcf2"
+		class="org.springframework.jms.connection.CachingConnectionFactory">
+		<property name="targetConnectionFactory" ref="cmt.wmq.qConnFact.mnlStsQcf2" />
+		<property name="sessionCacheSize" value="${wmq.session.cache.size.topsqmf2}" />
+	</bean>
+	
+
+	<!-- define the queue end-points for the reading the claim messages -->
+	<bean id="cmt.wmq.clm.manualQ" class="com.ibm.mq.jms.MQQueue">
+		<constructor-arg value="${wmq.clm.loc.manualQ.name}" />
+	</bean>
+
+	<!-- define the queue end-points for the reading the claim status update 
+		messages -->
+	<bean id="cmt.wmq.clm.stsUpdtQ" class="com.ibm.mq.jms.MQQueue">
+		<constructor-arg value="${wmq.clm.loc.stsUpdt.name}" />
+	</bean>
+
+	<!-- define the queue end-points for posting the interim message -->
+	<bean id="cmt.wmq.clm.interimQ" class="com.ibm.mq.jms.MQQueue">
+		<constructor-arg value="${wmq.clm.loc.interim.name}" />
+	</bean>
+
+</beans>

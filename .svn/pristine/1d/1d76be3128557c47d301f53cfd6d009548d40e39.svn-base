@@ -1,0 +1,37 @@
+package com.optum.comet.mctmcf.vo;
+
+import com.google.gson.Gson;
+import com.optum.diff.common.vo.BPMBaseVO;
+
+public class CometBaseVO extends BPMBaseVO {
+    private static final long serialVersionUID = -8720353086324003074L;
+
+    private boolean           deleteFlag;
+    private String            deleteDate;
+
+    public String getDeleteDate() {
+        return deleteDate;
+    }
+
+    public void setDeleteDate(String deleteDate) {
+        this.deleteDate = deleteDate;
+    }
+
+    public boolean isDeleteFlag() {
+        return deleteFlag;
+    }
+
+    public void setDeleteFlag(boolean deleteFlag) {
+        this.deleteFlag = deleteFlag;
+    }
+
+    public String toJSONString() {
+        return new Gson().toJson(this);
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getCanonicalName() + "@" + this.hashCode();
+    }
+
+}

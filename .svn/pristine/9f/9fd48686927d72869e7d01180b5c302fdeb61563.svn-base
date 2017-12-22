@@ -1,0 +1,67 @@
+package com.optum.comet.mctmcf.util;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import com.optum.diff.common.util.PropertiesHelper;
+
+/**
+ * This class converts the input dates into given formats in properties file using SimpleDateFormat.
+ * Override convert method of org.apache.commons.beanutils.Converter class
+ * @author 231297
+ *
+ */
+public class CustomDateConverter {
+    
+	/**
+	 * parses & converts the input Java SQL date into once of the given formats in properties file.
+	 * @see Date formats specified by property named "dateFormats"
+	 * @return Object: converted date
+	 */
+	public static Date convert(String dateValue) {
+		
+		Date parsedDate = null;
+		String[] dateFormats = null;
+		
+		try {
+			String dateFormat = PropertiesHelper.getProperty("resources.CometApp", "Comet.DateFormat"); // Retrieves the data formats from properties files
+			//String dateFormat = "MM/dd/yyyyHH:mm:ss, yyyyMMdd,dd-MMM-yy,dd/MMM/yy,MM-dd-yyyy,MM/dd/yyyy,yyyy-MM-dd";
+			if(dateFormat != null && !dateFormat.trim().equals("")){
+				dateFormats = dateFormat.split(",");
+			}
+			
+			for (String format : dateFormats) {
+				try {
+					SimpleDateFormat sdf = new SimpleDateFormat(format);
+					sdf.setLenient(false);
+					parsedDate = (sdf).parse((String) dateValue);
+					break;
+				} catch (ParseException e) {					
+					//e.printStackTrace();
+					continue;
+				}
+			}
+		} catch (Exception e) {
+			//throw new COMETRuntimeException("CustomDateConvertor.convert: ConversionException: ",e);
+		}
+		if (parsedDate == null) {
+			System.out.println("CustomDateConverter.convert: *** Couldn't parse date string = " + dateValue);
+			//throw new COMETRuntimeException("CustomDateConvertor.convert: ConversionException: Couldn't convert dateValue = " + dateValue );
+		}
+		return parsedDate;
+	}
+	
+	public static java.sql.Date convertToSqlDate(String dateValue) {
+	    
+	    Date date = convert(dateValue);
+	    if (date == null) {
+	        return null;
+	    }
+	    return new java.sql.Date(date.getTime());
+	}
+	
+	public static void main(String[] args) {
+		CustomDateConverter.convert("99999999");
+	}
+}

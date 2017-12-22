@@ -1,0 +1,679 @@
+package com.optum.comet.mctmcf.daos.impl;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Calendar;
+
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.ResultSetExtractor;
+
+import com.optum.comet.mctmcf.constants.CometConstants;
+import com.optum.comet.mctmcf.daos.IItemFlatDAO;
+import com.optum.comet.mctmcf.daos.dbos.StagedClmSfxMessage;
+import com.optum.comet.mctmcf.exception.CometException;
+import com.optum.comet.mctmcf.exception.vo.CometExceptionBean;
+import com.optum.comet.mctmcf.generated.vol04042017.ClaimStatusUpadteMessage;
+import com.optum.comet.mctmcf.generated.vol04042017.ClaimSuffixMessage;
+import com.optum.diff.common.dao.AbstractJDBCDAOSupport;
+import com.optum.diff.common.exception.GenericRuntimeException;
+import com.optum.diff.common.util.DateUtil;
+import com.optum.diff.common.util.PropertiesHelper;
+import com.optum.diff.common.util.StringUtil;
+
+public class ItemFlatDAO extends AbstractJDBCDAOSupport implements IItemFlatDAO {
+
+	String retrieveItemSts;
+	String insertItm;
+	String insertItmFlatStage;
+	String updateIntoItmFlt;
+	String retrieveItmStgNotProcessed;
+	String insertClaimsReleased;
+
+	public String getDescription() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	void init() {
+		final String location = "com.optum.comet.mctmcf.daos.impl.IItemFlatDAO.init()";
+		try {
+			retrieveItemSts = PropertiesHelper.getProperty("cmt-queries", "select.mcf.stat.itmflat");
+			insertItm = PropertiesHelper.getProperty("cmt-queries", "insert.into.itm.flt");
+			insertItmFlatStage = PropertiesHelper.getProperty("cmt-queries", "insert.into.itm.flt.stg");
+			updateIntoItmFlt = PropertiesHelper.getProperty("cmt-queries", "update.into.itm.flt");
+			retrieveItmStgNotProcessed = PropertiesHelper.getProperty("cmt-queries", "select.itemstg.not.processed");
+			insertClaimsReleased = PropertiesHelper.getProperty("cmt-queries", "insert.claims.released");
+		} catch (Exception e) {
+			throw new GenericRuntimeException(location + "Exception encountered[" + e + "]", e);
+		}
+	}
+
+	/*
+	 * @see com.optum.comet.mctmcf.daos.IItemFlatDAO#getTransDetails(java.lang.
+	 * String, java.lang.String)
+	 */
+	public StagedClmSfxMessage getTransDetails(StagedClmSfxMessage dbo, String logCorrId) throws CometException {
+		final String location = "com.optum.comet.mctmcf.daos.impl.IItemFlatDAO.getTransDetails(String, String)";
+		StagedClmSfxMessage retDbo = this.getJdbcTemplate().query(retrieveItemSts, new Object[] { dbo.getIcn() },
+				new ResultSetExtractor<StagedClmSfxMessage>() {
+					public StagedClmSfxMessage extractData(ResultSet rs) throws SQLException, DataAccessException {
+						StagedClmSfxMessage retVal = new StagedClmSfxMessage();
+						while (rs.next()) {
+							retVal.setIid(rs.getString(1));
+							retVal.setCurOper(rs.getString(2));
+							retVal.setCurStat(rs.getString(3));
+							retVal.setClmInd(rs.getString(4));
+
+						}
+						return retVal;
+					}
+				});
+		this.getLogger().info(location, "Fetched claim transactional details for [ ".concat(dbo.getIcn()).concat("]"),
+				logCorrId);
+		return retDbo;
+	}
+
+	/*
+	 * @see com.optum.comet.mctmcf.daos.IItemFlatDAO#checkNotProcessedItmStg(java.
+	 * lang. String, java.lang.String)
+	 */
+	public StagedClmSfxMessage checkNotProcessedItmStg(StagedClmSfxMessage dbo, String logCorrId)
+			throws CometException {
+		final String location = "com.optum.comet.mctmcf.daos.impl.IItemFlatDAO.checkNotProcessedItmStg(String, String)";
+		this.getLogger().info(location, "Check Itm Stg status id not new ICN  [ "
+				.concat(dbo.getIcn() != null ? dbo.getIcn() : CometConstants.BLANK).concat("]"), logCorrId);
+		StagedClmSfxMessage retDbo = this.getJdbcTemplate().query(retrieveItmStgNotProcessed,
+				new Object[] { dbo.getIcn() }, new ResultSetExtractor<StagedClmSfxMessage>() {
+					public StagedClmSfxMessage extractData(ResultSet rs) throws SQLException, DataAccessException {
+						StagedClmSfxMessage retVal = new StagedClmSfxMessage();
+						while (rs.next()) {
+							retVal.setItmStgNotProcessed(true);
+						}
+						return retVal;
+					}
+				});
+		return retDbo;
+	}
+
+	/*
+	 * @see com.optum.comet.mctmcf.daos.IItemFlatDAO#saveItm
+	 * (com.optum.comet.mctmcf.daos.dbos.CometBaseDBO, java.lang.String)
+	 */
+	public void saveItm(StagedClmSfxMessage itm, String logCorrId) throws CometException {
+
+		// throws Throwable{
+
+		// can pass StagedItemFlat dbo instead if we need dbo
+		String icn = null;
+		String iid = null;
+		final String location = "com.optum.comet.mctmcf.daos.impl.IItemFlatDAO.saveItm(CometBaseDBO, String)";
+		try {
+
+			ClaimSuffixMessage csm = (ClaimSuffixMessage) itm.getParamMap().get(CometConstants.ITM_REC_PARAM_MAP_KEY);
+			icn = csm.getCqrcmFixed().getCqrcmFileKey().getCqrcmIcn().substring(1, 11);
+
+			iid = (iid = itm.getIid()) == null ? StringUtil.decimal2Base36Str(Long.valueOf(icn)).toUpperCase()
+			.concat(DateUtil.getStringFromDate2(Calendar.getInstance().getTime(), true)) : iid;
+			
+			
+			// log item record
+			this.getLogger().info(location, "Insert parsed ICN in Item_flat: ".concat(icn), logCorrId);
+
+			// log item record
+			this.getLogger().info(location,
+					"Insert parsed ICN in Item_flat: ".concat(icn).concat(itm.getQueue().toString()), logCorrId);
+
+			this.getJdbcTemplate().update(insertItm, new Object[] {
+
+					iid, // IID
+					csm.getCqrcmLength(), // clngth
+					csm.getCqrcmFixed().getCqrcmFileFlnAltKey().getCqrcmAdjOffice(), // cpay
+					csm.getCqrcmFixed().getCqrcmFileFlnAltKey().getCqrcmFln().getCqrcmFlnReceiptDt()
+							.concat(csm.getCqrcmFixed().getCqrcmFileFlnAltKey().getCqrcmFln().getCqrcmFlnSerialNo()), // cfln
+					csm.getCqrcmFixed().getCqrcmFileFlnAltKey().getCqrcmRecordTypeFlnAix(), // cfln_typ
+					csm.getCqrcmFixed().getCqrcmFileSsnAltKey().getCqrcmEmpId().getCqrcmEmpId1()
+							.concat(csm.getCqrcmFixed().getCqrcmFileSsnAltKey().getCqrcmEmpId().getCqrcmEmpSsn()), // empid
+					icn, // cicn
+					csm.getCqrcmFixed().getCqrcmFileKey().getCqrcmRecordType(), // cicn_rec_typ
+					csm.getCqrcmFixed().getCqrcmFileKey().getCqrcmIcnSuffix(), // csfx
+					csm.getCqrcmFixed().getCqrcmClaimDateStamp1(), // cdt_stmp1
+					csm.getCqrcmFixed().getCqrcmClaimTimeStamp1(), // ctm_stmp1
+					csm.getCqrcmFixed().getCqrcmEngineInd(), // ceng
+					csm.getCqrcmFixed().getCqrcmNumberTyp2(), // cnum_typ2
+					csm.getCqrcmFixed().getCqrcmNumberTyp3(), // cnum_typ3
+					csm.getCqrcmVariable().getCqrcmMsgOutboundFields().getCqrcmType(), // cfrm_typ
+					csm.getCqrcmVariable().getCqrcmMsgOutboundFields().getCqrcmSendTo(), // csnd_to
+					csm.getCqrcmVariable().getCqrcmMsgOutboundFields().getCqrcmSendCnt(), // csnd_cnt
+
+					csm.getCqrcmVariable().getCqrcmMsgOutboundFields().getCqrcmNonselErrArea().getCqrcmNonselErrEntry()
+							.toString(), // cnsl_err
+
+					csm.getCqrcmVariable().getCqrcmMsgOutboundFields().getCqrcmNonselErrArea()
+							.getCqrcmNonselErrFillIn(), // cnsl_err_fill_in
+
+					csm.getCqrcmVariable().getCqrcmMsgOutboundFields().getCqrslClaimType().getChoiceValue(),
+
+					csm.getCqrcmVariable().getCqrcmMsgOutboundFields().getCqrcmPseudoPendPendCode(), // cpnd
+					csm.getCqrcmVariable().getCqrcmMsgOutboundFields().getCqrcmComments(), // ccmmts..to be fixed
+					csm.getCqrcmVariable().getCqrcmMsgReturnFields().getCqrcsqStatus().getChoiceValue(), // csq_sts
+					csm.getCqrcmVariable().getCqrcmMsgReturnFields().getCqrcsqReturnSystem().getChoiceValue(), // csq_rtn_sys
+					csm.getCqrcmVariable().getCqrcmMsgReturnFields().getCqrcsqReturnDt().getCqrcsuRetDtYyyy()
+							.concat(csm.getCqrcmVariable().getCqrcmMsgReturnFields().getCqrcsqReturnDt()
+									.getCqrcsuExpDtMm())
+							.concat(csm.getCqrcmVariable().getCqrcmMsgReturnFields().getCqrcsqReturnDt()
+									.getCqrcsuExpDtDd()), // csq_rtn_dt
+					csm.getCqrcmFixed().getCqrcmFileSsnAltKey().getCqrcmRecordTypeAix(), // empid_rec_typ
+					csm.getCqrcmFixed().getCqrcmNumberTyp1(), // cnum_typ1
+					csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2PrvTinSufx().getCqrcmV2PrvTinPrfx()
+							.concat(csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2PrvTinSufx()
+									.getCqrcmV2PrvTin())
+							.concat(csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2PrvTinSufx()
+									.getCqrcmV2PrvSufx()), // tinsfx
+					csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2NewEmpId(), // cv2_nemp_id
+					csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2NewPlatform(), // cv2_npltfrm
+					csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2NewEmpPolNo(), // cv2_nemp_pol
+					csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2NewPatFirstName(), // cv2_npat_fnm
+					csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2NewPatRelationship(), // cv2_npat_rel
+					csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2NewEngine(), // cv2_neng
+					csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2NewOfc(), // cv2_nofc
+					csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2PendType(), // cptp
+					csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2TriggerReasCd(), // cv2_trg_rs_cd
+					csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2AltId(), // cv2_alt_id
+					csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2MgrOfc(), // cv2_mgr_ofc
+					csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2SystemInd(), // cv2_sys_ind
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2OrgId(), // corg
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InstOrProf(), // ctyp
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2SqDesignation().getChoiceValue(), // cv2_sq_dsg
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2SufxTotCharge(), // cv2_sfx_amt
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ClaimTotCharge(), // camt
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2PlaceOfService(), // cv2_pos
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2MedServiceCode(), // cv2_msvc_cd
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2BillType(), // cv2_bll_typ
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2FlnDcc(), // cv2_fln_dcc
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ClaimReceiptDt(), // crdt
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2EarliestDos(), // cedt
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2LatestDos(), // csdt
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2PatientInfo()
+							.getCqrcmV2PatRelationship(), // relcd
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2PatientInfo().getCqrcmV2PatDob(), // cv2_pat_dob
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2PatientInfo().getCqrcmV2PatFirstName(), // patnm
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2PatientInfo().getCqrcmV2PatMidInit(), // cv2_pat_m
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2PatientInfo().getCqrcmV2PatLastName(), // cv2_pat_lnm
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2PatientInfo().getCqrcmV2PatAdr1(), // cv2_pat_adr1
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2PatientInfo().getCqrcmV2PatAdr2(), // cv2_pat_adr2
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2PatientInfo().getCqrcmV2PatCity(), // cv2_pat_cty
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2PatientInfo().getCqrcmV2PatState(), // cv2_pat_ste
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2PatientInfo().getCqrcmV2PatZip(), // cv2_pat_zip
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2PatientInfo().getCqrcmV2PatDob(), // cv2_ins_dob
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InsuredInfo().getCqrcmV2InsFirstName(), // cv2_ins_fnm
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InsuredInfo().getCqrcmV2InsMidInit(), // cv2_ins_m
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InsuredInfo().getCqrcmV2InsLastName(), // cv2_ins_lnm
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InsuredInfo().getCqrcmV2InsAdr1(), // cv2_ins_adr1
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InsuredInfo().getCqrcmV2InsAdr2(), // cv2_ins_adr2
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InsuredInfo().getCqrcmV2InsCity(), // cv2_ins_cty
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InsuredInfo().getCqrcmV2InsState(), //// cv2_ins_ste
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InsuredInfo().getCqrcmV2InsZip(), // cv2_ins_zip
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InsuredInfo().getCqrcmV2EnteredInsId(), // cv2_ins_id
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InsuredInfo().getCqrcmV2EnteredPolNo(), // cv2_pol_no
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InsuredInfo().getCqrcmV2EmpPolNo(), // cpol
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InsuredInfo().getCqrcmV2MbrMarket(), // cmkt
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InsuredInfo().getCqrcmV2CcmProduct(), // cprd
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ProviderInfo()
+							.getCqrcmV2PrvSsnEntered(), // cv2_prv_ssn
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ProviderInfo()
+							.getCqrcmV2PrvTinEntered(), // provid
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ProviderInfo().getCqrcmV2PrvDegree(), // cv2_prv_dgr
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ProviderInfo().getCqrcmV2PrvGroup(), // provname
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ProviderInfo().getCqrcmV2PrvIndFirst(), // cv2_prv_ind_fnm
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ProviderInfo().getCqrcmV2PrvIndLast(), // cv2_prv_ind_lnm
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ProviderInfo().getCqrcmV2PrvIndInit(), // cv2_prv_ind_init
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ProviderInfo().getCqrcmV2PrvAdr1(), // cv2_prv_adr1
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ProviderInfo().getCqrcmV2PrvAdr2(), // cv2_prv_adr2
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ProviderInfo().getCqrcmV2PrvCity(), // cv2_prv_cty
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ProviderInfo().getCqrcmV2PrvState(), // cv2_prv_ste
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ProviderInfo().getCqrcmV2PrvZip(), // cv2_prv_zip
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ProviderInfo()
+							.getCqrcmV2EpdMatchCode(), // cv2_epd_mtch_cd
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ClaimComments(), // cv2_clm_cmmts
+					csm.getCqrcmVariable3().getCqrcmV3RestrictCode(), // cpolrstrctcd
+					csm.getCqrcmVariable4().getCqrcmV4RiskDate()// crskdt
+			});
+			this.getLogger().info(location, "Insert parsed ICN in Item_flat: MANUAL :"
+					.concat(csm.getCqrcmFixed().getCqrcmFileKey().getCqrcmIcn()), logCorrId);
+
+		} catch (Throwable th) {
+			this.getLogger().error(location,
+					"Exception while inserting into itemflat  for manual msg : icn [".concat(icn).concat("]. Exception trace --\n".concat(ExceptionUtils.getStackTrace(th))),
+					logCorrId);
+			th.printStackTrace();
+			CometExceptionBean ceb = new CometExceptionBean(th, CometConstants.ACTORS.SERVICE, logCorrId, itm.getLid(),
+					icn);
+			throw new CometException(ceb);
+		}
+
+	}
+
+	public void saveStsUpdtItm(StagedClmSfxMessage itm, String logCorrId) throws CometException {
+		String icn = null;
+		String iid;
+		
+		final String location = "com.optum.comet.mctmcf.daos.impl.IItemFlatDAO.saveStsUpdtItm(CometBaseDBO, String)";
+		try {
+
+			ClaimStatusUpadteMessage cstm = (ClaimStatusUpadteMessage) itm.getParamMap()
+					.get(CometConstants.ITM_REC_PARAM_MAP_KEY);
+			icn = cstm.getCqrcmFixed().getCqrcmFileKey().getCqrcmIcn().substring(1, 11);
+			iid = (iid = itm.getIid()) == null ? StringUtil.decimal2Base36Str(Long.valueOf(icn)).toUpperCase()
+					.concat(DateUtil.getStringFromDate2(Calendar.getInstance().getTime(), true)) : iid;
+			
+			// log item record
+			this.getLogger().info(location,
+					"Insert parsed ICN in Item_flat sts updt msg : ".concat(icn).concat(itm.getQueue().toString()),
+					logCorrId);
+			this.getJdbcTemplate().update(insertItm,
+					new Object[] {
+							iid, // IID
+							cstm.getCqrcmLength(), // clngth
+							cstm.getCqrcmFixed().getCqrcmFileFlnAltKey().getCqrcmAdjOffice(), // cpay
+							cstm.getCqrcmFixed().getCqrcmFileFlnAltKey().getCqrcmFln().getCqrcmFlnReceiptDt().concat(
+									cstm.getCqrcmFixed().getCqrcmFileFlnAltKey().getCqrcmFln().getCqrcmFlnSerialNo()), // cfln
+							cstm.getCqrcmFixed().getCqrcmFileFlnAltKey().getCqrcmRecordTypeFlnAix(), // cfln_typ
+							cstm.getCqrcmFixed().getCqrcmFileSsnAltKey().getCqrcmEmpId().getCqrcmEmpId1().concat(
+									cstm.getCqrcmFixed().getCqrcmFileSsnAltKey().getCqrcmEmpId().getCqrcmEmpSsn()), // empid
+							icn, // cicn
+							cstm.getCqrcmFixed().getCqrcmFileKey().getCqrcmRecordType(), // cicn_rec_typ
+							cstm.getCqrcmFixed().getCqrcmFileKey().getCqrcmIcnSuffix(), // csfx
+							cstm.getCqrcmFixed().getCqrcmClaimDateStamp1(), // cdt_stmp1
+							cstm.getCqrcmFixed().getCqrcmClaimTimeStamp1(), // ctm_stmp1
+							cstm.getCqrcmFixed().getCqrcmEngineInd(), // ceng
+							cstm.getCqrcmFixed().getCqrcmNumberTyp2(), // cnum_typ2
+							cstm.getCqrcmFixed().getCqrcmNumberTyp3(), // cnum_typ3
+							cstm.getCqrcmVariable().getCqrcmMsgOutboundFields().getCqrcmType(), // cfrm_typ
+							cstm.getCqrcmVariable().getCqrcmMsgOutboundFields().getCqrcmSendTo(), // csnd_to
+							cstm.getCqrcmVariable().getCqrcmMsgOutboundFields().getCqrcmSendCnt(), // csnd_cnt
+							cstm.getCqrcmVariable().getCqrcmMsgOutboundFields().getCqrcmNonselErrArea()
+									.getCqrcmNonselErrEntry().toString(), // cnsl_err
+							cstm.getCqrcmVariable().getCqrcmMsgOutboundFields().getCqrcmNonselErrArea()
+									.getCqrcmNonselErrFillIn(), // cnsl_err_fill_in
+							cstm.getCqrcmVariable().getCqrcmMsgOutboundFields().getCqrslClaimType().getChoiceValue(),
+							cstm.getCqrcmVariable().getCqrcmMsgOutboundFields().getCqrcmPseudoPendPendCode(), // cpnd
+							cstm.getCqrcmVariable().getCqrcmMsgOutboundFields().getCqrcmComments(), // ccmmts..to be
+																									// fixed
+							cstm.getCqrcmVariable().getCqrcmMsgReturnFields().getCqrcsqStatus().getChoiceValue(), // csq_sts
+							cstm.getCqrcmVariable().getCqrcmMsgReturnFields().getCqrcsqReturnSystem().getChoiceValue(), // csq_rtn_sys
+							cstm.getCqrcmVariable().getCqrcmMsgReturnFields().getCqrcsqReturnDt().getCqrcsuRetDtYyyy()
+									.concat(cstm.getCqrcmVariable().getCqrcmMsgReturnFields().getCqrcsqReturnDt()
+											.getCqrcsuExpDtMm())
+									.concat(cstm.getCqrcmVariable().getCqrcmMsgReturnFields().getCqrcsqReturnDt()
+											.getCqrcsuExpDtDd()), // csq_rtn_dt
+							cstm.getCqrcmFixed().getCqrcmFileSsnAltKey().getCqrcmRecordTypeAix(), // empid_rec_typ
+							cstm.getCqrcmFixed().getCqrcmNumberTyp1(), // cnum_typ1
+							CometConstants.BLANK, // tinsfx
+							CometConstants.BLANK, // cv2_nemp_id
+							CometConstants.BLANK, // cv2_npltfrm
+							CometConstants.BLANK, // cv2_nemp_pol
+							CometConstants.BLANK, // cv2_npat_fnm
+							CometConstants.BLANK, // cv2_npat_rel
+							CometConstants.BLANK, // cv2_neng
+							CometConstants.BLANK, // cv2_nofc
+							CometConstants.BLANK, // cptp
+							CometConstants.BLANK, // cv2_trg_rs_cd
+							CometConstants.BLANK, // cv2_alt_id
+							CometConstants.BLANK, // cv2_mgr_ofc
+							CometConstants.BLANK, // cv2_sys_ind
+							CometConstants.BLANK, // corg
+							CometConstants.BLANK, // ctyp
+							CometConstants.BLANK, // cv2_sq_dsg ..will be added later
+							CometConstants.BLANK, // cv2_sfx_amt....will be added later
+							CometConstants.BLANK, // camt..will be added later
+							CometConstants.BLANK, // cv2_pos
+							CometConstants.BLANK, // cv2_msvc_cd
+							CometConstants.BLANK, // cv2_bll_typ
+							CometConstants.BLANK, // cv2_fln_dcc
+							CometConstants.BLANK, // crdt
+							CometConstants.BLANK, // cedt
+							CometConstants.BLANK, // csdt
+							CometConstants.BLANK, // relcd
+							CometConstants.BLANK, // cv2_pat_dob
+							CometConstants.BLANK, // patnm
+							CometConstants.BLANK, // cv2_pat_m
+							CometConstants.BLANK, // cv2_pat_lnm
+							CometConstants.BLANK, // cv2_pat_adr1
+							CometConstants.BLANK, // cv2_pat_adr2
+							CometConstants.BLANK, // cv2_pat_cty
+							CometConstants.BLANK, // cv2_pat_ste
+							CometConstants.BLANK, // cv2_pat_zip
+							CometConstants.BLANK, // cv2_ins_dob
+							CometConstants.BLANK, // cv2_ins_fnm
+							CometConstants.BLANK, // cv2_ins_m
+							CometConstants.BLANK, // cv2_ins_lnm
+							CometConstants.BLANK, // cv2_ins_adr1
+							CometConstants.BLANK, // cv2_ins_adr2
+							CometConstants.BLANK, // cv2_ins_cty
+							CometConstants.BLANK, // cv2_ins_ste
+							CometConstants.BLANK, // cv2_ins_zip
+							CometConstants.BLANK, // cv2_ins_id
+							CometConstants.BLANK, // cv2_pol_no
+							CometConstants.BLANK, // cpol
+							CometConstants.BLANK, // cmkt
+							CometConstants.BLANK, // cprd
+							CometConstants.BLANK, // cv2_prv_ssn
+							CometConstants.BLANK, // provid
+							CometConstants.BLANK, // cv2_prv_dgr
+							CometConstants.BLANK, // provname
+							CometConstants.BLANK, // cv2_prv_ind_fnm
+							CometConstants.BLANK, // cv2_prv_ind_lnm
+							CometConstants.BLANK, // cv2_prv_ind_init
+							CometConstants.BLANK, // cv2_prv_adr1
+							CometConstants.BLANK, // cv2_prv_adr2
+							CometConstants.BLANK, // cv2_prv_cty
+							CometConstants.BLANK, // cv2_prv_ste
+							CometConstants.BLANK, // cv2_prv_zip
+							CometConstants.BLANK, // cv2_epd_mtch_cd
+							CometConstants.BLANK, // cv2_clm_cmmts
+							CometConstants.BLANK, // cpolrstrctcd
+							CometConstants.BLANK // crskdt
+					});
+
+			this.getLogger().info(location, "Insert sts updt parsed ICN in Item_flat: "
+					.concat(cstm.getCqrcmFixed().getCqrcmFileKey().getCqrcmIcn()), logCorrId);
+		} catch (Throwable th) {
+			this.getLogger().error(location,
+					"Exception while inserting into itemflat  for sts updt msg : icn [".concat(icn).concat("]. Exception trace --\n".concat(ExceptionUtils.getStackTrace(th))),
+					logCorrId);
+			CometExceptionBean ceb = new CometExceptionBean(th, CometConstants.ACTORS.SERVICE, logCorrId, itm.getLid(),
+					icn);
+			// to be uncommented later - once entries getting populated in claim
+			// works
+			th.printStackTrace();
+			throw new CometException(ceb);
+		}
+
+	}
+
+	/*
+	 * @see com.optum.comet.mctmcf.daos.IItemFlatDAO#updateItm
+	 * (com.optum.comet.mctmcf.daos.dbos.CometBaseDBO, java.lang.String)
+	 */
+	public void updateItm(StagedClmSfxMessage itm, String logCorrId) throws CometException {
+
+		final String location = "com.optum.comet.mctmcf.daos.impl.IItemFlatDAO.updateItm(CometBaseDBO, String)";
+		String icn = null;
+		String iid = null;
+		
+		try {
+
+			ClaimSuffixMessage csm = (ClaimSuffixMessage) itm.getParamMap().get(CometConstants.ITM_REC_PARAM_MAP_KEY);
+
+			icn = csm.getCqrcmFixed().getCqrcmFileKey().getCqrcmIcn().substring(1, 11);
+			iid = (iid = itm.getIid()) == null ? StringUtil.decimal2Base36Str(Long.valueOf(icn)).toUpperCase()
+					.concat(DateUtil.getStringFromDate2(Calendar.getInstance().getTime(), true)) : iid;
+			
+			this.getJdbcTemplate().update(updateIntoItmFlt, new Object[] { csm.getCqrcmLength(), // clngth
+					csm.getCqrcmFixed().getCqrcmFileFlnAltKey().getCqrcmAdjOffice(), // cpay
+					csm.getCqrcmFixed().getCqrcmFileFlnAltKey().getCqrcmFln().getCqrcmFlnReceiptDt()
+							.concat(csm.getCqrcmFixed().getCqrcmFileFlnAltKey().getCqrcmFln().getCqrcmFlnSerialNo()), // cfln
+					csm.getCqrcmFixed().getCqrcmFileFlnAltKey().getCqrcmRecordTypeFlnAix(), // cfln_typ
+					csm.getCqrcmFixed().getCqrcmFileSsnAltKey().getCqrcmEmpId().getCqrcmEmpId1()
+							.concat(csm.getCqrcmFixed().getCqrcmFileSsnAltKey().getCqrcmEmpId().getCqrcmEmpSsn()), // empid
+					csm.getCqrcmFixed().getCqrcmFileKey().getCqrcmRecordType(), // cicn_rec_typ
+					csm.getCqrcmFixed().getCqrcmFileKey().getCqrcmIcnSuffix(), // csfx
+					csm.getCqrcmFixed().getCqrcmClaimDateStamp1(), // cdt_stmp1
+					csm.getCqrcmFixed().getCqrcmClaimTimeStamp1(), // ctm_stmp1
+					csm.getCqrcmFixed().getCqrcmEngineInd(), // ceng
+					csm.getCqrcmFixed().getCqrcmNumberTyp2(), // cnum_typ2
+					csm.getCqrcmFixed().getCqrcmNumberTyp3(), // cnum_typ3
+					csm.getCqrcmVariable().getCqrcmMsgOutboundFields().getCqrcmType(), // cfrm_typ
+					csm.getCqrcmVariable().getCqrcmMsgOutboundFields().getCqrcmSendTo(), // csnd_to
+					csm.getCqrcmVariable().getCqrcmMsgOutboundFields().getCqrcmSendCnt(), // csnd_cnt
+					csm.getCqrcmVariable().getCqrcmMsgOutboundFields().getCqrcmNonselErrArea().getCqrcmNonselErrEntry()
+							.toString(), // cnsl_err
+					csm.getCqrcmVariable().getCqrcmMsgOutboundFields().getCqrcmNonselErrArea()
+							.getCqrcmNonselErrFillIn(), // cnsl_err_fill_in
+					csm.getCqrcmVariable().getCqrcmMsgOutboundFields().getCqrslClaimType().getChoiceValue(),
+					csm.getCqrcmVariable().getCqrcmMsgOutboundFields().getCqrcmPseudoPendPendCode(), // cpnd
+					csm.getCqrcmVariable().getCqrcmMsgOutboundFields().getCqrcmComments(), // ccmmts..to be fixed
+					csm.getCqrcmVariable().getCqrcmMsgReturnFields().getCqrcsqStatus().getChoiceValue(), // csq_sts
+					csm.getCqrcmVariable().getCqrcmMsgReturnFields().getCqrcsqReturnSystem().getChoiceValue(), // csq_rtn_sys
+					csm.getCqrcmVariable().getCqrcmMsgReturnFields().getCqrcsqReturnDt().getCqrcsuRetDtYyyy()
+							.concat(csm.getCqrcmVariable().getCqrcmMsgReturnFields().getCqrcsqReturnDt()
+									.getCqrcsuExpDtMm())
+							.concat(csm.getCqrcmVariable().getCqrcmMsgReturnFields().getCqrcsqReturnDt()
+									.getCqrcsuExpDtDd()), // csq_rtn_dt
+					csm.getCqrcmFixed().getCqrcmFileSsnAltKey().getCqrcmRecordTypeAix(), // empid_rec_typ
+					csm.getCqrcmFixed().getCqrcmNumberTyp1(), // cnum_typ1
+					csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2PrvTinSufx().getCqrcmV2PrvTinPrfx()
+							.concat(csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2PrvTinSufx()
+									.getCqrcmV2PrvTin())
+							.concat(csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2PrvTinSufx()
+									.getCqrcmV2PrvSufx()), // tinsfx);
+					csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2NewEmpId(), // cv2_nemp_id
+					csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2NewPlatform(), // cv2_npltfrm
+					csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2NewEmpPolNo(), // cv2_nemp_pol
+					csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2NewPatFirstName(), // cv2_npat_fnm
+					csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2NewPatRelationship(), // cv2_npat_rel
+					csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2NewEngine(), // cv2_neng
+					csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2NewOfc(), // cv2_nofc
+					csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2PendType(), // cptp
+					csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2TriggerReasCd(), // cv2_trg_rs_cd
+					csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2AltId(), // cv2_alt_id
+					csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2MgrOfc(), // cv2_mgr_ofc
+					csm.getCqrcmVariable2().getCqrcmV2InboundFields().getCqrcmV2SystemInd(), // cv2_sys_ind
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2OrgId(), // corg
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InstOrProf(), // ctyp
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2SqDesignation().getChoiceValue(), // cv2_sq_dsg
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2SufxTotCharge(), // cv2_sfx_amt
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ClaimTotCharge(), // camt
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2PlaceOfService(), // cv2_pos
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2MedServiceCode(), // cv2_msvc_cd
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2BillType(), // cv2_bll_typ
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2FlnDcc(), // cv2_fln_dcc
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ClaimReceiptDt(), // crdt
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2EarliestDos(), // cedt
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2LatestDos(), // csdt
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2PatientInfo()
+							.getCqrcmV2PatRelationship(), // relcd
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2PatientInfo().getCqrcmV2PatDob(), // cv2_pat_dob
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2PatientInfo().getCqrcmV2PatFirstName(), // patnm
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2PatientInfo().getCqrcmV2PatMidInit(), // cv2_pat_m
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2PatientInfo().getCqrcmV2PatLastName(), // cv2_pat_lnm
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2PatientInfo().getCqrcmV2PatAdr1(), // cv2_pat_adr1
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2PatientInfo().getCqrcmV2PatAdr2(), // cv2_pat_adr2
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2PatientInfo().getCqrcmV2PatCity(), // cv2_pat_cty
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2PatientInfo().getCqrcmV2PatState(), // cv2_pat_ste
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2PatientInfo().getCqrcmV2PatZip(), // cv2_pat_zip
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2PatientInfo().getCqrcmV2PatDob(), // cv2_ins_dob
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InsuredInfo().getCqrcmV2InsFirstName(), // cv2_ins_fnm
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InsuredInfo().getCqrcmV2InsMidInit(), // cv2_ins_m
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InsuredInfo().getCqrcmV2InsLastName(), // cv2_ins_lnm
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InsuredInfo().getCqrcmV2InsAdr1(), // cv2_ins_adr1
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InsuredInfo().getCqrcmV2InsAdr2(), // cv2_ins_adr2
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InsuredInfo().getCqrcmV2InsCity(), // cv2_ins_cty
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InsuredInfo().getCqrcmV2InsState(), //// cv2_ins_ste
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InsuredInfo().getCqrcmV2InsZip(), // cv2_ins_zip
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InsuredInfo().getCqrcmV2EnteredInsId(), // cv2_ins_id
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InsuredInfo().getCqrcmV2EnteredPolNo(), // cv2_pol_no
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InsuredInfo().getCqrcmV2EmpPolNo(), // cpol
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InsuredInfo().getCqrcmV2MbrMarket(), // cmkt
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InsuredInfo().getCqrcmV2CcmProduct(), // cprd
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ProviderInfo()
+							.getCqrcmV2PrvSsnEntered(), // cv2_prv_ssn
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ProviderInfo()
+							.getCqrcmV2PrvTinEntered(), // provid
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ProviderInfo().getCqrcmV2PrvDegree(), // cv2_prv_dgr
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ProviderInfo().getCqrcmV2PrvGroup(), // provname
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ProviderInfo().getCqrcmV2PrvIndFirst(), // cv2_prv_ind_fnm
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ProviderInfo().getCqrcmV2PrvIndLast(), // cv2_prv_ind_lnm
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ProviderInfo().getCqrcmV2PrvIndInit(), // cv2_prv_ind_init
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ProviderInfo().getCqrcmV2PrvAdr1(), // cv2_prv_adr1
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ProviderInfo().getCqrcmV2PrvAdr2(), // cv2_prv_adr2
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ProviderInfo().getCqrcmV2PrvCity(), // cv2_prv_cty
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ProviderInfo().getCqrcmV2PrvState(), // cv2_prv_ste
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ProviderInfo().getCqrcmV2PrvZip(), // cv2_prv_zip
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ProviderInfo()
+							.getCqrcmV2EpdMatchCode(), // cv2_epd_mtch_cd
+					csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ClaimComments(), // cv2_clm_cmmts
+					csm.getCqrcmVariable3().getCqrcmV3RestrictCode(), // cpolrstrctcd
+					csm.getCqrcmVariable4().getCqrcmV4RiskDate(), // crskdt
+					icn });
+			// log item stage
+			this.getLogger().info(location,
+					"Update parsed ICN in Item_flat: ".concat(csm.getCqrcmFixed().getCqrcmFileKey().getCqrcmIcn()),
+					logCorrId);
+		} catch (Throwable th) {
+			this.getLogger().error(location,
+					"Exception while updating into itemflat for manual msg: icn [".concat(icn).concat("]. Exception trace --\n".concat(ExceptionUtils.getStackTrace(th))),
+					logCorrId);
+			CometExceptionBean ceb = new CometExceptionBean(th, CometConstants.ACTORS.SERVICE, logCorrId, itm.getLid(),
+					icn);
+			throw new CometException(ceb);
+		}
+	}
+
+	/*
+	 * @see com.optum.comet.mctmcf.daos.IItemFlatDAO#saveItmFlatStage
+	 * (com.optum.comet.mctmcf.daos.dbos.CometBaseDBO, java.lang.String)
+	 */
+	public void saveItmFlatStage(StagedClmSfxMessage itm, String logCorrId) throws CometException {
+
+		String icn 			 	= null;
+		String iid 			 	= null;
+		String updatemsgind  	= null;
+		String statusUpdtInd 	= null;
+		String multiSfxInd   	= null;
+		ClaimSuffixMessage csm 	= null;
+		final String location = "com.optum.comet.mctmcf.daos.impl.IItemFlatDAO.saveItmFlatStage(CometBaseDBO, String)";
+		
+		try {
+			
+			updatemsgind 	= itm.isClaimAlreadyExists() ? "Y" : "N";
+			multiSfxInd 	= itm.isMultiSfx()   		 ? "Y" : "N";
+			statusUpdtInd 	= itm.isStsUpdtInd() 		 ? "Y" : "N";
+			
+			
+			// to be reviewed if we need parsed message
+			csm = (ClaimSuffixMessage) itm.getParamMap().get(CometConstants.ITM_REC_PARAM_MAP_KEY);
+			
+			icn = csm.getCqrcmFixed().getCqrcmFileKey().getCqrcmIcn().substring(1, 11);
+			iid = (iid = itm.getIid()) == null ? StringUtil.decimal2Base36Str(Long.valueOf(icn)).toUpperCase()
+					.concat(DateUtil.getStringFromDate2(Calendar.getInstance().getTime(), true)) : iid;
+			
+			// log item stage
+			this.getLogger().info(location,
+					"before item_Flat_stg insert : ICN : Update Msg Ind ".concat(icn).concat(updatemsgind), logCorrId);
+			
+			if(!itm.isStsUpdtInd()) {
+			
+				this.getJdbcTemplate().update(insertItmFlatStage, 
+					new Object[] {
+						iid, // IID
+						icn, // CICN
+						csm.getCqrcmFixed().getCqrcmFileKey().getCqrcmIcnSuffix(), // CSFX
+						multiSfxInd, // MULTISFXIND
+						csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2OrgId(), // CORG
+						csm.getCqrcmVariable().getCqrcmMsgOutboundFields().getCqrcmPseudoPendPendCode(), // CPND
+						csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ClaimTotCharge(), // camt
+						csm.getCqrcmFixed().getCqrcmFileFlnAltKey().getCqrcmAdjOffice(), // CPAY
+						csm.getCqrcmFixed().getCqrcmEngineInd(), // CENG
+						csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InsuredInfo().getCqrcmV2EmpPolNo(), // CPOL
+						csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InstOrProf(), // CTYP
+						csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2InsuredInfo().getCqrcmV2MbrMarket(), // cmkt
+						csm.getCqrcmVariable2().getCqrcmV2OutboundFields().getCqrcmV2ProviderInfo()
+								.getCqrcmV2PrvTinEntered(), // provid
+						csm.getCqrcmVariable3().getCqrcmV3RestrictCode(), // cpolrstrctcd
+						updatemsgind, // updatemsgind
+						"Y", // evalwb - to changed later
+						"Y", // evalpoint- to changed later
+						"Y", // evalpriority- to changed later
+						statusUpdtInd, CometConstants.NEW_REC_IND, 
+						CometConstants.CRE_OPER, // cre_opr
+						Calendar.getInstance().getTime() // cre_date
+				});
+			} else {
+				
+				this.getJdbcTemplate().update(insertItmFlatStage,
+						new Object[] {
+								iid, // IID
+								icn, // CICN
+								csm.getCqrcmFixed().getCqrcmFileKey().getCqrcmIcnSuffix(), // CSFX
+								multiSfxInd, 		  // MULTISFXIND- expected to be N for status update
+								CometConstants.BLANK, // CORG
+								csm.getCqrcmVariable().getCqrcmMsgOutboundFields().getCqrcmPseudoPendPendCode(), // CPND
+								CometConstants.BLANK, // camt..will be added later
+								csm.getCqrcmFixed().getCqrcmFileFlnAltKey().getCqrcmAdjOffice(), // CPAY
+								csm.getCqrcmFixed().getCqrcmEngineInd(), // CENG
+								CometConstants.BLANK, // CPOL
+								CometConstants.BLANK, // CTYP
+								CometConstants.BLANK, // CMKT
+								CometConstants.BLANK, // PROVID
+								CometConstants.BLANK, // CPOLRSTRCTCD
+								updatemsgind, 		  // UPDATEMSGIND
+								"N", 				  // EVALWB    - no wb for status update
+								"N", 				  // EVALPOINT - no point for status update
+								"N", 				  // EVALPRI-  - no pri for status update
+								statusUpdtInd, 
+								CometConstants.NEW_REC_IND, 
+								CometConstants.CRE_OPER, // cre_opr
+								Calendar.getInstance().getTime() // cre_date
+						});
+				
+			}
+			
+			this.getLogger().info(location,
+					"Parsed ICN  item_flat stg insert completed  for manual msg: ".concat(icn).concat("]"), logCorrId);
+
+		} catch (Throwable th) {
+			this.getLogger().error(location,
+					"Exception while inserting into item flat stg for manual msg : icn [".concat(icn).concat("]. Exception trace --\n".concat(ExceptionUtils.getStackTrace(th))),
+					logCorrId);
+			th.printStackTrace();
+			CometExceptionBean ceb = new CometExceptionBean(th, CometConstants.ACTORS.SERVICE, logCorrId, itm.getLid(),
+					icn);
+			throw new CometException(ceb);
+		} finally {
+						
+			// to release objects from heap
+			icn 			= null;
+			iid 			= null;
+			updatemsgind  	= null;
+			statusUpdtInd 	= null;
+			multiSfxInd   	= null;
+			csm 			= null;
+		}
+
+	}
+		
+	
+	/*
+	 * @see com.optum.comet.mctmcf.daos.IItemFlatDAO#saveClaimsRelease(com.optum.comet.mctmcf.daos.dbos.StagedClmSfxMessage, java.lang.String)
+	 */
+	public void saveClaimsRelease(StagedClmSfxMessage itm, String logCorrId) throws CometException {
+
+		String icn = null;
+		/*String retrieveKey = null;
+		String pfx = null;
+		String sfx = null;*/
+		final String location = "com.optum.comet.mctmcf.daos.impl.ItemFlatDAO.saveClaimsRelease(StagedClmSfxMessage, String)";
+
+		try {
+			icn = itm.getIcn();
+
+			this.getLogger().info(location, "before claims_released_stage insert : ICN  ".concat(icn), logCorrId);
+
+			this.getJdbcTemplate().update(insertClaimsReleased, new Object[] { CometConstants.NEW_REC_IND, icn,
+					itm.getEngine(), CometConstants.CRE_OPER, Calendar.getInstance().getTime()
+
+			});
+		} catch (Throwable th) {
+			this.getLogger().error(location,
+					"Exception while inserting into claims_released_stage  : icn [".concat(icn).concat("]. Exception trace --\n".concat(ExceptionUtils.getStackTrace(th))),
+					logCorrId);
+			CometExceptionBean ceb = new CometExceptionBean(th, CometConstants.ACTORS.SERVICE, logCorrId, itm.getLid(),
+					icn);
+			throw new CometException(ceb);
+		}
+
+	}
+
+}

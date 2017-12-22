@@ -1,0 +1,32 @@
+package com.optum.comet.mctmcf.generated.vol04042017;
+
+public class CqrcmFileFlnAltKey extends com.optum.comet.mctmcf.generator.predefbeans.Definition implements java.io.Serializable {
+
+    public CqrcmFileFlnAltKey() {
+        this.cqrcmFln = new com.optum.comet.mctmcf.generated.vol04042017.CqrcmFln();
+    }
+
+    private static final long serialVersionUID = 1L;
+    private String cqrcmAdjOffice;
+    private com.optum.comet.mctmcf.generated.vol04042017.CqrcmFln cqrcmFln;
+    private String cqrcmRecordTypeFlnAix;
+
+    public void setCqrcmAdjOffice(String cqrcmAdjOffice) { 
+        this.cqrcmAdjOffice = cqrcmAdjOffice;
+    }
+    public String getCqrcmAdjOffice() { 
+        return this.cqrcmAdjOffice;
+    }
+    public void setCqrcmFln(com.optum.comet.mctmcf.generated.vol04042017.CqrcmFln cqrcmFln) { 
+        this.cqrcmFln = cqrcmFln;
+    }
+    public com.optum.comet.mctmcf.generated.vol04042017.CqrcmFln getCqrcmFln() { 
+        return this.cqrcmFln;
+    }
+    public void setCqrcmRecordTypeFlnAix(String cqrcmRecordTypeFlnAix) { 
+        this.cqrcmRecordTypeFlnAix = cqrcmRecordTypeFlnAix;
+    }
+    public String getCqrcmRecordTypeFlnAix() { 
+        return this.cqrcmRecordTypeFlnAix;
+    }
+}

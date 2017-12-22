@@ -1,0 +1,76 @@
+package com.optum.comet.mctmcf.parser.impl;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.optum.comet.mctmcf.generated.vol04042017.ClaimSuffixMessage;
+import com.optum.comet.mctmcf.parser.ICobolCopyBookMessageParser;
+import com.optum.diff.common.util.StringUtil;
+
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={"/META-INF/spring/com.optum.comet.mctmcf.app.cntxt.xml"})
+
+public class CobolCopyBookMessageParserImplTest {
+	
+	String clmSfxMsg = "";
+	String clmSfxStsUpdtMsg = "";
+	
+	@Autowired
+    @Qualifier(value = "cmt.mcfParser")
+    ICobolCopyBookMessageParser mcfParser;
+    
+    @Autowired
+    @Qualifier(value = "cmt.suParser")
+    ICobolCopyBookMessageParser suParser;
+	
+	
+	@Before
+	public void setUp() throws Exception {
+		InputStream is = this.getClass().getClassLoader().getResourceAsStream("test-artifacts/MCF_1020493280_01.txt");
+		BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		String entireText = "";
+		String line;
+		for(; (line = br.readLine()) != null; entireText = entireText + line);
+		this.clmSfxMsg = entireText;
+		br.close();
+		
+		is = this.getClass().getClassLoader().getResourceAsStream("test-artifacts/SU_1020273071_01.txt");
+		br = new BufferedReader(new InputStreamReader(is));
+		entireText = "";
+		line = "";
+		for(; (line = br.readLine()) != null; entireText = entireText + line);
+		this.clmSfxStsUpdtMsg = entireText;
+		br.close();
+		
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		mcfParser = null;
+		suParser = null;
+	}
+
+	@Test
+	public void testParseMessageStringClassOfQ() {
+		ClaimSuffixMessage out = (ClaimSuffixMessage) mcfParser.parseMessage(clmSfxMsg, ClaimSuffixMessage.class);
+		String result = StringUtil.toString(out ,1, null);
+		System.out.println(result);
+		
+		
+		/*ClaimStatusUpadteMessage out1 = (ClaimStatusUpadteMessage) suParser.parseMessage(clmSfxStsUpdtMsg, ClaimStatusUpadteMessage.class);
+		result = StringUtil.toString(out1 ,1, null);
+		System.out.println(result);*/
+	}
+
+}

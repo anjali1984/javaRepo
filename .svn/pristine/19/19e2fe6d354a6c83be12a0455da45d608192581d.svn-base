@@ -1,0 +1,28 @@
+package com.optum.comet.mctmcf.parser;
+
+import com.optum.comet.mctmcf.exception.CometParsingRuntimeException;
+import com.optum.comet.mctmcf.generator.predefbeans.Definition;
+
+
+public interface ICobolCopyBookMessageParser {
+
+	String ATT_NODE_LEVEL = "level";
+	String ATT_NODE_NAME = "name";
+	String ATT_NODE_POS = "position";
+	String ATT_NODE_STORAGE_LENGTH = "storage-length";
+	String ATT_NODE_TYP_NUMERIC = "numeric";
+	String ATT_NODE_REDEFINES = "redefines";
+	String ATT_NODE_REDEFINED = "redefined";
+	String ATT_NODE_SIGNED = "signed";
+	String ATT_NODE_PIC = "picture";
+	String ATT_NODE_OCCURS = "occurs";
+	String NODE_TYP_FILLER = "FILLER";
+	String NODE_TYP_COND = "condition";
+	String NODE_TYP_COND_VAL = "value";
+	
+	void setBeanPkg(String beanPkg);
+	void setConfigFilePath(String configFilePath);
+	<T extends Definition> T parseMessage (String message, Class<T> containerClass) throws CometParsingRuntimeException;
+	<T extends Definition> T parseMessage (String message, Class<T> containerClass, String configFilePath) throws CometParsingRuntimeException;
+	
+}

@@ -1,0 +1,34 @@
+package com.optum.comet.mctmcf.generator.predefbeans;
+
+import java.util.Arrays;
+
+import com.optum.comet.mctmcf.exception.CometParsingRuntimeException;
+
+public class ChoiceRestriction extends Definition {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private String choiceValue;
+	private String[] restrictedChoices;
+	
+	public ChoiceRestriction () {}
+	
+	public ChoiceRestriction(String choiceCsv) {
+		restrictedChoices = choiceCsv.split(",");
+	}
+
+	public String getChoiceValue() {
+		return choiceValue;
+	}
+
+	public void setChoiceValue (String choice) throws CometParsingRuntimeException {
+		
+		if (Arrays.asList(restrictedChoices).contains(choice.trim()) == false) {
+			/*throw new COMETException("Exception: Creation attempeted with invalid choice = " + choice 
+										+ ". Should be one of " + Arrays.asList(restrictedChoices));*/
+		}
+		this.choiceValue = choice;
+	}
+}

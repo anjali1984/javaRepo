@@ -1,0 +1,57 @@
+package com.optum.comet.mctmcf.converter;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.optum.diff.common.exception.BPMSystemException;
+import com.optum.comet.mctmcf.exception.CometException;
+
+/**
+ * This is used to handle the cache the various converters we use across the ISA java service Also features a mechanism via which
+ * we can obtain a particular converter via a single factory only. Design based on Dynamic Factory Pattern(Dynamic class caching
+ * and instantiation upon the Abstract Factory).
+ * 
+ * @author 142037
+ */
+@SuppressWarnings({ "rawtypes", "unchecked" })
+public class ConversionFactory {
+
+    protected static volatile ConversionFactory instance;
+
+    // not accessible from outside this class
+    private ConversionFactory() {
+        this.converterMap = new HashMap<CometMappers, Converter<com.optum.comet.mctmcf.vo.CometBaseVO, com.optum.comet.mctmcf.daos.dbos.CometBaseDBO>>();
+    }
+
+    public static ConversionFactory getInstance() {
+        if (instance == null) instance = new ConversionFactory();
+        return instance;
+    }
+
+    
+    
+	
+	public Converter getConverter(CometMappers converterId) throws CometException {
+        Converter retConverter = null;
+        if (converterMap.containsKey(converterId)) {
+            retConverter = converterMap.get(converterId);
+        } else {
+            String classImpl = converterId.getClassImpl();
+            try {
+                retConverter = (Converter) Thread.currentThread().getContextClassLoader().loadClass(classImpl).newInstance();
+                converterMap.put(converterId, retConverter);
+            } catch (InstantiationException e) {
+                new BPMSystemException(e);
+            } catch (IllegalAccessException e) {
+                new BPMSystemException(e);
+            } catch (ClassNotFoundException e) {
+                new BPMSystemException(e);
+            }
+        }
+        return retConverter;
+    }
+
+    // cache all instances of the various converters
+    private Map<CometMappers, Converter<com.optum.comet.mctmcf.vo.CometBaseVO, com.optum.comet.mctmcf.daos.dbos.CometBaseDBO>> converterMap;
+
+}

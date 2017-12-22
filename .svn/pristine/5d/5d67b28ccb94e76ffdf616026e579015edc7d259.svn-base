@@ -1,0 +1,108 @@
+package com.optum.comet.mctmcf.exception.vo;
+
+import java.io.Serializable;
+import java.util.Calendar;
+
+import com.optum.comet.mctmcf.constants.CometConstants;
+import com.optum.comet.mctmcf.exception.CometExceptionConstants;
+
+public class CometExceptionBean implements Serializable {
+
+    private static final long serialVersionUID = -3530252034081381513L;
+	
+    
+    private String reason;
+    private Throwable cause;
+    private Calendar exceptionDate;
+    private CometConstants.ACTORS ACTORS;
+    private String logId;
+    private Long lid;
+    private String icn;
+	private String possibleRemedy;
+    
+    
+    public CometExceptionBean(String reasonarg, Throwable causearg, 
+    		Calendar exceptionDatearg, CometConstants.ACTORS ACTORSarg, String logIdarg) {
+	    super();
+	    this.reason = reasonarg;
+	    this.cause = causearg;
+	    this.exceptionDate = exceptionDatearg;
+	    this.ACTORS = ACTORSarg;
+	    this.logId = logIdarg;
+	    
+    }
+    
+    public CometExceptionBean(String reasonarg, Throwable causearg, 
+    		Calendar exceptionDatearg, CometConstants.ACTORS ACTORSarg, String logIdarg,Long lid,String icn) {
+	    super();
+	    this.reason = reasonarg;
+	    this.cause = causearg;
+	    this.exceptionDate = exceptionDatearg;
+	    this.ACTORS = ACTORSarg;
+	    this.logId = logIdarg;
+	    this.lid =lid;
+	    this.icn =icn;
+	    
+    }
+	
+    public CometExceptionBean(Throwable causearg, CometConstants.ACTORS ACTORSarg, 
+    		String logIdarg) {
+	    this(causearg.getMessage(), causearg, 
+	    		Calendar.getInstance(), ACTORSarg, logIdarg);
+    }
+
+    
+    
+    public CometExceptionBean(Throwable causearg, CometConstants.ACTORS ACTORSarg, 
+    		String logIdarg,Long lid,String icn ) {
+	    this(causearg.getMessage(), causearg, 
+	    		Calendar.getInstance(), ACTORSarg, logIdarg,lid,icn);
+    }
+
+    
+    
+    
+	public String getReason() {
+    	return this.reason;
+    }
+
+	public Throwable getCause() {
+    	return this.cause;
+    }
+
+	public Calendar getExceptionDate() {
+    	return this.exceptionDate;
+    }
+
+	public CometConstants.ACTORS getACTORS() {
+    	return this.ACTORS;
+    }
+
+	public String getLogId() {
+    	return this.logId;
+    }
+
+	
+	public Long getLid() {
+    	return this.lid;
+    }
+
+
+	public String getIcn() {
+    	return this.icn;
+    }
+
+	public String getPossibleRemedy() {
+		if(!(reason == null || reason.trim().length() == 0)) {
+			try {
+				CometExceptionConstants.POSSIBLE_REASONS possibleReason 
+	            	= CometExceptionConstants.POSSIBLE_REASONS.fromValue(reason.trim());
+	            this.possibleRemedy = possibleReason.getRemedy();
+            } catch (IllegalArgumentException e) {
+	            e.printStackTrace();
+	            this.possibleRemedy = "No Suggested Remedy found because this is not a registered possible exception";
+            }
+		}
+    	return this.possibleRemedy;
+    }
+}

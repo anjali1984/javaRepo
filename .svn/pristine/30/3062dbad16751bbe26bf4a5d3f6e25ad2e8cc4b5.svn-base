@@ -1,0 +1,23 @@
+package com.optum.comet.mctmcf.exception;
+
+import com.optum.diff.common.exception.BPMSystemException;
+
+public class CometParsingRuntimeException extends BPMSystemException {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	public CometParsingRuntimeException (Exception e) {
+		super(e);
+	}
+	
+	public CometParsingRuntimeException (String msg) {
+		super(msg);
+	}
+	
+	public CometParsingRuntimeException (String msg, Throwable e) {
+		super(msg, e);
+	}
+}

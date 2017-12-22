@@ -1,0 +1,33 @@
+package com.optum.comet.mctmcf.generated.vol04042017;
+
+public class ClaimStatusUpadteMessage extends com.optum.comet.mctmcf.generator.predefbeans.Definition implements java.io.Serializable {
+
+    public ClaimStatusUpadteMessage() {
+        this.cqrcmFixed = new com.optum.comet.mctmcf.generated.vol04042017.CqrcmFixed();
+        this.cqrcmVariable = new com.optum.comet.mctmcf.generated.vol04042017.CqrcmVariable();
+    }
+
+    private static final long serialVersionUID = 1L;
+    private String cqrcmLength;
+    private com.optum.comet.mctmcf.generated.vol04042017.CqrcmFixed cqrcmFixed;
+    private com.optum.comet.mctmcf.generated.vol04042017.CqrcmVariable cqrcmVariable;
+
+    public void setCqrcmLength(String cqrcmLength) { 
+        this.cqrcmLength = cqrcmLength;
+    }
+    public String getCqrcmLength() { 
+        return this.cqrcmLength;
+    }
+    public void setCqrcmFixed(com.optum.comet.mctmcf.generated.vol04042017.CqrcmFixed cqrcmFixed) { 
+        this.cqrcmFixed = cqrcmFixed;
+    }
+    public com.optum.comet.mctmcf.generated.vol04042017.CqrcmFixed getCqrcmFixed() { 
+        return this.cqrcmFixed;
+    }
+    public void setCqrcmVariable(com.optum.comet.mctmcf.generated.vol04042017.CqrcmVariable cqrcmVariable) { 
+        this.cqrcmVariable = cqrcmVariable;
+    }
+    public com.optum.comet.mctmcf.generated.vol04042017.CqrcmVariable getCqrcmVariable() { 
+        return this.cqrcmVariable;
+    }
+}

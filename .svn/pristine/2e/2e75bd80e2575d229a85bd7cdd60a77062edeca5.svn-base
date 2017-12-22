@@ -1,0 +1,31 @@
+package com.optum.comet.mctmcf.generated.vol04042017;
+
+public class CqrcmFileKey extends com.optum.comet.mctmcf.generator.predefbeans.Definition implements java.io.Serializable {
+
+    public CqrcmFileKey() {
+    }
+
+    private static final long serialVersionUID = 1L;
+    private String cqrcmIcn;
+    private String cqrcmRecordType;
+    private String cqrcmIcnSuffix;
+
+    public void setCqrcmIcn(String cqrcmIcn) { 
+        this.cqrcmIcn = cqrcmIcn;
+    }
+    public String getCqrcmIcn() { 
+        return this.cqrcmIcn;
+    }
+    public void setCqrcmRecordType(String cqrcmRecordType) { 
+        this.cqrcmRecordType = cqrcmRecordType;
+    }
+    public String getCqrcmRecordType() { 
+        return this.cqrcmRecordType;
+    }
+    public void setCqrcmIcnSuffix(String cqrcmIcnSuffix) { 
+        this.cqrcmIcnSuffix = cqrcmIcnSuffix;
+    }
+    public String getCqrcmIcnSuffix() { 
+        return this.cqrcmIcnSuffix;
+    }
+}
