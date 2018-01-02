@@ -9,6 +9,9 @@ import com.optum.tops.J5427HC1.models.HC1Response;
 import com.optum.tops.J5427HC1.models.Hc1Request;
 import com.optum.tops.J5427HC1.models.ReqClaimEntry;
 import com.optum.tops.J5427HC1.models.V5427HC1;
+import com.optum.tops.JP835RED.FuncCodeProcessing;
+import com.optum.tops.JP835RED.models.JP54RedRequest;
+import com.optum.tops.JP835RED.models.JP54RedReturn;
 
 //Single Service that relies on all other services to process the incoming request and sends a HC1Response to the Controller
 @Service
@@ -25,6 +28,9 @@ public class RequestProcessor {
 	
 	@Autowired
 	COBLN2131Service cobln2131; 
+	
+	@Autowired
+	FuncCodeProcessing red_Processor ; 
 	
 	
 	public HC1Response process (Hc1Request request){
@@ -57,7 +63,13 @@ public class RequestProcessor {
 			//Institutional Claims
 			if(currentClaim.getHC1_COB_INST_OR_PROF().equals("I") && currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("Y")){
 				//Perform 2140-GET-Instl-Reductions [i.e. Call DP835RED with func cd = 1] 
+				JP54RedRequest request_to_RED = new JP54RedRequest() ; 
+				request_to_RED.setRED_INV_CTL_NBR(individual_claim.getHc1_REQ_CLM_INVN_CTL_NBR());
+				request_to_RED.setRED_ICN_SUFX_CD(currentClaim.getMy_indicator().getDBKE2_ICN_SUFX_CD());
+				request_to_RED.setRED_PROC_DT(individual_claim.getHc1_REQ_CLM_PROC_DT());
+				request_to_RED.setRED_PROC_TM(individual_claim.getHc1_REQ_CLM_PROC_TM());
 				
+				JP54RedReturn red_return = red_Processor.InstClaim2100(request_to_RED);
 				
 			}else{
 				//Professional Claims

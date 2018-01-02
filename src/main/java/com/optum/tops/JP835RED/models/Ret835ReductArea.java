@@ -1,4 +1,4 @@
-package com.optum.tops.JP835RED;
+package com.optum.tops.JP835RED.models;
 
 import java.math.BigDecimal;
 
