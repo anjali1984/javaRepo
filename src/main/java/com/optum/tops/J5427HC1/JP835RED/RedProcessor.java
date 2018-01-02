@@ -1,34 +1,21 @@
-package com.optum.tops.JP835RED;
+package com.optum.tops.J5427HC1.JP835RED;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.optum.tops.JP835RED.models.JP54RedRequest;
 import com.optum.tops.JP835RED.models.JP54RedReturn;
 
-public class FuncCodeProcessing {
+@Service
+public class RedProcessor {
 	/* evaluate the DSM-Function Code then pass it to either 2100 or 2200 based on that 
 	 * error out if there isn't a proper function code (1-7)
 	 *  we could just put the 2100 and 2200 functions in here ? depends how much we want to break the
 	 *  functions up
 	 *  
 	 */
-	
-	/*public void initialize(){
-		/* do DAO stuff and initialize stuff
-		 * 
-		 * have if statement to decide if the function code is 1 or 2 
-		 * 
-		 * if its 1 then u go to 2100 
-		 * if its 2 then u go to 2200
-		 */
-		
-		// if block reading function code then decide
-		
-	//}
-
-	
 	@Autowired
-	com.optum.tops.JP835RED.processing7700 processing7700;
+	com.optum.tops.J5427HC1.JP835RED.processing7700 processing7700; //DAO
 	
 	
 	public JP54RedReturn InstClaim2100(JP54RedRequest request_to_red){
@@ -37,16 +24,17 @@ public class FuncCodeProcessing {
 		  *  7701, 7702, 7703, 7708 
 		  *  did not add logic for the following: program = d5427MID, then it calls 7712) 
 		  */
-		processing7700.do7701();
-		processing7700.do7702();
-		processing7700.do7703();
-		processing7700.do7708();
+		JP54RedReturn return_to_D54Hc1 = new JP54RedReturn(); 
+		return_to_D54Hc1.setRet835ClmRedTbl(processing7700.do7701(request_to_red));
+		return_to_D54Hc1.setRet835ClmRarcTbl(processing7700.do7702(request_to_red));
+		return_to_D54Hc1.setRet835ClmErrTbl(processing7700.do7703(request_to_red));
+		return_to_D54Hc1.setRetUB92_835_AdjdSvcInfo(processing7700.do7708(request_to_red));
 		
 
-		return null;
+		return return_to_D54Hc1;
 	}
 	
-	public void ProClaim2200(){
+	public void ProClaim2200(JP54RedRequest request_to_red){
 		/*read data from adjudicated tables for a professional claim
 		 * 
 		 * This calls: 
@@ -57,9 +45,9 @@ public class FuncCodeProcessing {
 		processing7700.do7704();
 		processing7700.do7705();
 		processing7700.do7706();
-		processing7700.do7702();
-		processing7700.do7703();
-		processing7700.do7708();
+		processing7700.do7702(request_to_red);
+		processing7700.do7703(request_to_red);
+		processing7700.do7708(request_to_red);
 
 	}
 }

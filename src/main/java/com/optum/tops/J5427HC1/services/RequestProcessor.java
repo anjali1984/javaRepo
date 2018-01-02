@@ -5,11 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.optum.tops.J5427HC1.JP835RED.RedProcessor;
 import com.optum.tops.J5427HC1.models.HC1Response;
 import com.optum.tops.J5427HC1.models.Hc1Request;
 import com.optum.tops.J5427HC1.models.ReqClaimEntry;
 import com.optum.tops.J5427HC1.models.V5427HC1;
-import com.optum.tops.JP835RED.FuncCodeProcessing;
 import com.optum.tops.JP835RED.models.JP54RedRequest;
 import com.optum.tops.JP835RED.models.JP54RedReturn;
 
@@ -30,7 +30,7 @@ public class RequestProcessor {
 	COBLN2131Service cobln2131; 
 	
 	@Autowired
-	FuncCodeProcessing red_Processor ; 
+	RedProcessor red_Processor ; 
 	
 	
 	public HC1Response process (Hc1Request request){
@@ -69,7 +69,7 @@ public class RequestProcessor {
 				request_to_RED.setRED_PROC_DT(individual_claim.getHc1_REQ_CLM_PROC_DT());
 				request_to_RED.setRED_PROC_TM(individual_claim.getHc1_REQ_CLM_PROC_TM());
 				
-				JP54RedReturn red_return = red_Processor.InstClaim2100(request_to_RED);
+				JP54RedReturn red_return = red_Processor.InstClaim2100(request_to_RED); //Data returned from 835RED
 				
 			}else{
 				//Professional Claims
