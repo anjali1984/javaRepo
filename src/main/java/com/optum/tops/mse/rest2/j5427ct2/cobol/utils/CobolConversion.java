@@ -54,15 +54,13 @@ public class CobolConversion {
 	public static String spaceConversion(String conversion)
 	{
 
-		for(int i=0;i<conversion.length();i++)
-		{
-			char character=conversion.charAt(i);	
+		char character=conversion.charAt(0);	
 
-			if (character=='&')
-			{
-				conversion=conversion.replaceAll(conversion,""); 
-			}
+		if (character=='&')
+		{
+			conversion=conversion.replaceAll(conversion,""); 
 		}
+
 		return conversion;
 	}
 
@@ -151,7 +149,7 @@ public class CobolConversion {
 		case '}':
 		case '{':
 			return '0';
-		
+
 		}
 		return lastByte;
 	}
