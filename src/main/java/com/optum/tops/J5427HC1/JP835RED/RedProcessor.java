@@ -20,7 +20,7 @@ public class RedProcessor {
 	
 	public JP54RedReturn InstClaim2100(JP54RedRequest request_to_red){
 	     /*read data from adjudicated tables for Institutional Claims 
-		  *  It then calls the following programs:
+		  *  It then calls the following sections:
 		  *  7701, 7702, 7703, 7708 
 		  *  did not add logic for the following: program = d5427MID, then it calls 7712) 
 		  */
@@ -29,7 +29,6 @@ public class RedProcessor {
 		return_to_D54Hc1.setRet835ClmRarcTbl(processing7700.do7702(request_to_red));
 		return_to_D54Hc1.setRet835ClmErrTbl(processing7700.do7703(request_to_red));
 		return_to_D54Hc1.setRetUB92_835_AdjdSvcInfo(processing7700.do7708(request_to_red));
-		
 
 		return return_to_D54Hc1;
 	}

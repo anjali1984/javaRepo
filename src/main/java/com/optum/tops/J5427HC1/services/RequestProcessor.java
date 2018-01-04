@@ -28,10 +28,9 @@ public class RequestProcessor {
 	
 	@Autowired
 	COBLN2131Service cobln2131; 
-	
-	@Autowired
-	RedProcessor red_Processor ; 
-	
+
+	@Autowired 
+	InstlReduction2140Service instlRed2140; //A Service that utilizes another service RedProcessor for getting DP835RED Data
 	
 	public HC1Response process (Hc1Request request){
 		HC1Response response = new HC1Response() ; //to be sent back to the HC1Controller
@@ -62,14 +61,12 @@ public class RequestProcessor {
 			
 			//Institutional Claims
 			if(currentClaim.getHC1_COB_INST_OR_PROF().equals("I") && currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("Y")){
-				//Perform 2140-GET-Instl-Reductions [i.e. Call DP835RED with func cd = 1] 
-				JP54RedRequest request_to_RED = new JP54RedRequest() ; 
-				request_to_RED.setRED_INV_CTL_NBR(individual_claim.getHc1_REQ_CLM_INVN_CTL_NBR());
-				request_to_RED.setRED_ICN_SUFX_CD(currentClaim.getMy_indicator().getDBKE2_ICN_SUFX_CD());
-				request_to_RED.setRED_PROC_DT(individual_claim.getHc1_REQ_CLM_PROC_DT());
-				request_to_RED.setRED_PROC_TM(individual_claim.getHc1_REQ_CLM_PROC_TM());
+				if(currentClaim.getMy_indicator().getCXINT_CLAIM_INDICATOR().equals("N")){ // If this is a Yes you dont have to do 2140 and 2141 sections
+					//Perform 2140-GET-Instl-Reductions [i.e. Call DP835RED with func cd = 1] 
+					currentClaim = instlRed2140.do2140Section(individual_claim, currentClaim);
+				}
 				
-				JP54RedReturn red_return = red_Processor.InstClaim2100(request_to_RED); //Data returned from 835RED
+				
 				
 			}else{
 				//Professional Claims

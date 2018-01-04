@@ -131,7 +131,7 @@ public class processing7700 {
 		query.setLength(0);
 		query.append("SELECT   CLM_RARC_CD ");
 		query.append(",CLM_RMRK_CD ");
-		query.append("FROM ADJD_CLMSF_RARC_CD ");
+		query.append("FROM T5410DTA.ADJD_CLMSF_RARC_CD ");
 		query.append("WHERE  INVN_CTL_NBR       =  ? ");
 		query.append("AND ICN_SUFX_CD           = ? ");
 		query.append("AND PROC_DT               = ? ");
@@ -182,7 +182,7 @@ public class processing7700 {
 		query.setLength(0);
 		query.append("SELECT   CLM_ERR_CD ");
 		query.append(",CLM_LN_ERR_TYP_CD ");
-		query.append("FROM ADJD_CLMSF_ERR_CD ");
+		query.append("FROM T5410DTA.ADJD_CLMSF_ERR_CD ");
 		query.append("WHERE  INVN_CTL_NBR       = ? ");
 		query.append("AND ICN_SUFX_CD           = ? ");
 		query.append(" AND PROC_DT              = ? ");
@@ -259,7 +259,7 @@ public class processing7700 {
 		query.append(",UB92_RVNU_CD ");
 		query.append(",UB92_CHRG_AMT ");
 		query.append(",UB92_ALLW_AMT ");
-		query.append("FROM ADJD_CLMSF_ORIGHDR ");
+		query.append("FROM T5410DTA.ADJD_CLMSF_ORIGHDR ");
 		query.append("WHERE INVN_CTL_NBR       = ? ");
 		query.append("AND ICN_SUFX_CD          = ? ");
 		query.append("AND PROC_DT              = ? ");
@@ -270,6 +270,7 @@ public class processing7700 {
 		Connection con = null ; 
 		PreparedStatement ps = null;
 		List<Ub92_835AdjdSvc> retUB92_835_AdjdSvcInfo = new ArrayList<Ub92_835AdjdSvc>();
+		
 		try{
 			con = ds.getConnection();
 			ps = con.prepareStatement(query.toString());
@@ -278,6 +279,27 @@ public class processing7700 {
 			ps.setString(3, req.getRED_PROC_DT());
 			ps.setString(4, req.getRED_PROC_TM());
 			ResultSet rs = ps.executeQuery(); 
+			int counter = 0 ; 
+			while(counter < 60 && rs.next()){
+				Ub92_835AdjdSvc temp = new Ub92_835AdjdSvc(); 
+				temp.setUB92_835_ADJD_PAID_AMT(rs.getBigDecimal("RPT_835_PD_AMT"));
+				temp.setUB92_835_ADJD_REV_CD(rs.getString("RPT_835_RVNU_CD"));
+				temp.setUB92_835_ADJD_PROC_CD(rs.getString("RPT_835_PROC_CD"));
+				temp.setUB92_835_ADJD_PROC_MOD_1_CD(rs.getString("RPT_835_PROC_MOD_1_CD"));
+				temp.setUB92_835_ADJD_PROC_MOD_2_CD(rs.getString("RPT_835_PROC_MOD_2_CD"));
+				temp.setUB92_835_ADJD_PROC_MOD_3_CD(rs.getString("RPT_835_PROC_MOD_3_CD"));
+				temp.setUB92_835_ADJD_PROC_MOD_4_CD(rs.getString("RPT_835_PROC_MOD_4_CD"));
+				temp.setORIG_HDR_SEQ_NBR(rs.getInt("LN_NBR"));
+				temp.setORIG_HDR_PROC_TYPE(rs.getString("PROC_TYP_CD"));
+				temp.setORIG_HDR_LINE_CORR_ID(rs.getInt("LN_CORR_ID"));
+				temp.setUB92_RVNU_CD(rs.getString("UB92_RVNU_CD"));
+				temp.setUB92_CHRG_AMT(rs.getBigDecimal("UB92_CHRG_AMT"));
+				temp.setUB92_ALLW_AMT(rs.getBigDecimal("UB92_ALLW_AMT"));
+				
+				retUB92_835_AdjdSvcInfo.add(temp);
+				
+				counter++;
+			}
 			
 			//PROCESS THE RESULTS 
 		}catch (SQLException e) {

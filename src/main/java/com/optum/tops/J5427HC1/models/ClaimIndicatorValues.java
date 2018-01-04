@@ -21,11 +21,13 @@ public class ClaimIndicatorValues{
 	private String NYSTATE_COB_CLAIM = "" ; 
 	private boolean NY_COB_PARENT_CLM ; //Corresponds to WS-NY-COB-PARENT-CLM-SW, NY-COB-PARENT-CLM
 	private String NYSTATE_COB_CLAIM_PAIDTO = "" ; // Can be paid to State ('S') or Provider ("P") 
+	private boolean NYS_SERV_LINE_SW; // Corresponds to WS-NYS-SERV-LINE-SW used in 2121 set in a loop, checked again in 2141,2161 etc.
 	private String PENNY_PROC_INDICATOR  = "N" ; // Claim level field "Y" or "N" 
 	private String OPS_HCFA_INDICATOR = "N" ; 
 	private String CALL_OIMC_TBL_INDICATOR = "N"; // "Y" or "N" , corresponds to WS-CALL-OIMC-TBL-SW 
 	private String CXINT_CLAIM_INDICATOR = "N"; // "Y"or "N" 
 	
+	private int last_line_id;
 	private BigDecimal LN_TOT_RPT_ALL_AMT = new BigDecimal(0); //Corresponds to the WS-LN-TOT-RPT-ALL-AMT filed used as an sum variable for all lines when requested TransCd == "00" 
 	
 	private List<ADJD_CLMSF_ORIGHDR_LINE> HC1_ADJD_CLMSF_ORIGHDR_DATAAREA = new ArrayList<ADJD_CLMSF_ORIGHDR_LINE>(); //ADJD_CLMSF_ORIGHDR Lines for the claim IF ANY, Max SIZE can be 150  
@@ -151,6 +153,18 @@ public class ClaimIndicatorValues{
 	}
 	public void setLN_TOT_RPT_ALL_AMT(BigDecimal lN_TOT_RPT_ALL_AMT) {
 		LN_TOT_RPT_ALL_AMT = lN_TOT_RPT_ALL_AMT;
+	}
+	public boolean isNYS_SERV_LINE_SW() {
+		return NYS_SERV_LINE_SW;
+	}
+	public void setNYS_SERV_LINE_SW(boolean nYS_SERV_LINE_SW) {
+		NYS_SERV_LINE_SW = nYS_SERV_LINE_SW;
+	}
+	public int getLast_line_id() {
+		return last_line_id;
+	}
+	public void setLast_line_id(int last_line_id) {
+		this.last_line_id = last_line_id;
 	}
 	
 }

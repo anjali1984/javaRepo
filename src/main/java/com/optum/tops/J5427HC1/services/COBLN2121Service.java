@@ -35,6 +35,8 @@ public class COBLN2121Service {
 		BigDecimal WS_TEMP_RPT_ALLOW_AMT = new BigDecimal(0); // Corresponds to  WS-TEMP-RPT-ALLOW-AMT working Storage variable
 		
 		for(COBLN_LINE_FLDS line: results){
+			indicatorObject.setLast_line_id(line.getLN_ID());// Used in 2141 logic to skip last line 
+			
 			String line_pmt_svc_cd = line.getLN_PMT_SVC_CD(); // MOVE DCLNE-PMT-SVC-CD to DCLNE-PMT-SVC-CD TO CK-SERV-CLS, WRK-NY-SERV-CD
 			
 			
@@ -53,7 +55,7 @@ public class COBLN2121Service {
 			
 			if( (line_pmt_svc_cd.contains("OI") || line_pmt_svc_cd.contains("OIM") || line_pmt_svc_cd.contains("OIMEDI")) 
 					|| (requestedClaim.getHc1_REQ_CLM_TRANS_CD().contains("69") && !line.getLN_RMRK_CD().contains("69"))){
-				System.out.println("Line " + line.getLN_ID() + " will NOT be added to arraylist of redcution table. OI,OM, OIMEDI COBLN2121Service ");
+				System.out.println("Line " + line.getLN_ID() + " will ONLY be added for avoiding exception of adding to Arraylist, redcution table. OI,OM, OIMEDI COBLN2121Service ");
 				indicatorObject.getWS_LINE_DATA_AREA_TABLE().add(index, line_data);
 				indicatorObject.getWS_LINE_REDUCTION_TABLE().add(index, line_reduction_data);
 				continue; 
@@ -62,7 +64,7 @@ public class COBLN2121Service {
 																			
 			List<COB_835_INFO> enumValues = Arrays.asList(COB_835_INFO.values()); // Gets all 
 			if (enumValues.contains("COB_835_INFO." + line_pmt_svc_cd)) {
-				System.out.println("Line " + line.getLN_ID() + " will not be added to arraylist of redcution table. COB_835_INFO COBLN2121Service ");
+				System.out.println("Line " + line.getLN_ID() + " will ONLY be added for avoiding exception of adding to Arraylist, redcution table. COB_835_INFO COBLN2121Service ");
 				indicatorObject.getWS_LINE_DATA_AREA_TABLE().add(index, line_data);
 				indicatorObject.getWS_LINE_REDUCTION_TABLE().add(index, line_reduction_data);
 				continue;
@@ -76,11 +78,13 @@ public class COBLN2121Service {
 					if (line_pmt_svc_cd.charAt(0) == 'C' && (line_pmt_svc_cd.substring(3).equalsIgnoreCase("NYS")
 							|| line_pmt_svc_cd.substring(3).equalsIgnoreCase("NYA"))) {
 						line.setNYS_SERV_LINE(true);
+						indicatorObject.setNYS_SERV_LINE_SW(true);
 					} else {
 						line.setNYS_SERV_LINE(false);
+						indicatorObject.setNYS_SERV_LINE_SW(false);
 					}
 					if (indicatorObject.getCXINT_CLAIM_INDICATOR().equals("Y")) {
-						System.out.println("Line " + line.getLN_ID() + " will not be added to arraylist of redcution table. CXINT_CLAIM_INDICATOR Y COBLN2121Service ");
+						System.out.println("Line " + line.getLN_ID() + " will ONLY be added for avoiding exception of adding to Arraylist, redcution table. CXINT_CLAIM_INDICATOR Y COBLN2121Service ");
 						indicatorObject.getWS_LINE_DATA_AREA_TABLE().add(index, line_data);
 						indicatorObject.getWS_LINE_REDUCTION_TABLE().add(index, line_reduction_data);
 						continue;

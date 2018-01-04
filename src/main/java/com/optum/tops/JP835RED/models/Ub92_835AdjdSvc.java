@@ -37,13 +37,13 @@ public class Ub92_835AdjdSvc {
 				A61812             15 :RET:_UB92_835_BAL_NYSPD PIC S9(09)V99 COMP_3.
 					 */
 	private BigDecimal UB92_835_ADJD_PAID_AMT = BigDecimal.ZERO;
-	private BigDecimal UB92_835_ADJD_REV_CD = BigDecimal.ZERO; 
+	private String UB92_835_ADJD_REV_CD ; 
 	private String UB92_835_ADJD_PROC_CD ; 
 	private String UB92_835_ADJD_PROC_MOD_1_CD ; 
 	private String UB92_835_ADJD_PROC_MOD_2_CD ; 
 	private String UB92_835_ADJD_PROC_MOD_3_CD ; 
 	private String UB92_835_ADJD_PROC_MOD_4_CD ; 
-	private BigDecimal ORIG_HDR_SEQ_NBR; 
+	private int ORIG_HDR_SEQ_NBR; 
 	private BigDecimal UB92_835_CHRG;
 	private BigDecimal UB92_835_COINS;
 	private BigDecimal UB92_835_DED;
@@ -55,8 +55,8 @@ public class Ub92_835AdjdSvc {
 	private BigDecimal UB92_835_PNLTY_AMT;
 	private BigDecimal UB92_835_SANC_AMT;
 	private BigDecimal UB92_835_CAP_AMT;
-	private BigDecimal ORIG_HDR_LINE_CORR_ID;
-	private BigDecimal UB92_RVNU_CD;
+	private int ORIG_HDR_LINE_CORR_ID;
+	private String UB92_RVNU_CD;
 	private BigDecimal UB92_CHRG_AMT;
 	private BigDecimal UB92_ALLW_AMT;
 	private BigDecimal UB92_835_BL_AMT;
@@ -64,16 +64,17 @@ public class Ub92_835AdjdSvc {
 	private BigDecimal UB92_835_BAL_NYSPD;
 	private String ORIG_HDR_PROC_TYPE;
 	private String UB92_BLNCE_REV_LVL;
+	
 	public BigDecimal getUB92_835_ADJD_PAID_AMT() {
 		return UB92_835_ADJD_PAID_AMT;
 	}
 	public void setUB92_835_ADJD_PAID_AMT(BigDecimal uB92_835_ADJD_PAID_AMT) {
 		UB92_835_ADJD_PAID_AMT = uB92_835_ADJD_PAID_AMT;
 	}
-	public BigDecimal getUB92_835_ADJD_REV_CD() {
+	public String getUB92_835_ADJD_REV_CD() {
 		return UB92_835_ADJD_REV_CD;
 	}
-	public void setUB92_835_ADJD_REV_CD(BigDecimal uB92_835_ADJD_REV_CD) {
+	public void setUB92_835_ADJD_REV_CD(String uB92_835_ADJD_REV_CD) {
 		UB92_835_ADJD_REV_CD = uB92_835_ADJD_REV_CD;
 	}
 	public String getUB92_835_ADJD_PROC_CD() {
@@ -106,10 +107,10 @@ public class Ub92_835AdjdSvc {
 	public void setUB92_835_ADJD_PROC_MOD_4_CD(String uB92_835_ADJD_PROC_MOD_4_CD) {
 		UB92_835_ADJD_PROC_MOD_4_CD = uB92_835_ADJD_PROC_MOD_4_CD;
 	}
-	public BigDecimal getORIG_HDR_SEQ_NBR() {
+	public int getORIG_HDR_SEQ_NBR() {
 		return ORIG_HDR_SEQ_NBR;
 	}
-	public void setORIG_HDR_SEQ_NBR(BigDecimal oRIG_HDR_SEQ_NBR) {
+	public void setORIG_HDR_SEQ_NBR(int oRIG_HDR_SEQ_NBR) {
 		ORIG_HDR_SEQ_NBR = oRIG_HDR_SEQ_NBR;
 	}
 	public BigDecimal getUB92_835_CHRG() {
@@ -178,16 +179,16 @@ public class Ub92_835AdjdSvc {
 	public void setUB92_835_CAP_AMT(BigDecimal uB92_835_CAP_AMT) {
 		UB92_835_CAP_AMT = uB92_835_CAP_AMT;
 	}
-	public BigDecimal getORIG_HDR_LINE_CORR_ID() {
+	public int getORIG_HDR_LINE_CORR_ID() {
 		return ORIG_HDR_LINE_CORR_ID;
 	}
-	public void setORIG_HDR_LINE_CORR_ID(BigDecimal oRIG_HDR_LINE_CORR_ID) {
+	public void setORIG_HDR_LINE_CORR_ID(int oRIG_HDR_LINE_CORR_ID) {
 		ORIG_HDR_LINE_CORR_ID = oRIG_HDR_LINE_CORR_ID;
 	}
-	public BigDecimal getUB92_RVNU_CD() {
+	public String getUB92_RVNU_CD() {
 		return UB92_RVNU_CD;
 	}
-	public void setUB92_RVNU_CD(BigDecimal uB92_RVNU_CD) {
+	public void setUB92_RVNU_CD(String uB92_RVNU_CD) {
 		UB92_RVNU_CD = uB92_RVNU_CD;
 	}
 	public BigDecimal getUB92_CHRG_AMT() {
