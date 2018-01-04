@@ -83,7 +83,7 @@ public class CheckCOBDao {
 				indicator_object.setDBKE2_ICN_SUFX_VERS_NBR(rs.getString("ICN_SUFX_VERS_NBR"));
 				indicator_object.setDBKE2_COB_LOGC_CD(rs.getString("NEW_COB_LOGC_CD"));
 				indicator_object.setDBKE2_835_COB_PROC_IND(rs.getString("NEW_835_COB_PROC_IND"));
-				indicator_object.setDBKE2_SUFX_TOT_CHRG_AMT(rs.getBigDecimal("BKE2.SUFX_TOT_CHRG_AMT"));
+				indicator_object.setDBKE2_SUFX_TOT_CHRG_AMT(rs.getBigDecimal("SUFX_TOT_CHRG_AMT"));
 			}
 			
 			if (indicator_object.getDBKE2_COB_LOGC_CD().trim().equals("Y")
