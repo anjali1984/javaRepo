@@ -15,8 +15,7 @@ public class ClaimIndicatorValues{
 	private String DBKE2_835_COB_PROC_IND = "" ; 
 	private String DBKE2_FACL_OR_PROF_CD = "" ;
 	private String DBKE2_ALLW_AMT_DTRM_CD = "" ; 
-	private String DBKE2_DIAG_B_NBR = "" ; 
-	private String DBKE2_SUFX_TOT_CHRG_AMT ; 
+	private String DBKE2_DIAG_B_NBR = "" ;  
 	private String DBKE2_EMC_IND = "";
 	private String NYSTATE_COB_CLAIM = "" ; 
 	private boolean NY_COB_PARENT_CLM ; //Corresponds to WS-NY-COB-PARENT-CLM-SW, NY-COB-PARENT-CLM
@@ -28,6 +27,8 @@ public class ClaimIndicatorValues{
 	private String CXINT_CLAIM_INDICATOR = "N"; // "Y"or "N" 
 	
 	private int last_line_id;
+	
+	private BigDecimal DBKE2_SUFX_TOT_CHRG_AMT = new BigDecimal(0);
 	private BigDecimal LN_TOT_RPT_ALL_AMT = new BigDecimal(0); //Corresponds to the WS-LN-TOT-RPT-ALL-AMT filed used as an sum variable for all lines when requested TransCd == "00" 
 	
 	private List<ADJD_CLMSF_ORIGHDR_LINE> HC1_ADJD_CLMSF_ORIGHDR_DATAAREA = new ArrayList<ADJD_CLMSF_ORIGHDR_LINE>(); //ADJD_CLMSF_ORIGHDR Lines for the claim IF ANY, Max SIZE can be 150  
@@ -55,7 +56,7 @@ public class ClaimIndicatorValues{
 	public void setDBKE2_DIAG_B_NBR(String dBKE2_DIAG_B_NBR) {
 		DBKE2_DIAG_B_NBR = dBKE2_DIAG_B_NBR;
 	}
-	public void setDBKE2_SUFX_TOT_CHRG_AMT(String dBKE2_SUFX_TOT_CHRG_AMT) {
+	public void setDBKE2_SUFX_TOT_CHRG_AMT(BigDecimal dBKE2_SUFX_TOT_CHRG_AMT) {
 		DBKE2_SUFX_TOT_CHRG_AMT = dBKE2_SUFX_TOT_CHRG_AMT;
 	}
 	public void setDBKE2_EMC_IND(String dBKE2_EMC_IND) {
@@ -82,7 +83,7 @@ public class ClaimIndicatorValues{
 	public String getDBKE2_DIAG_B_NBR() {
 		return DBKE2_DIAG_B_NBR;
 	}
-	public String getDBKE2_SUFX_TOT_CHRG_AMT() {
+	public BigDecimal getDBKE2_SUFX_TOT_CHRG_AMT() {
 		return DBKE2_SUFX_TOT_CHRG_AMT;
 	}
 	public String getDBKE2_EMC_IND() {

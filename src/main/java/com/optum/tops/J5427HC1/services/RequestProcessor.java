@@ -32,6 +32,9 @@ public class RequestProcessor {
 	@Autowired 
 	InstlReduction2140Service instlRed2140; //A Service that utilizes another service RedProcessor for getting DP835RED Data
 	
+	@Autowired 
+	LoadCobLnLineAmtsService2150 instlLoad2150; 
+	
 	public HC1Response process (Hc1Request request){
 		HC1Response response = new HC1Response() ; //to be sent back to the HC1Controller
 		List<ReqClaimEntry> claims_to_be_serviced = request.getClaimEntries() ; 
@@ -65,7 +68,8 @@ public class RequestProcessor {
 					//Perform 2140-GET-Instl-Reductions [i.e. Call DP835RED with func cd = 1] 
 					currentClaim = instlRed2140.do2140Section(individual_claim, currentClaim);
 				}
-				
+				//2150-LOAD-COBLN-LINE-AMTS
+				currentClaim = instlLoad2150.do2150Section(currentClaim, individual_claim.getHc1_REQ_CLM_TRANS_CD().trim());
 				
 				
 			}else{
