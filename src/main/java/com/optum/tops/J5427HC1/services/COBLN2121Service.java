@@ -200,6 +200,7 @@ public class COBLN2121Service {
 	//2122-PENNY-PROCESS-ADJUST-SECT
 	public void penny_process_adjustment(COBLN_LINE_FLDS line , V5427HC1 outboundClaim){
 		ClaimIndicatorValues my_indicator = outboundClaim.getMy_indicator(); 
+		      
 		List<ADJD_CLMSF_ORIGHDR_LINE> orig_HDR_DATA = my_indicator.getHC1_ADJD_CLMSF_ORIGHDR_DATAAREA(); 
 		String line_pmt_svc_cd = line.getLN_PMT_SVC_CD() ;
 		
@@ -225,6 +226,8 @@ public class COBLN2121Service {
 		}
 		
 		if(my_indicator.getOPS_HCFA_INDICATOR().equals("Y") || outboundClaim.getHC1_COB_INST_OR_PROF().equals("Y")){
+			int svc_sub = line.getLN_ID(); //Index into the array for marking it as SVC-LINE-PENNY-YES
+			
 			//SCAN ORIGHDR DATA TABLES TO FIND ENTRIES FOR THIS SVC LINE
 			for(ADJD_CLMSF_ORIGHDR_LINE a_hdr_line : orig_HDR_DATA ){
 				//MATCH ON CORR-ID'S  -------* 
@@ -235,10 +238,13 @@ public class COBLN2121Service {
 						a_hdr_line.setUB92_CHRG_AMT(BigDecimal.ZERO);
 						a_hdr_line.setUB92_NOT_COV_AMT(BigDecimal.ZERO);
 						a_hdr_line.setREV_LINE_PENNY_INDICATOR("Y");
+						my_indicator.getSVC_LINE_PENNY_IND_ENTRY()[svc_sub] = true;
+						
 						//IF THERE WAS ANY PENNY ISSUE FOR THE SVE LINE RE-CALCULATE THE  
 						//* SERVICE LINE CHARGE AND NCOV AMOUNTS AMTS AS SUM OF REV-LEVEL AMOUNTS 
 						line.setLN_CHRG_AMT(BigDecimal.ZERO);
 						line.setLN_NC_AMT(BigDecimal.ZERO);
+						
 						//RE-CALCULATE SVC-LEVEL AMTS AS SUM OF REV-LEVEL AMOUNTS
 						for(ADJD_CLMSF_ORIGHDR_LINE hrd_line_iterator : orig_HDR_DATA){
 							if(hrd_line_iterator.getLN_CORR_ID() == line.getLN_ORIG_LN_CORR_ID()){

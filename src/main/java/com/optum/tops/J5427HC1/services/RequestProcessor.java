@@ -1,5 +1,6 @@
 package com.optum.tops.J5427HC1.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class RequestProcessor {
 		HC1Response response = new HC1Response() ; //to be sent back to the HC1Controller
 		List<ReqClaimEntry> claims_to_be_serviced = request.getClaimEntries() ; 
 		
-		System.out.println("REQUEST with " + claims_to_be_serviced.size() + " Recieved");
+		//If NEED to be OPTIMIZED, give each requested claim a thread of its OWN for processing
 		//For Each ReqClaimEntry service it by creating a V5427HC1 instance, put it in the response_list_all_claims field of HC1Response
 		for(ReqClaimEntry individual_claim : claims_to_be_serviced){
 			V5427HC1 currentClaim ; //Claim instance to be put in the return object 
@@ -81,6 +82,19 @@ public class RequestProcessor {
 				}
 			}
 			
+			//??? PUTthis in RED PORTION for both Insti and Professional
+			// 2003-PENNY-PROCESS-ERROR-SECT  
+			/*55367A*82 1. CHECK FOR SELECTIVE SERVICE LINE ERRORS ON THE BASIS OF  * 09760000
+			55367A*82    SVC-LINE-PENNY-YES FLAG, IF IT IS EXIST THEN MOVE THE    * 09770000
+			55367A*82    SPACES INTO DHC1-COB-835-OOB-ERROR. 
+			 */
+			//private List<String> HC1_COB_835_OOB_ERROR = new ArrayList<String>(); in the ClaimtobeSent i.e. currentClaim
+			//currentClaim.getHC1_COB_835_OOB_ERROR() its a List<String>
+			
+			//2200-WRTOFF-CALC if DHC1-COB-CLAIM-INDICATOR = 'Y'
+			if(currentClaim.getHC1_COB_COB_CLAIM_INDICATOR().equals("Y")){
+				
+			}
 			
 			//Doing this because these working storage fields are not required by the request
 			currentClaim.setMy_indicator(null);
