@@ -48,9 +48,7 @@ public class COBLN2121Service {
 			
 			//If Penny Process perform 2122-PENNY-PROCESS-ADJUST-SECT
 			if(indicatorObject.getPENNY_PROC_INDICATOR().equals("Y")){
-				//TODO : Complete the implementation 
-				penny_process_adjustment (line, outboundClaim); 
-				
+				outboundClaim = penny_process_adjustment (line, outboundClaim); 
 			}
 			
 			if( (line_pmt_svc_cd.contains("OI") || line_pmt_svc_cd.contains("OIM") || line_pmt_svc_cd.contains("OIMEDI")) 
@@ -198,7 +196,7 @@ public class COBLN2121Service {
 	}
 	
 	//2122-PENNY-PROCESS-ADJUST-SECT
-	public void penny_process_adjustment(COBLN_LINE_FLDS line , V5427HC1 outboundClaim){
+	private V5427HC1 penny_process_adjustment(COBLN_LINE_FLDS line , V5427HC1 outboundClaim){
 		ClaimIndicatorValues my_indicator = outboundClaim.getMy_indicator(); 
 		      
 		List<ADJD_CLMSF_ORIGHDR_LINE> orig_HDR_DATA = my_indicator.getHC1_ADJD_CLMSF_ORIGHDR_DATAAREA(); 
@@ -221,12 +219,13 @@ public class COBLN2121Service {
 				|| line_pmt_svc_cd.trim().length() == 0 
 				|| line_pmt_svc_cd.equals("------")
 			) {
-			return; //Dont have to do this section. 
+			return outboundClaim; //Dont have to do this section. 
 			
 		}
 		
-		if(my_indicator.getOPS_HCFA_INDICATOR().equals("Y") || outboundClaim.getHC1_COB_INST_OR_PROF().equals("Y")){
-			int svc_sub = line.getLN_ID(); //Index into the array for marking it as SVC-LINE-PENNY-YES
+		//FOR INSTITUTIONAL AND OPS-HCFA CLAIMS
+		if(my_indicator.getOPS_HCFA_INDICATOR().equals("Y") || outboundClaim.getHC1_COB_INST_OR_PROF().equals("I")){
+			int svc_sub = line.getLN_ID() - 1; //Index into the array for marking it as SVC-LINE-PENNY-YES, its an array of size 7 so indexes are from 0 to 6.
 			
 			//SCAN ORIGHDR DATA TABLES TO FIND ENTRIES FOR THIS SVC LINE
 			for(ADJD_CLMSF_ORIGHDR_LINE a_hdr_line : orig_HDR_DATA ){
@@ -239,20 +238,23 @@ public class COBLN2121Service {
 						a_hdr_line.setUB92_NOT_COV_AMT(BigDecimal.ZERO);
 						a_hdr_line.setREV_LINE_PENNY_INDICATOR("Y");
 						my_indicator.getSVC_LINE_PENNY_IND_ENTRY()[svc_sub] = true;
-						
-						//IF THERE WAS ANY PENNY ISSUE FOR THE SVE LINE RE-CALCULATE THE  
-						//* SERVICE LINE CHARGE AND NCOV AMOUNTS AMTS AS SUM OF REV-LEVEL AMOUNTS 
-						line.setLN_CHRG_AMT(BigDecimal.ZERO);
-						line.setLN_NC_AMT(BigDecimal.ZERO);
-						
-						//RE-CALCULATE SVC-LEVEL AMTS AS SUM OF REV-LEVEL AMOUNTS
-						for(ADJD_CLMSF_ORIGHDR_LINE hrd_line_iterator : orig_HDR_DATA){
-							if(hrd_line_iterator.getLN_CORR_ID() == line.getLN_ORIG_LN_CORR_ID()){
-								line.setLN_CHRG_AMT(line.getLN_CHRG_AMT().add(hrd_line_iterator.getUB92_CHRG_AMT()));
-								line.setLN_NC_AMT(line.getLN_NC_AMT().add(hrd_line_iterator.getUB92_NOT_COV_AMT()));
-							}
-						}
-						
+					}
+				}
+			}
+			
+			if (my_indicator.getSVC_LINE_PENNY_IND_ENTRY()[svc_sub] == true) {
+				// IF THERE WAS ANY PENNY ISSUE FOR THE SVE LINE RE-CALCULATE
+				// THE
+				// * SERVICE LINE CHARGE AND NCOV AMOUNTS AMTS AS SUM OF
+				// REV-LEVEL AMOUNTS
+				line.setLN_CHRG_AMT(BigDecimal.ZERO);
+				line.setLN_NC_AMT(BigDecimal.ZERO);
+
+				// RE-CALCULATE SVC-LEVEL AMTS AS SUM OF REV-LEVEL AMOUNTS
+				for (ADJD_CLMSF_ORIGHDR_LINE hrd_line_iterator : orig_HDR_DATA) {
+					if (hrd_line_iterator.getLN_CORR_ID() == line.getLN_ORIG_LN_CORR_ID()) {
+						line.setLN_CHRG_AMT(line.getLN_CHRG_AMT().add(hrd_line_iterator.getUB92_CHRG_AMT()));
+						line.setLN_NC_AMT(line.getLN_NC_AMT().add(hrd_line_iterator.getUB92_NOT_COV_AMT()));
 					}
 				}
 			}
@@ -267,8 +269,11 @@ public class COBLN2121Service {
          	 	MOVE DCLNE-LN-ID TO SVC-SUB  
          		SET  SVC-LINE-PENNY-YES (SVC-SUB) TO TRUE
          	 */ 
+			int svc_sub = line.getLN_ID() - 1; //Index into the array for marking it as SVC-LINE-PENNY-YES, its an array of size 7 so indexes are from 0 to 6.
+			my_indicator.getSVC_LINE_PENNY_IND_ENTRY()[svc_sub] = true;
 		}
 		
+		return outboundClaim;
 		
 	}
 }
