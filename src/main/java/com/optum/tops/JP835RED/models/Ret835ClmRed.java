@@ -2,6 +2,7 @@ package com.optum.tops.JP835RED.models;
 
 import java.math.BigDecimal;
 
+//Model Class representing record from CURS-FACL-PD-RDUC cursor in RED. Populated by 7701 section
 public class Ret835ClmRed {
 	private String CLM_RD_CATGY_ID ; 
 	private String CLM_RD_GRP_CD ; 

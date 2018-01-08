@@ -4,9 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JP54RedReturn {
-	private List<Ret835ClmRed> ret835ClmRedTbl = new ArrayList<Ret835ClmRed>(10);
+	
+	//Corresponds to :RET:-835-CLM-RED-TBL in the return copybook from RED, Populated by 7701 Section.
+	private List<Ret835ClmRed> ret835ClmRedTbl = new ArrayList<Ret835ClmRed>(10); 
+	
+	////Corresponds to :RET:-835-CLM-RARC-TBL, Populated by 7702 Section.
 	private List<Ret835ClmRarc> ret835ClmRarcTbl = new ArrayList<Ret835ClmRarc>(3); 
-	private List<Ret835ClmErr> ret835ClmErrTbl = new ArrayList<Ret835ClmErr>(3); 
+	
+	 // Corresponds to :RET:-835-CLM-ERR-TBL, Populated by 7703 Section of Red. 
+	private List<Ret835ClmErr> ret835ClmErrTbl = new ArrayList<Ret835ClmErr>(3);
 	
 
 		// 10 :RET:-835-REDUCT-AREA OCCURS 150 TIMES.
@@ -20,9 +26,10 @@ public class JP54RedReturn {
 		// 15 :RET:-835-RD-CARC-CD PIC X(05).
 		// 15 :RET:-835-RD-RARC-CD PIC X(06).
 		// 15 :RET:-835-RD-PD-AMT PIC S9(09)V99 COMP-3.
-	private List<Ret835ReductArea> ret835ReductArea = new ArrayList<Ret835ReductArea>(150);
-
-	private List<Ub92_835AdjdSvc> retUB92_835_AdjdSvcInfo = new ArrayList<Ub92_835AdjdSvc>(60); 
+	
+	//Corresponds to :RET:-835-REDUCT-AREA, populated by 7704, 
+	private List<Ret835Reduct> ret835ReductArea = new ArrayList<Ret835Reduct>(150); 
+	private List<Ub92_835AdjdSvc> retUB92_835_AdjdSvcInfo = new ArrayList<Ub92_835AdjdSvc>(60); // Corresponds to :RET:-UB92-835-ADJD-SVC-INFO structure
 	
 	public List<Ret835ClmRed> getRet835ClmRedTbl() {
 		return ret835ClmRedTbl;
@@ -54,12 +61,12 @@ public class JP54RedReturn {
 	}
 
 
-	public List<Ret835ReductArea> getRet835ReductArea() {
+	public List<Ret835Reduct> getRet835ReductArea() {
 		return ret835ReductArea;
 	}
 
 
-	public void setRet835ReductArea(List<Ret835ReductArea> ret835ReductArea) {
+	public void setRet835ReductArea(List<Ret835Reduct> ret835ReductArea) {
 		this.ret835ReductArea = ret835ReductArea;
 	}
 

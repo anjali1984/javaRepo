@@ -2,7 +2,9 @@ package com.optum.tops.JP835RED.models;
 
 import java.math.BigDecimal;
 
-public class Ret835ReductArea {
+//Model Class for the record returned by CURS-LN-PD-AMT-RDUC, a list of these objects is populated
+//by the 7704-GET-LNE-RDUC section.
+public class Ret835Reduct {
 
 	private int RET_835_RD_SVC_ID;
 	private int RET_835_RD_REV_ID;
