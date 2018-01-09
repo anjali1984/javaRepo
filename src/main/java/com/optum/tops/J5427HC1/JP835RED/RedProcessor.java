@@ -41,12 +41,14 @@ public class RedProcessor {
 		 * 
 		 * did not add logic for the following: d5427MID call 7716)
 		 */
+		JP54RedReturn return_to_D54Hc1 = new JP54RedReturn();
+		
 		processing7700.do7704();
 		processing7700.do7705();
 		processing7700.do7706();
-		processing7700.do7702(request_to_red);
-		processing7700.do7703(request_to_red);
-		processing7700.do7708(request_to_red);
+		return_to_D54Hc1.setRet835ClmRarcTbl(processing7700.do7702(request_to_red));
+		return_to_D54Hc1.setRet835ClmErrTbl(processing7700.do7703(request_to_red));
+		return_to_D54Hc1.setRetUB92_835_AdjdSvcInfo(processing7700.do7708(request_to_red));
 
 	}
 }
