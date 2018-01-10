@@ -43,6 +43,7 @@ public class RequestProcessor {
 		//If NEED to be OPTIMIZED, give each requested claim a thread of its OWN for processing
 		//For Each ReqClaimEntry service it by creating a V5427HC1 instance, put it in the response_list_all_claims field of HC1Response
 		for(ReqClaimEntry individual_claim : claims_to_be_serviced){
+			System.out.println("========================================NEW REQUESTED CLAIM==============================");
 			V5427HC1 currentClaim ; //Claim instance to be put in the return object 
 			currentClaim = cobclaimcheck.COB_claim_check(individual_claim) ; //Sets the field in the indicator object [corresponds to 1100-GET-SuFX-CD] 
 			if(currentClaim.getHC1_COB_COB_CLAIM_INDICATOR().equals("N")){
@@ -61,6 +62,7 @@ public class RequestProcessor {
 			}
 			//Institutional Claims
 			if(currentClaim.getHC1_COB_INST_OR_PROF().equals("I") && currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("Y")){
+				System.out.println("In 2140, 2150 sections");
 				if(currentClaim.getMy_indicator().getCXINT_CLAIM_INDICATOR().equals("N")){ // If this is a Yes you dont have to do 2140 and 2141 sections
 					//Perform 2140-GET-Instl-Reductions [i.e. Call DP835RED with func cd = 1] 
 					currentClaim = instlRed2140.do2140Section(individual_claim, currentClaim);
@@ -72,6 +74,7 @@ public class RequestProcessor {
 				if( (currentClaim.getHC1_COB_INST_OR_PROF().equals("P") || currentClaim.getHC1_COB_INST_OR_PROF().trim().equals("") && (currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("Y") || currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("M"))) 
 						|| (currentClaim.getHC1_COB_INST_OR_PROF().equals("I") && currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("M")) 
 						){
+					System.out.println("In 2160, 2170 sections");
 					//Perform 2160 , 2170  [i.e. Call DP835RED with func cd = 2] 
 				}
 			}
@@ -88,7 +91,7 @@ public class RequestProcessor {
 			 * 2200-WRTOFF-CALC 
 			 */
 			if(currentClaim.getHC1_COB_COB_CLAIM_INDICATOR().equals("Y")){
-				WriteOff2200(currentClaim);
+				//WriteOff2200(currentClaim);
 			}
 			//Doing this because these working storage fields are not required by the request
 			currentClaim.setMy_indicator(null);
