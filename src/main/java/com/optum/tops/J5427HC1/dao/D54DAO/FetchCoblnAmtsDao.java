@@ -24,7 +24,6 @@ public class FetchCoblnAmtsDao {
 	static StringBuffer query = new StringBuffer();
 	
 	public List<COBLN_LINE_FLDS> getCoblnFlds(ReqClaimEntry incoming_Claim, String suffix_cd){
-		System.out.println("In FetchCoblnAmtsDao ");
 		query.setLength(0); // To ensure its cleared of previous query
 		query.append("SELECT LN.LN_ID ");
 		query.append(" ,CB.RPTG_LN_ALLW_AMT ");

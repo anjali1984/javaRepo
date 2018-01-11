@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Repository;
 
 import com.optum.tops.J5427HC1.models.ClaimIndicatorValues;
@@ -15,16 +17,18 @@ import com.optum.tops.J5427HC1.models.ReqClaimEntry;
 import com.optum.tops.J5427HC1.models.V5427HC1;
 
 @Repository
+@PropertySource("queries.properties")
 public class CheckCOBDao {
 
 	@Autowired
 	private DataSource ds; 
 
-	static StringBuffer query = new StringBuffer();
-
+	@Value("${hc1.cobClaimQuery}")
+	private String cobClaimQuery; 
+	
 	public V5427HC1 am_i_COB_claim(ReqClaimEntry claim) {
 		System.out.println("IN CHECKCOBDao ");
-		query.setLength(0); // To ensure its cleared of previous query
+		/*query.setLength(0); // To ensure its cleared of previous query
 		query.append("SELECT BKE2.ICN_SUFX_CD ");
 		query.append(" ,BKE2.ICN_SUFX_VERS_NBR ");
 		query.append(" ,BKE2.NEW_COB_LOGC_CD ");
@@ -56,7 +60,7 @@ public class CheckCOBDao {
 		query.append(" ) ");
 		query.append(" AND LNE.DFT_NBR = ? ");
 		query.append("FETCH FIRST 1 ROWS ONLY ");
-		query.append("WITH UR");
+		query.append("WITH UR");*/
 
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -65,7 +69,7 @@ public class CheckCOBDao {
 		
 		try {
 			con = ds.getConnection();
-			ps = con.prepareStatement(query.toString());
+			ps = con.prepareStatement(cobClaimQuery.toString());
 			ps.setString(1, claim.getHc1_REQ_CLM_INVN_CTL_NBR()); // Sets the icn variable in the query
 			ps.setString(2, claim.getHc1_REQ_CLM_PROC_DT());
 			ps.setString(3, claim.getHc1_REQ_CLM_PROC_TM());
