@@ -96,11 +96,17 @@ public class RequestProcessor {
 		}
 		return response ;
 	}
-
+	/**
+	 * java version of 2200-WRTOFF-CALC section of COBOL program D5427HC1
+	 * Functionality:
+	 * 1.When a cob claim, initializes the write off for recalculation
+	 * 2.Separate calculations based on if the claim a professional or institutional claim
+	 * @param currentClaim
+	 */
 	public void WriteOff2200 (V5427HC1 currentClaim){
-		/*
-		 * anjali:sysout and compute can be removed once tested.
-		 */
+		
+		  /*anjali:sysout and compute can be removed once tested.*/
+		 
 		try {
 			currentClaim.setHC1_COB_PRV_WRT_OFF(BigDecimal.ZERO);
 			/*

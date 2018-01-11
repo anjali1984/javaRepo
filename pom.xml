@@ -151,6 +151,10 @@
 
 	<repositories>
 		<repository>
+			<id>repo1.uhc.com</id>
+			<url>http://repo1.uhc.com/artifactory/repo</url>
+		</repository>
+		<repository>
 			<id>spring-snapshots</id>
 			<name>Spring Snapshots</name>
 			<url>https://repo.spring.io/snapshot</url>
