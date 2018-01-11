@@ -72,8 +72,9 @@ public class RequestProcessor {
 			}else{
 				//Professional Claims
 				if( (currentClaim.getHC1_COB_INST_OR_PROF().equals("P") || currentClaim.getHC1_COB_INST_OR_PROF().trim().equals("") && (currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("Y") || currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("M"))) 
-						|| (currentClaim.getHC1_COB_INST_OR_PROF().equals("I") && currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("M")) 
-						){
+					|| 
+					(currentClaim.getHC1_COB_INST_OR_PROF().equals("I") && currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("M")) 
+				  ){
 					System.out.println("In 2160, 2170 sections");
 					//Perform 2160 , 2170  [i.e. Call DP835RED with func cd = 2] 
 				}
