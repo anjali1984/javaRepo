@@ -28,7 +28,7 @@ public class COBLN2131Service {
 		
 		
 		for(COBLN_2131 each_record: results){
-			System.out.println(" Each line " + each_record.getOrig_Ln_Corr_Id() );
+			System.out.println(" Each line in COBLN2131Service " + each_record.getOrig_Ln_Corr_Id() );
 			
 			/*NEEDS REFACTORING because of 
 			 * how Ln_CORR_ID and Ln_Id are 

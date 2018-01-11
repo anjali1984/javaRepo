@@ -77,7 +77,7 @@ public class LoadCobLnLineAmtsService2150 {
 		}
 		
 		
-		
+		claimToBeSent.setHC1_COB_NBR_LINES(lines_in_return.size());
 		return claimToBeSent;
 		
 	}
