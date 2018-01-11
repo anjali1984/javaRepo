@@ -100,6 +100,7 @@ public class RequestProcessor {
 		}
 		return response ;
 	}
+	
 	/**
 	 * java version of 2200-WRTOFF-CALC section of COBOL program D5427HC1
 	 * Functionality:
@@ -107,7 +108,9 @@ public class RequestProcessor {
 	 * 2.Separate calculations based on if the claim a professional or institutional claim
 	 * @param currentClaim
 	 */
-	public void WriteOff2200 (V5427HC1 currentClaim){
+		public void WriteOff2200 (V5427HC1 currentClaim){
+			
+			
 		
 		  /*anjali:sysout and compute can be removed once tested.*/
 		 
@@ -116,6 +119,7 @@ public class RequestProcessor {
 			/*
 			 * Recalculation for professional or medicare estimated   service lines
 			 */
+			
 			if (((currentClaim.getHC1_COB_INST_OR_PROF().equals("P") || currentClaim.getHC1_COB_INST_OR_PROF().equals("")) && (currentClaim.getHC1_COB_COB_835_PROC_IND().equals("Y") || currentClaim.getHC1_COB_COB_835_PROC_IND().equals("M")))
 					||
 					(currentClaim.getHC1_COB_INST_OR_PROF().equals("I") && currentClaim.getHC1_COB_COB_835_PROC_IND().equals("M")))
@@ -130,6 +134,7 @@ public class RequestProcessor {
 					currentClaim.setHC1_COB_MEDC_PAID_AMT(BigDecimal.ZERO);
 				}
 				int cobDxCnt=0;
+				
 				do {
 					/*
 					 * For inst. and prof medicare claims BigDecimal.ZEROes to medicare paid amount on all line levels   
@@ -174,4 +179,6 @@ public class RequestProcessor {
 
 		}
 	}
+		
+		//accessor and setters
 }

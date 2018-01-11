@@ -13,21 +13,21 @@ public class V5427HC1 {
 	private String HC1_COB_INST_OR_PROF;        
 	       
 	private String HC1_COB_ALLOW_AMT_IND;       
-	private BigDecimal HC1_COB_835_RPT_ALLOW_AMT;   
-	private BigDecimal HC1_COB_OI_PAID_AMT;         
-	private BigDecimal HC1_COB_MEDC_PAID_AMT;      
-	private BigDecimal HC1_COB_PRV_WRT_OFF;         
+	private BigDecimal HC1_COB_835_RPT_ALLOW_AMT=BigDecimal.ZERO;   
+	private BigDecimal HC1_COB_OI_PAID_AMT=BigDecimal.ZERO;         
+	private BigDecimal HC1_COB_MEDC_PAID_AMT=BigDecimal.ZERO;      
+	private BigDecimal HC1_COB_PRV_WRT_OFF=BigDecimal.ZERO;         
 	
-	private BigDecimal HC1_COB_835_COB_PRIM_IMPAC;
-	private BigDecimal HC1_COB_835_PAT_RESP_OVERC;
-	private BigDecimal HC1_COB_835_PAT_RESP_DEDUC;
-	private BigDecimal HC1_COB_835_PAT_RESP_COPAY;
-	private BigDecimal HC1_COB_835_PAT_RESP_COINS;
-	private BigDecimal HC1_COB_835_PAT_RESP_NTCOV;
-	private BigDecimal HC1_COB_835_PAT_RESP_MCEST;
-	private BigDecimal HC1_COB_835_PAT_RESP_TOTAL;
-	private BigDecimal HC1_COB_835_PRV_NC_AMT;    
-	private BigDecimal HC1_COB_835_DENY_NC_AMT;
+	private BigDecimal HC1_COB_835_COB_PRIM_IMPAC =BigDecimal.ZERO;
+	private BigDecimal HC1_COB_835_PAT_RESP_OVERC=BigDecimal.ZERO;
+	private BigDecimal HC1_COB_835_PAT_RESP_DEDUC=BigDecimal.ZERO;
+	private BigDecimal HC1_COB_835_PAT_RESP_COPAY=BigDecimal.ZERO;
+	private BigDecimal HC1_COB_835_PAT_RESP_COINS=BigDecimal.ZERO;
+	private BigDecimal HC1_COB_835_PAT_RESP_NTCOV=BigDecimal.ZERO;
+	private BigDecimal HC1_COB_835_PAT_RESP_MCEST=BigDecimal.ZERO;
+	private BigDecimal HC1_COB_835_PAT_RESP_TOTAL=BigDecimal.ZERO;
+	private BigDecimal HC1_COB_835_PRV_NC_AMT=BigDecimal.ZERO;    
+	private BigDecimal HC1_COB_835_DENY_NC_AMT=BigDecimal.ZERO;
 	
 	private ClaimIndicatorValues my_indicator = new ClaimIndicatorValues();
 	private List<HC1_COB_LINE_ENTRY> HC1_COB_LINE_DATA_AREA = new ArrayList<HC1_COB_LINE_ENTRY>(); //Various Line level data for this Claim to be returned  

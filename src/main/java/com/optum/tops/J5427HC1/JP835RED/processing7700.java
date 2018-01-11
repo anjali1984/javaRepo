@@ -53,7 +53,7 @@ public class processing7700 {
 			ps.setString(3, req.getRED_PROC_DT());
 			ps.setString(4, req.getRED_PROC_TM());
 			ResultSet rs = ps.executeQuery();	
-			result = rs.getInt("ICN_SUFX_VERS_NBR");
+			result=rs.getInt(1);
 
 		}catch (SQLException e) {
 			e.printStackTrace();
@@ -352,10 +352,10 @@ public class processing7700 {
 		//query
 		Connection con = null ; 
 		PreparedStatement ps = null;
-		while (rs.next())
+		/*while (rs.next())
 		{
 			
-		}
+		}*/
 	}
 	public void do7706(){
 		/*
