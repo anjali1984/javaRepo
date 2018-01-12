@@ -1,23 +1,19 @@
 package com.optum.tops.J5427HC1.services;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.optum.tops.J5427HC1.JP835RED.RedProcessor;
 import com.optum.tops.J5427HC1.models.HC1Response;
 import com.optum.tops.J5427HC1.models.Hc1Request;
 import com.optum.tops.J5427HC1.models.ReqClaimEntry;
 import com.optum.tops.J5427HC1.models.V5427HC1;
-import com.optum.tops.JP835RED.models.JP54RedRequest;
-import com.optum.tops.JP835RED.models.JP54RedReturn;
 
 //Single Service that relies on all other services to process the incoming request and sends a HC1Response to the Controller
 @Service
-public class RequestProcessor {
+public class RequestProcessor implements Runnable{
 
 	@Autowired 
 	CheckCOBClaim cobclaimcheck ; //Service that checks if a claim is a COB claim, NYSTATECOB, Penny Process claim
@@ -167,5 +163,11 @@ public class RequestProcessor {
 		finally{
 
 		}
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
 	}
 }
