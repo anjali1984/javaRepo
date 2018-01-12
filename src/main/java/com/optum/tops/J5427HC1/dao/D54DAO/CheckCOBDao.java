@@ -25,7 +25,7 @@ public class CheckCOBDao {
 
 	@Value("${hc1.cobClaimQuery}")
 	private String cobClaimQuery; 
-	
+
 	public V5427HC1 am_i_COB_claim(ReqClaimEntry claim) {
 		System.out.println("IN CHECKCOBDao ");
 		/*query.setLength(0); // To ensure its cleared of previous query
@@ -66,7 +66,7 @@ public class CheckCOBDao {
 		PreparedStatement ps = null;
 		V5427HC1 individual_claim_response = new V5427HC1() ;
 		ClaimIndicatorValues indicator_object = individual_claim_response.getMy_indicator() ; 
-		
+
 		try {
 			con = ds.getConnection();
 			ps = con.prepareStatement(cobClaimQuery.toString());
@@ -75,8 +75,8 @@ public class CheckCOBDao {
 			ps.setString(3, claim.getHc1_REQ_CLM_PROC_TM());
 			ps.setString(4, claim.getHc1_REQ_CLM_DRFT_NBR());
 			ResultSet rs = ps.executeQuery();
-			
-			
+
+
 			//rs.next();//Query returns only 1 row, so to get to the 1st row 
 			if(!rs.next()){
 				System.out.println("No data returned by query in CheckCOBDao");
@@ -89,17 +89,17 @@ public class CheckCOBDao {
 				indicator_object.setDBKE2_835_COB_PROC_IND(rs.getString("NEW_835_COB_PROC_IND"));
 				indicator_object.setDBKE2_SUFX_TOT_CHRG_AMT(rs.getBigDecimal("SUFX_TOT_CHRG_AMT"));
 			}
-			
+
 			if (indicator_object.getDBKE2_COB_LOGC_CD().trim().equals("Y")
 					&& (indicator_object.getDBKE2_835_COB_PROC_IND().trim().equals("Y")
 							|| indicator_object.getDBKE2_835_COB_PROC_IND().trim().equals("M"))) {
-				
+
 				individual_claim_response.setHC1_COB_COB_CLAIM_INDICATOR("Y"); 
 				individual_claim_response.setHC1_COB_COB_CALC_IND(rs.getString("NEW_COB_LOGC_CD"));
 				individual_claim_response.setHC1_COB_COB_835_PROC_IND(rs.getString("NEW_835_COB_PROC_IND"));
 				individual_claim_response.setHC1_COB_INST_OR_PROF(rs.getString("FACL_OR_PROF_CD"));
 				individual_claim_response.setHC1_COB_ALLOW_AMT_IND(rs.getString("ALLW_AMT_DTRM_CD"));
-				
+
 				if(rs.getString("DIAG_B_NBR").trim().contains("S") || rs.getString("DIAG_B_NBR").trim().contains("P")){
 					indicator_object.setNYSTATE_COB_CLAIM("Y");
 					if(rs.getString("DIAG_B_NBR").trim().contains("S"))
@@ -109,14 +109,14 @@ public class CheckCOBDao {
 					else
 						System.out.println("Invalid Value in CheckCOBDao for NYSTATE");
 				}
-				
+
 				//Determine if claim qualifies for Penny Process, To be used later in 2000-Processing 
 				if(rs.getString("NEW_COB_LOGC_CD").trim().equalsIgnoreCase("Y") && rs.getString("EMC_IND").trim().equalsIgnoreCase("Y")){
 					indicator_object.setPENNY_PROC_INDICATOR("Y");
 				}else{
 					indicator_object.setPENNY_PROC_INDICATOR("N");
 				}
-				
+
 			}//Not a COB Claim  
 			else {
 				individual_claim_response.setHC1_COB_COB_CLAIM_INDICATOR("N");

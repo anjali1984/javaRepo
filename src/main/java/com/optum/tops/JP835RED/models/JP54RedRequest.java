@@ -16,6 +16,8 @@ public class JP54RedRequest {
 	private String RED_PROC_DT ; 
 
 	private String RED_PROC_TM ;
+	
+	private String RED_835_TRAN_TYPE;
 
 	public String getRED_INV_CTL_NBR() {
 		return RED_INV_CTL_NBR;
@@ -47,6 +49,14 @@ public class JP54RedRequest {
 
 	public void setRED_PROC_TM(String rED_PROC_TM) {
 		RED_PROC_TM = rED_PROC_TM;
+	}
+
+	public String getRED_835_TRAN_TYPE() {
+		return RED_835_TRAN_TYPE;
+	}
+
+	public void setRED_835_TRAN_TYPE(String rED_835_TRAN_TYPE) {
+		RED_835_TRAN_TYPE = rED_835_TRAN_TYPE;
 	} 
 
 

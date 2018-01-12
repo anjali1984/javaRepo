@@ -96,16 +96,26 @@ public class RequestProcessor implements Runnable{
 		}
 		return response ;
 	}
-
-	public void WriteOff2200 (V5427HC1 currentClaim){
-		/*
-		 * anjali:sysout and compute can be removed once tested.
-		 */
+	
+	/**
+	 * java version of 2200-WRTOFF-CALC section of COBOL program D5427HC1
+	 * Functionality:
+	 * 1.When a cob claim, initializes the write off for recalculation
+	 * 2.Separate calculations based on if the claim a professional or institutional claim
+	 * @param currentClaim
+	 */
+		public void WriteOff2200 (V5427HC1 currentClaim){
+			
+			
+		
+		  /*anjali:sysout and compute can be removed once tested.*/
+		 
 		try {
 			currentClaim.setHC1_COB_PRV_WRT_OFF(BigDecimal.ZERO);
 			/*
 			 * Recalculation for professional or medicare estimated   service lines
 			 */
+			
 			if (((currentClaim.getHC1_COB_INST_OR_PROF().equals("P") || currentClaim.getHC1_COB_INST_OR_PROF().equals("")) && (currentClaim.getHC1_COB_COB_835_PROC_IND().equals("Y") || currentClaim.getHC1_COB_COB_835_PROC_IND().equals("M")))
 					||
 					(currentClaim.getHC1_COB_INST_OR_PROF().equals("I") && currentClaim.getHC1_COB_COB_835_PROC_IND().equals("M")))
@@ -120,6 +130,7 @@ public class RequestProcessor implements Runnable{
 					currentClaim.setHC1_COB_MEDC_PAID_AMT(BigDecimal.ZERO);
 				}
 				int cobDxCnt=0;
+				
 				do {
 					/*
 					 * For inst. and prof medicare claims BigDecimal.ZEROes to medicare paid amount on all line levels   
@@ -164,10 +175,15 @@ public class RequestProcessor implements Runnable{
 
 		}
 	}
+<<<<<<< HEAD
 
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
 		
 	}
+=======
+		
+		//accessor and setters
+>>>>>>> 87856f0fff7a0e25a929df64cf8f8a5f525609f9
 }

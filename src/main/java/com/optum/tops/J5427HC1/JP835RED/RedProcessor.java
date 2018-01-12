@@ -43,7 +43,7 @@ public class RedProcessor {
 		 */
 		JP54RedReturn return_to_D54Hc1 = new JP54RedReturn();
 		
-		processing7700.do7704();
+		return_to_D54Hc1.setRet835ReductArea(processing7700.do7704(request_to_red));
 		processing7700.do7705();
 		processing7700.do7706();
 		return_to_D54Hc1.setRet835ClmRarcTbl(processing7700.do7702(request_to_red));
