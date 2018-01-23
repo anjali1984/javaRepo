@@ -44,6 +44,8 @@ public class RequestProcessor{
 	
 	
 	public HC1Response process (Hc1Request request){
+		
+		long start = System.currentTimeMillis() ; 
 		HC1Response response = new HC1Response() ; //to be sent back to the HC1Controller
 		List<ReqClaimEntry> claims_to_be_serviced = request.getClaimEntries() ; 
 		
@@ -72,6 +74,9 @@ public class RequestProcessor{
 	    }
 	    System.out.println("All Child Threads Finished their Job");
 		System.out.println("Response size is " + response.getResponse_map_all_claims().size());
+		
+		long end  = System.currentTimeMillis() ;
+		System.out.println("Took " +Long.toString(end-start) + " milliseconds to finish all claims ");
 		return response ;
 	}
 
