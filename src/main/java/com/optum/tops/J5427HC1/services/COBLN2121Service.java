@@ -139,7 +139,7 @@ public class COBLN2121Service {
 				}
 				indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).setLN_OI_PAID_AMT(line.getLN_OI_PD_LN_AMT());
 				
-				if(line.getLN_MEDC_L04_AMT().compareTo(new BigDecimal(-1)) == -1){
+				if(line.getLN_MEDC_L04_AMT().compareTo(new BigDecimal(-1)) < 0){
 					line.setLN_MEDC_L04_AMT(BigDecimal.ZERO);
 				}
 				indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).setLN_MEDC_PAID_AMT(line.getLN_MEDC_L04_AMT());

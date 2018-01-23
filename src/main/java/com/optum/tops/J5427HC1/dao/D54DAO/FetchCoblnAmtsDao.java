@@ -1,5 +1,6 @@
 package com.optum.tops.J5427HC1.dao.D54DAO;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -93,7 +94,13 @@ public class FetchCoblnAmtsDao {
 				returned_record.setLN_FST_DT(rs.getString("FST_DT"));
 				returned_record.setLN_LST_SRVC_DT(rs.getString("LST_SRVC_DT"));
 				returned_record.setLN_OI_PD_LN_AMT(rs.getBigDecimal("OI_PD_LN_AMT"));
-				returned_record.setLN_MEDC_L04_AMT(rs.getBigDecimal("MEDC_L04_AMT"));
+				
+				if(rs.getBigDecimal("MEDC_L04_AMT").compareTo(BigDecimal.ZERO) < 0){
+					returned_record.setLN_MEDC_L04_AMT(BigDecimal.ZERO);
+				}else{
+					returned_record.setLN_MEDC_L04_AMT(rs.getBigDecimal("MEDC_L04_AMT"));
+				}
+				
 				returned_record.setLN_ALLW_AMT_DTRM_CD(rs.getString("ALLW_AMT_DTRM_CD"));
 				returned_record.setLN_LN_PROV_WRITE_OFF(rs.getBigDecimal("LN_PROV_WRITE_OFF"));
 				returned_record.setLN_MM_DED_AMT(rs.getBigDecimal("MM_DED_AMT"));

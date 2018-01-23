@@ -11,25 +11,45 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Repository;
 
 import com.optum.tops.JP835RED.models.JP54RedRequest;
 import com.optum.tops.JP835RED.models.Ret835ClmErr;
 import com.optum.tops.JP835RED.models.Ret835ClmRarc;
 import com.optum.tops.JP835RED.models.Ret835ClmRed;
+import com.optum.tops.JP835RED.models.Ret835LineLvl;
+import com.optum.tops.JP835RED.models.Ret835PrcLvl;
 import com.optum.tops.JP835RED.models.Ret835Reduct;
 import com.optum.tops.JP835RED.models.Ub92_835AdjdSvc;
 
 @Repository
+@PropertySource("queries.properties")
 public class processing7700 {
 
 	@Autowired
 	private DataSource ds;
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
-
+	
 	static StringBuffer query = new StringBuffer();
+	
+	@Value("${hc1.7702.query}")
+	private String hc17702Query;
+	
+	@Value("${hc1.7703.query}")
+	private String hc17703Query;
+	
+	@Value("${hc1.7704.query}")
+	private String hc17704Query;
+
+	@Value("${hc1.7705.query}")
+	private String hc17705Query;
+
+	@Value("${hc1.7706.query}")
+	private String hc17706Query;
+	
+	@Value("${hc1.7708.query}")
+	private String hc17708Query;
 
 	//Common method used by all other methods.
 	public int maxSufxVersNbr(JP54RedRequest req){
@@ -134,7 +154,7 @@ public class processing7700 {
 		/*
 		 * read data from adjd_clmsf_facl_pd_rduc table and move them to CB variables
 		 */
-		query.setLength(0);
+		/*query.setLength(0);
 		query.append("SELECT   CLM_RARC_CD ");
 		query.append(",CLM_RMRK_CD ");
 		query.append("FROM T5410DTA.ADJD_CLMSF_RARC_CD ");
@@ -143,7 +163,7 @@ public class processing7700 {
 		query.append("AND PROC_DT               = ? ");
 		query.append("AND PROC_TM               = ? ");
 		query.append("AND ICN_SUFX_VERS_NBR     = ");
-		query.append(maxSufxVersNbr(req) + " "); 
+		query.append(maxSufxVersNbr(req) + " "); */
 
 		Connection con = null ; 
 		PreparedStatement ps = null;
@@ -151,11 +171,15 @@ public class processing7700 {
 
 		try{
 			con = ds.getConnection();
-			ps = con.prepareStatement(query.toString());
+			ps = con.prepareStatement(hc17702Query.toString());
 			ps.setString(1, req.getRED_INV_CTL_NBR()); // Sets the icn variable in the query
 			ps.setString(2, req.getRED_ICN_SUFX_CD());
 			ps.setString(3, req.getRED_PROC_DT());
 			ps.setString(4, req.getRED_PROC_TM());
+			ps.setString(5,req.getRED_INV_CTL_NBR());
+			ps.setString(6,req.getRED_ICN_SUFX_CD());
+			ps.setString(7, req.getRED_PROC_DT());
+			ps.setString(8, req.getRED_PROC_TM());
 			ResultSet rs = ps.executeQuery();
 			int runner = 0 ; 
 			while( runner < 3 && rs.next()){
@@ -185,7 +209,7 @@ public class processing7700 {
 		/*
 		 * read data from ADJD_CLMSF_RARC_CD  table and move them to CB variables
 		 */
-		query.setLength(0);
+		/*query.setLength(0);
 		query.append("SELECT   CLM_ERR_CD ");
 		query.append(",CLM_LN_ERR_TYP_CD ");
 		query.append("FROM T5410DTA.ADJD_CLMSF_ERR_CD ");
@@ -195,6 +219,7 @@ public class processing7700 {
 		query.append("AND PROC_TM               = ? ");
 		query.append("AND ICN_SUFX_VERS_NBR     = "); 
 		query.append(maxSufxVersNbr(req) + " ");
+		*/
 
 		Connection con = null ; 
 		PreparedStatement ps = null;
@@ -202,11 +227,15 @@ public class processing7700 {
 
 		try{
 			con = ds.getConnection();
-			ps = con.prepareStatement(query.toString());
+			ps = con.prepareStatement(hc17703Query.toString());
 			ps.setString(1, req.getRED_INV_CTL_NBR()); // Sets the icn variable in the query
 			ps.setString(2, req.getRED_ICN_SUFX_CD());
 			ps.setString(3, req.getRED_PROC_DT());
 			ps.setString(4, req.getRED_PROC_TM());
+			ps.setString(5,req.getRED_INV_CTL_NBR());
+			ps.setString(6,req.getRED_ICN_SUFX_CD());
+			ps.setString(7, req.getRED_PROC_DT());
+			ps.setString(8, req.getRED_PROC_TM());
 			ResultSet rs = ps.executeQuery();
 			int counter = 0 ; 
 			while(counter < 3 && rs.next()){
@@ -240,7 +269,7 @@ public class processing7700 {
 	 */
 	public List<Ret835Reduct> do7704(JP54RedRequest req){
 
-		query.setLength(0);
+		/*query.setLength(0);
 		query.append("SELECT   PD_AMT_RDUC_CATGY_ID ");
 		query.append(",PD_AMT_RDUC_AMT ");
 		query.append(",PD_AMT_RDUC_GRP_CD ");
@@ -263,14 +292,15 @@ public class processing7700 {
 		query.append("AND C.ICN_SUFX_CD   = ? ");
 		query.append("AND C.PROC_DT       = ? ");
 		query.append("AND C.PROC_TM       = ?) ");
-
+		*/
+		
 		Connection con = null ; 
 		PreparedStatement ps = null;
 		List <Ret835Reduct> ClmRed=new ArrayList<Ret835Reduct>();
 
 		try{
 			con = ds.getConnection();
-			ps = con.prepareStatement(query.toString());
+			ps = con.prepareStatement(hc17704Query.toString());
 			ps.setString(1,req.getRED_INV_CTL_NBR());
 			ps.setString(2,req.getRED_ICN_SUFX_CD());
 			ps.setString(3, req.getRED_PROC_DT());
@@ -288,7 +318,7 @@ public class processing7700 {
 				Ret835Reduct temp=new Ret835Reduct();
 				temp.setRET_835_RD_SVC_ID(rs.getInt("LN_ID"));
 				temp.setRET_835_RD_CATGY_ID(rs.getInt("PD_AMT_RDUC_CATGY_ID"));
-				temp.setRET_835_RD_PD_AMT(rs.getBigDecimal("PD_AMT_RDUC_AM"));
+				temp.setRET_835_RD_PD_AMT(rs.getBigDecimal("PD_AMT_RDUC_AMT"));
 
 				if(req.getRED_835_TRAN_TYPE().equals("87"))
 				{
@@ -345,28 +375,137 @@ public class processing7700 {
 
 	}
 	
-	public void do7705(){
-		/*
-		 * read data from ADJD_CLMSFLN_RARC_CD  table and move them to CB variables
-		 */
-		//query
+	/**
+	 * read data from ADJD_CLMSFLN_RARC_CD  table and move them to CB variables
+	 * @param req
+	 * @return
+	 */
+	public Ret835LineLvl[] do7705(JP54RedRequest req){
+
 		Connection con = null ; 
 		PreparedStatement ps = null;
-		/*while (rs.next())
-		{
-			
-		}*/
+/*		List<Ret835LineLvl> ret835LineLvlList = new ArrayList<Ret835LineLvl>();
+*/			
+		Ret835LineLvl[] ret835LineLvl=new Ret835LineLvl[7];
+
+		try {
+			con = ds.getConnection();
+			ps = con.prepareStatement(hc17705Query);
+
+			ps.setString(1, req.getRED_INV_CTL_NBR());
+			ps.setString(2, req.getRED_ICN_SUFX_CD());
+			ps.setString(3, req.getRED_PROC_DT());
+			ps.setString(4, req.getRED_PROC_TM());
+			ps.setString(5, req.getRED_INV_CTL_NBR());
+			ps.setString(6, req.getRED_ICN_SUFX_CD());
+			ps.setString(7, req.getRED_PROC_DT());
+			ps.setString(8,req.getRED_PROC_TM());
+
+			ResultSet  rs =ps.executeQuery();
+			int ws_ln=0;
+			int ws_sub=0;
+
+			/*if (rs.isBeforeFirst()) {
+				rs.next();
+				ws_ln=rs.getBigDecimal("LN_ID").intValue();
+				System.out.println("ws_ln "+ws_ln);
+				ws_sub=1;
+			}
+*/
+			while (rs.next())//makes the first row as current ,then second the current and so on 
+			{
+				/*anjali:needs review*/
+				if(rs.isFirst())
+				{
+					ws_ln=rs.getBigDecimal("LN_ID").intValue()-1;
+					System.out.println("ws_ln "+ws_ln);
+					ws_sub=1;
+				}else
+				{
+					if(rs.getBigDecimal("LN_ID").intValue()==ws_ln)
+					{
+						ws_sub++;
+					}
+					else
+					{
+						ws_sub=0;
+						ret835LineLvl[ws_ln].setRET_835_20LN_SVC_ID(rs.getBigDecimal("LN_ID"));
+
+					}
+
+				}
+				ws_ln=rs.getBigDecimal("LN_ID").intValue();
+				System.out.println("ws_ln "+ws_ln);
+
+				ret835LineLvl[ws_ln].setRET_835_20LN_SVC_ID(rs.getBigDecimal("LN_ID"));
+				//what if therse no element in tbl for ws_ln index
+				ret835LineLvl[ws_ln].getRet835LnRarcTbl()[ws_sub].setRET_835_LN_RARC_CD(rs.getString("CLM_LN_RARC_CD"));
+				ret835LineLvl[ws_ln].getRet835LnRarcTbl()[ws_sub].setRET_835_LN_RMRK_CD(rs.getString("CLM_LN_RMRK_CD"));
+				ret835LineLvl[ws_ln].getRet835LnRarcTbl()[ws_sub].setRET_835_LN_REV_CD(rs.getBigDecimal("RVNU_CD"));
+				ret835LineLvl[ws_ln].getRet835LnRarcTbl()[ws_sub].setRET_835_LN_PROC_CD(rs.getString("PROC_CD"));
+				ret835LineLvl[ws_ln].getRet835LnRarcTbl()[ws_sub].setRET_835_LN_PROC_TYP_CD(rs.getString("PROC_TYP_CD"));
+				ret835LineLvl[ws_ln].getRet835LnRarcTbl()[ws_sub].setRET_835_LN_REV_ID(rs.getBigDecimal("ORIG_HDR_SEQ_NBR"));
+				
+			}
+			return ret835LineLvl;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ret835LineLvl;
+
 	}
-	public void do7706(){
-		/*
-		 * read data from ADJD_CLMSFLN_ERR_CD table and move them to CB variables
-		 */
+	/**
+	 * read data from ADJD_CLMSFLN_ERR_CD table and move them to CB variables
+	 * @param JP54RedRequest req
+	 * @return
+	 */
+	public List<Ret835PrcLvl> do7706(JP54RedRequest req){
+		Connection con=null;
+		PreparedStatement ps=null;
+		List<Ret835PrcLvl> ret835PrcLvlList=new ArrayList<Ret835PrcLvl>();
+
+		try {
+			con=ds.getConnection();
+			ps=con.prepareStatement(hc17706Query);
+			ps.setString(1, req.getRED_INV_CTL_NBR());
+			ps.setString(2, req.getRED_ICN_SUFX_CD());
+			ps.setString(3, req.getRED_PROC_DT());
+			ps.setString(4, req.getRED_PROC_TM());
+			ps.setString(5, req.getRED_INV_CTL_NBR());
+			ps.setString(6, req.getRED_ICN_SUFX_CD());
+			ps.setString(7, req.getRED_PROC_DT());
+			ps.setString(8, req.getRED_PROC_TM());
+
+			ResultSet rs=ps.executeQuery();
+			int cntr=1;
+			while (cntr<=60 && rs.next())
+			{
+				Ret835PrcLvl ret835PrcLvl=new Ret835PrcLvl();
+				ret835PrcLvl.setRET_835_ERR_CD(rs.getString("CLM_LN_ERR_CD"));
+				ret835PrcLvl.setRET_835_ERR_PROC_TYP_CD(rs.getString("CLM_LN_ERR_TYP_CD"));
+				ret835PrcLvl.setRET_835_ERR_SVC_ID(rs.getBigDecimal("LN_ID"));
+				ret835PrcLvl.setRET_835_ERR_REV_CD(rs.getBigDecimal("RVNU_CD"));	
+				ret835PrcLvl.setRET_835_ERR_PROC_CD(rs.getString("PROC_CD"));
+				ret835PrcLvl.setRET_835_ERR_PROC_TYP_CD(rs.getString("PROC_TYP_CD"));
+				ret835PrcLvl.setRET_835_ERR_REV_ID(rs.getBigDecimal("ORIG_HDR_SEQ_NBR"));
+				ret835PrcLvlList.add(ret835PrcLvl);
+				cntr++;
+			}
+			return ret835PrcLvlList;
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return ret835PrcLvlList;
 	}
 	public List<Ub92_835AdjdSvc> do7708(JP54RedRequest req){
 		/*
 		 * EXTRACT 835 PRORATED DATA AND POPULATE THE INTO RETURN AREA  
 		 */
-		query.setLength(0);
+		/*query.setLength(0);
 		query.append("SELECT   RPT_835_PD_AMT ");
 		query.append(",RPT_835_RVNU_CD ");
 		query.append(",RPT_835_PROC_CD ");
@@ -387,18 +526,22 @@ public class processing7700 {
 		query.append("AND PROC_TM              = ? ");
 		query.append("AND ICN_SUFX_VERS_NBR    = ");
 		query.append(maxSufxVersNbr(req) + " "); 
-
+		*/
 		Connection con = null ; 
 		PreparedStatement ps = null;
 		List<Ub92_835AdjdSvc> retUB92_835_AdjdSvcInfo = new ArrayList<Ub92_835AdjdSvc>();
 
 		try{
 			con = ds.getConnection();
-			ps = con.prepareStatement(query.toString());
+			ps = con.prepareStatement(hc17708Query.toString());
 			ps.setString(1, req.getRED_INV_CTL_NBR()); // Sets the icn variable in the query
 			ps.setString(2, req.getRED_ICN_SUFX_CD());
 			ps.setString(3, req.getRED_PROC_DT());
 			ps.setString(4, req.getRED_PROC_TM());
+			ps.setString(5,req.getRED_INV_CTL_NBR());
+			ps.setString(6,req.getRED_ICN_SUFX_CD());
+			ps.setString(7, req.getRED_PROC_DT());
+			ps.setString(8, req.getRED_PROC_TM());
 			ResultSet rs = ps.executeQuery(); 
 			int counter = 0 ; 
 			while(counter < 60 && rs.next()){

@@ -33,7 +33,7 @@ public class RedProcessor {
 		return return_to_D54Hc1;
 	}
 	
-	public void ProClaim2200(JP54RedRequest request_to_red){
+	public JP54RedReturn ProClaim2200(JP54RedRequest request_to_red){
 		/*read data from adjudicated tables for a professional claim
 		 * 
 		 * This calls: 
@@ -44,11 +44,13 @@ public class RedProcessor {
 		JP54RedReturn return_to_D54Hc1 = new JP54RedReturn();
 		
 		return_to_D54Hc1.setRet835ReductArea(processing7700.do7704(request_to_red));
-		processing7700.do7705();
-		processing7700.do7706();
+		return_to_D54Hc1.setRet835LineLvl(processing7700.do7705(request_to_red));
+		return_to_D54Hc1.setRet835PrcLvl(processing7700.do7706(request_to_red));
 		return_to_D54Hc1.setRet835ClmRarcTbl(processing7700.do7702(request_to_red));
 		return_to_D54Hc1.setRet835ClmErrTbl(processing7700.do7703(request_to_red));
 		return_to_D54Hc1.setRetUB92_835_AdjdSvcInfo(processing7700.do7708(request_to_red));
+		
+		return return_to_D54Hc1;
 
 	}
 }

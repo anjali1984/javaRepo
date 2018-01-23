@@ -9,15 +9,15 @@ package com.optum.tops.JP835RED.models;
 
 public class JP54RedRequest {
 
-	private String RED_INV_CTL_NBR ; 
+	private String RED_INV_CTL_NBR = "" ; 
 	
-	private String RED_ICN_SUFX_CD ; 
+	private String RED_ICN_SUFX_CD = "" ; 
 
-	private String RED_PROC_DT ; 
+	private String RED_PROC_DT = "" ; 
 
-	private String RED_PROC_TM ;
+	private String RED_PROC_TM = "" ;
 	
-	private String RED_835_TRAN_TYPE;
+	private String RED_835_TRAN_TYPE = "" ;
 
 	public String getRED_INV_CTL_NBR() {
 		return RED_INV_CTL_NBR;
