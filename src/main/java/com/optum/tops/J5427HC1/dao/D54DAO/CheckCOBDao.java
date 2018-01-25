@@ -38,9 +38,9 @@ public class CheckCOBDao {
 		query.append(" ,BKE2.DIAG_B_NBR ");
 		query.append(" ,BKE2.SUFX_TOT_CHRG_AMT ");
 		query.append(" ,BKE2.EMC_IND "); //Used in conjunction with "BKE2.NEW_COB_LOGC_CD" to determine if this claim qualifies for Penny Process 
-		query.append("FROM T5410DTA.ADJD_CLMSF_BLK_E2 BKE2 ");
+		query.append("FROM T5410DBA.ADJD_CLMSF_BLK_E2 BKE2 ");
 		query.append(" ");
-		query.append("INNER JOIN T5410DTA.ADJD_CLMSF_LN LNE ");
+		query.append("INNER JOIN T5410DBA.ADJD_CLMSF_LN LNE ");
 		query.append(" ON LNE.INVN_CTL_NBR = BKE2.INVN_CTL_NBR ");
 		query.append(" AND LNE.ICN_SUFX_CD = BKE2.ICN_SUFX_CD ");
 		query.append(" AND LNE.PROC_DT = BKE2.PROC_DT ");
@@ -51,7 +51,7 @@ public class CheckCOBDao {
 		query.append(" AND BKE2.PROC_TM = ? ");
 		query.append(" AND BKE2.ICN_SUFX_VERS_NBR = ");
 		query.append(" ( SELECT MAX( BKE2A.ICN_SUFX_VERS_NBR) ");
-		query.append(" FROM T5410DTA.ADJD_CLMSF_BLK_E2 BKE2A ");
+		query.append(" FROM T5410DBA.ADJD_CLMSF_BLK_E2 BKE2A ");
 		query.append(" WHERE BKE2A.INVN_CTL_NBR = BKE2.INVN_CTL_NBR ");
 		query.append(" AND BKE2A.ICN_SUFX_CD = BKE2.ICN_SUFX_CD ");
 		query.append(" AND BKE2A.PROC_DT = BKE2.PROC_DT ");

@@ -55,7 +55,7 @@ public class processing7700 {
 	public int maxSufxVersNbr(JP54RedRequest req){
 		query.setLength(0);
 		query.append("SELECT MAX(ICN_SUFX_VERS_NBR) "); 
-		query.append("FROM T5410DTA.ADJD_CLMSF_FACL_PD_RDUC C ");
+		query.append("FROM T5410DBA.ADJD_CLMSF_FACL_PD_RDUC C ");
 		query.append("WHERE C.INVN_CTL_NBR  = ? ");
 		query.append("AND C.ICN_SUFX_CD   =  ? ");
 		query.append("AND C.PROC_DT       =  ? ");
@@ -101,7 +101,7 @@ public class processing7700 {
 		query.append(",PD_AMT_RDUC_GRP_CD ");
 		query.append(",PD_AMT_RDUC_CARC_CD ");
 		query.append(",PD_AMT_RDUC_RARC_CD ");
-		query.append("FROM T5410DTA.ADJD_CLMSF_FACL_PD_RDUC ");
+		query.append("FROM T5410DBA.ADJD_CLMSF_FACL_PD_RDUC ");
 		query.append("WHERE  INVN_CTL_NBR        = ? ");
 		query.append("AND ICN_SUFX_CD           =  ? ");
 		query.append("AND PROC_DT               =  ? ");
@@ -157,7 +157,7 @@ public class processing7700 {
 		/*query.setLength(0);
 		query.append("SELECT   CLM_RARC_CD ");
 		query.append(",CLM_RMRK_CD ");
-		query.append("FROM T5410DTA.ADJD_CLMSF_RARC_CD ");
+		query.append("FROM T5410DBA.ADJD_CLMSF_RARC_CD ");
 		query.append("WHERE  INVN_CTL_NBR       =  ? ");
 		query.append("AND ICN_SUFX_CD           = ? ");
 		query.append("AND PROC_DT               = ? ");
@@ -212,7 +212,7 @@ public class processing7700 {
 		/*query.setLength(0);
 		query.append("SELECT   CLM_ERR_CD ");
 		query.append(",CLM_LN_ERR_TYP_CD ");
-		query.append("FROM T5410DTA.ADJD_CLMSF_ERR_CD ");
+		query.append("FROM T5410DBA.ADJD_CLMSF_ERR_CD ");
 		query.append("WHERE  INVN_CTL_NBR       = ? ");
 		query.append("AND ICN_SUFX_CD           = ? ");
 		query.append(" AND PROC_DT              = ? ");
@@ -519,7 +519,7 @@ public class processing7700 {
 		query.append(",UB92_RVNU_CD ");
 		query.append(",UB92_CHRG_AMT ");
 		query.append(",UB92_ALLW_AMT ");
-		query.append("FROM T5410DTA.ADJD_CLMSF_ORIGHDR ");
+		query.append("FROM T5410DBA.ADJD_CLMSF_ORIGHDR ");
 		query.append("WHERE INVN_CTL_NBR       = ? ");
 		query.append("AND ICN_SUFX_CD          = ? ");
 		query.append("AND PROC_DT              = ? ");
