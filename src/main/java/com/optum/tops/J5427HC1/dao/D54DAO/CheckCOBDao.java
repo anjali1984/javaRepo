@@ -74,6 +74,7 @@ public class CheckCOBDao {
 			ps.setString(2, claim.getHc1_REQ_CLM_PROC_DT());
 			ps.setString(3, claim.getHc1_REQ_CLM_PROC_TM());
 			ps.setString(4, claim.getHc1_REQ_CLM_DRFT_NBR());
+			
 			ResultSet rs = ps.executeQuery();
 
 

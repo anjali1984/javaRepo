@@ -76,6 +76,14 @@ public class FetchCoblnAmtsDao {
 			ps.setString(3, incoming_Claim.getHc1_REQ_CLM_DRFT_NBR());
 			ps.setString(4, incoming_Claim.getHc1_REQ_CLM_PROC_TM());
 			ps.setString(5, incoming_Claim.getHc1_REQ_CLM_PROC_DT());
+			
+			System.out.println(incoming_Claim.getHc1_REQ_CLM_INVN_CTL_NBR());
+			System.out.println(suffix_cd);
+			System.out.println(incoming_Claim.getHc1_REQ_CLM_DRFT_NBR());
+			System.out.println(incoming_Claim.getHc1_REQ_CLM_PROC_TM());
+			System.out.println(incoming_Claim.getHc1_REQ_CLM_PROC_DT());
+			
+			
 			ResultSet rs = ps.executeQuery();
 			
 			System.out.println("RESULT SET LINE IDS ORDER");
