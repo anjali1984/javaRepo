@@ -46,10 +46,10 @@ public class FetchCoblnAmtsDao {
 		query.append(" ,LN.NYSCHG_DED_MM_AMT");
 		query.append(" ,LN.ORIG_LN_CORR_ID  ");
 		query.append(" ,LN.ORIG_LN_CHRG_AMT  ");
-//		query.append(" FROM  T5410DBA.ADJD_CLMSFLN_COB   	CB ");
+//		query.append(" FROM  T5410DTA.ADJD_CLMSFLN_COB   	CB ");
 //		query.append(" ,ADJD_CLMSF_LN    		  	LN ");
-		query.append(" FROM  T5410DBA.ADJD_CLMSF_LN          LN ") ;
-		query.append(" LEFT OUTER JOIN T5410DBA.ADJD_CLMSFLN_COB   CB ") ;
+		query.append(" FROM  T5410DTA.ADJD_CLMSF_LN          LN ") ;
+		query.append(" LEFT OUTER JOIN T5410DTA.ADJD_CLMSFLN_COB   CB ") ;
 		query.append("ON  CB.INVN_CTL_NBR      = LN.INVN_CTL_NBR ") ;
 		query.append("AND  CB.ICN_SUFX_CD       = LN.ICN_SUFX_CD  ") ;
 		query.append("AND  CB.PROC_DT           = LN.PROC_DT ") ;
