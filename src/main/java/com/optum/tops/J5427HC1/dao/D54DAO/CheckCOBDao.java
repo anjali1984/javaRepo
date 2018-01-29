@@ -90,6 +90,7 @@ public class CheckCOBDao {
 				indicator_object.setDBKE2_SUFX_TOT_CHRG_AMT(rs.getBigDecimal("SUFX_TOT_CHRG_AMT"));
 			}
 
+			//COB CLAIM setters.
 			if (indicator_object.getDBKE2_COB_LOGC_CD().trim().equals("Y")
 					&& (indicator_object.getDBKE2_835_COB_PROC_IND().trim().equals("Y")
 							|| indicator_object.getDBKE2_835_COB_PROC_IND().trim().equals("M"))) {
