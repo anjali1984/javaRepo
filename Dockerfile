@@ -19,7 +19,7 @@ RUN chown -R 1001:1001 /opt/optum/
 RUN chown -R 1001:1001 /logs
 USER 1001
 
-CMD ["java", "-cp", "/opt/optum/J5427HC1-0.0.1-SNAPSHOT.jar", "com.optum.tops.J5427HC1.J5427Hc1Application"]
+CMD ["java", "-jar", "/opt/optum/J5427HC1-0.0.1-SNAPSHOT.jar"]
 
 #Use to change JAVA_OPTS
 #This will override the previous CMD line.
