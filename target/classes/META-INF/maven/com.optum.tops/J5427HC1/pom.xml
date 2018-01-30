@@ -106,7 +106,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>com.optum.tops.J5427HC1.J5427Hc1ApplicationTests</mainClass>
+							<mainClass>com.optum.tops.J5427HC1.J5427Hc1Application</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

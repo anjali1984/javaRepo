@@ -12,7 +12,7 @@ RUN mkdir -p /opt/optum/
 RUN mkdir -p /logs
 RUN touch /logs/output.log
 COPY /src/main/resources/ /opt/optum/
-COPY /target/*.jar /opt/optum/app.jar
+COPY /target/J5427HC1-0.0.1-SNAPSHOT.jar /opt/optum/app.jar
 
 USER root
 RUN chown -R 1001:1001 /opt/optum/
