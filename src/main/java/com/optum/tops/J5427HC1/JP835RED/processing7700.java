@@ -20,6 +20,7 @@ import com.optum.tops.JP835RED.models.Ret835ClmErr;
 import com.optum.tops.JP835RED.models.Ret835ClmRarc;
 import com.optum.tops.JP835RED.models.Ret835ClmRed;
 import com.optum.tops.JP835RED.models.Ret835LineLvl;
+import com.optum.tops.JP835RED.models.Ret835LnRarcTbl;
 import com.optum.tops.JP835RED.models.Ret835PrcLvl;
 import com.optum.tops.JP835RED.models.Ret835Reduct;
 import com.optum.tops.JP835RED.models.Ub92_835AdjdSvc;
@@ -387,6 +388,17 @@ public class processing7700 {
 /*		List<Ret835LineLvl> ret835LineLvlList = new ArrayList<Ret835LineLvl>();
 */			
 		Ret835LineLvl[] ret835LineLvl=new Ret835LineLvl[7];
+		/**
+		 * initialize array ret835LineLvl
+		 */
+		for(int i=0;i<7;i++)
+		{
+			ret835LineLvl[i]=new Ret835LineLvl();
+			for (int j=0;j<3;j++)
+			{
+			ret835LineLvl[i].getRet835LnRarcTbl()[j]=new Ret835LnRarcTbl();	
+			}
+		}
 
 		try {
 			con = ds.getConnection();
