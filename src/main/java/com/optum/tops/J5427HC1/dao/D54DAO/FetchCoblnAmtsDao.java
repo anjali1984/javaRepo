@@ -11,21 +11,25 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Repository;
 
 import com.optum.tops.J5427HC1.models.COBLN_LINE_FLDS;
 import com.optum.tops.J5427HC1.models.ReqClaimEntry;
 
 @Repository
+@PropertySource("queries.properties")
 public class FetchCoblnAmtsDao {
 
 	@Autowired
-	private DataSource ds; 
-
-	static StringBuffer query = new StringBuffer();
+	private DataSource ds;
+	
+	@Value("${hc1.getCoblnFlds_Query}")
+	private String getCoblnFlds_Query;
 	
 	public List<COBLN_LINE_FLDS> getCoblnFlds(ReqClaimEntry incoming_Claim, String suffix_cd){
-		query.setLength(0); // To ensure its cleared of previous query
+		/*query.setLength(0); // To ensure its cleared of previous query
 		query.append("SELECT LN.LN_ID ");
 		query.append(" ,CB.RPTG_LN_ALLW_AMT ");
 		//query.append(" ,IFNULL(CB.RPTG_LN_ALLW_AMT,0) ");
@@ -63,6 +67,8 @@ public class FetchCoblnAmtsDao {
 		query.append("AND  LN.PROC_DT           = ? ");
 		query.append(" ORDER BY LN.LN_ID ASC "); // ADDED so that the index out of bounds is solved for arraylist
 		query.append("FOR FETCH ONLY ");
+		*/
+		
 		
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -70,7 +76,7 @@ public class FetchCoblnAmtsDao {
 		
 		try{
 			con = ds.getConnection();
-			ps = con.prepareStatement(query.toString());
+			ps = con.prepareStatement(getCoblnFlds_Query.toString());
 			ps.setString(1, incoming_Claim.getHc1_REQ_CLM_INVN_CTL_NBR()); // Sets the icn variable in the query
 			ps.setString(2, suffix_cd);
 			ps.setString(3, incoming_Claim.getHc1_REQ_CLM_DRFT_NBR());
