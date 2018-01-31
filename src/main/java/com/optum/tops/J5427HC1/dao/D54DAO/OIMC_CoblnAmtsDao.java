@@ -11,20 +11,25 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Repository;
 
 import com.optum.tops.J5427HC1.models.COBLN_2131;
 
 @Repository
+@PropertySource("queries.properties")
 public class OIMC_CoblnAmtsDao {
 	@Autowired
 	private DataSource ds;
 	
-	static StringBuffer query = new StringBuffer();
+	@Value("${hc1.OIMC_CoblnAmtsDao_Query}")
+	private String OIMC_CoblnAmtsDao_Query;
 	
 	public List<COBLN_2131> getData(String ICN, String Icn_Sufx_Cd){
 		System.out.println("In OIMC_CoblnAmtsDao ");
 		List<COBLN_2131> return_data = new ArrayList<COBLN_2131>() ;
+		/*
 		query.setLength(0); // To ensure its cleared of previous query
 		query.append("SELECT SRVC.INVN_CTL_NBR "); 
 		query.append(",SRVC.ICN_SUFX_CD ");
@@ -45,13 +50,15 @@ public class OIMC_CoblnAmtsDao {
 		query.append("AND SRVC2.ICN_SUFX_CD     = SRVC.ICN_SUFX_CD ");
 		query.append("AND SRVC2.ORIG_LN_CORR_ID = SRVC.ORIG_LN_CORR_ID) ");
 		query.append("FOR FETCH ONLY ");
+		*/
+		
 		
 		Connection con = null;
 		PreparedStatement ps = null;
 		
 		try{
 			con = ds.getConnection();
-			ps = con.prepareStatement(query.toString());
+			ps = con.prepareStatement(OIMC_CoblnAmtsDao_Query);
 			ps.setString(1, ICN);
 			ps.setString(2, Icn_Sufx_Cd);
 			
