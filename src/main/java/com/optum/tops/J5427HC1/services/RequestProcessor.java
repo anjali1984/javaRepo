@@ -45,7 +45,7 @@ public class RequestProcessor{
 	
 	
 	public HC1Response process (Hc1Request request){
-		boolean threadPool = true ; 
+		boolean threadPool = false ; 
 		
 		if (!threadPool){ //Each claim in the incoming request will get a new thread of its own (Basic Design) 
 			HC1Response response = new HC1Response() ; //to be sent back to the HC1Controller
@@ -105,7 +105,7 @@ public class RequestProcessor{
 			// No more threads can be submitted to the executor service!
 			executor.shutdown();
 			
-			// Blocks until all 100 submitted threads have finished!
+			// Blocks until all submitted threads tasks have finished!
 		    try {
 				executor.awaitTermination(Long.MAX_VALUE, TimeUnit.MINUTES);
 			} catch (InterruptedException e) {

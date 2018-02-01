@@ -80,7 +80,9 @@ public class CallableClaimTask implements Callable<V5427HC1> {
 			// Doing this because these working storage fields are not required
 			// by the request
 			currentClaim.setMy_indicator(null);
-			response.getResponse_map_all_claims().put(position_of_claim_in_requestlist, currentClaim);
+			synchronized(response){
+				response.getResponse_map_all_claims().put(position_of_claim_in_requestlist, currentClaim);
+			}
 			return currentClaim; // Move onto the next claim
 		}
 		currentClaim = opshcfacheck.Ops_Hcfa_claim_check(individual_claim, currentClaim); // At
@@ -174,7 +176,11 @@ public class CallableClaimTask implements Callable<V5427HC1> {
 		
 		
 		System.out.println("Thread " + Thread.currentThread() + " adding V5427HC1 object to ConcurrentMapofResponse");
+		
+		synchronized(response){
 		response.getResponse_map_all_claims().put(position_of_claim_in_requestlist, currentClaim);
+		}
+		
 		System.out.println("Thread " + Thread.currentThread() + " Added V5427HC1 object to ConcurrentMapofResponse");
 		
 		
