@@ -1,6 +1,7 @@
 package com.optum.tops.J5427HC1.concurrency;
 
 import java.math.BigDecimal;
+import java.util.concurrent.Callable;
 
 import com.optum.tops.J5427HC1.models.HC1Response;
 import com.optum.tops.J5427HC1.models.ReqClaimEntry;
@@ -14,7 +15,7 @@ import com.optum.tops.J5427HC1.services.LoadSumForReductService2170;
 import com.optum.tops.J5427HC1.services.OpsHcfaService;
 import com.optum.tops.J5427HC1.services.ProfReduction2160Service;
 
-public class OneClaimTask implements Runnable {
+public class CallableClaimTask implements Callable<V5427HC1> {
 	ReqClaimEntry individual_claim;
 	HC1Response response_this_thread_will_add_to; // COMMON resource across all
 													// threads
@@ -34,7 +35,7 @@ public class OneClaimTask implements Runnable {
 	LoadSumForReductService2170 profLoad2170;
 
 	// Constructor for the Task,
-	public OneClaimTask(ReqClaimEntry individual_claim, HC1Response reponse, int index, CheckCOBClaim cobclaimcheck,
+	public CallableClaimTask(ReqClaimEntry individual_claim, HC1Response reponse, int index, CheckCOBClaim cobclaimcheck,
 			OpsHcfaService opshcfacheck, COBLN2121Service cobln2121, COBLN2131Service cobln2131,
 			InstlReduction2140Service instlRed2140, LoadCobLnLineAmtsService2150 instlLoad2150,
 			ProfReduction2160Service profRed2160, LoadSumForReductService2170 profLoad2170) {
@@ -53,13 +54,14 @@ public class OneClaimTask implements Runnable {
 	}
 
 	@Override
-	public void run() {
+	public V5427HC1 call() {
 		// TODO Auto-generated method stub
-		processOneClaimTask(this.individual_claim, response_this_thread_will_add_to, index_to_put);
+		V5427HC1 returned_claim = processOneClaimTask(this.individual_claim, response_this_thread_will_add_to, index_to_put);
+		return returned_claim;
 
 	}
 
-	private void processOneClaimTask(ReqClaimEntry individual_claim, HC1Response response, int index) {
+	private V5427HC1 processOneClaimTask(ReqClaimEntry individual_claim, HC1Response response, int index) {
 		// TODO Auto-generated method stub
 		System.out.println("========================================NEW REQUESTED CLAIM==============================");
 		int position_of_claim_in_requestlist = index; // claims_to_be_serviced.indexOf(individual_claim);
@@ -79,7 +81,7 @@ public class OneClaimTask implements Runnable {
 			// by the request
 			currentClaim.setMy_indicator(null);
 			response.getResponse_map_all_claims().put(position_of_claim_in_requestlist, currentClaim);
-			return; // Move onto the next claim
+			return currentClaim; // Move onto the next claim
 		}
 		currentClaim = opshcfacheck.Ops_Hcfa_claim_check(individual_claim, currentClaim); // At
 																							// this
@@ -169,10 +171,14 @@ public class OneClaimTask implements Runnable {
 		// Doing this because these working storage fields are not required by
 		// the request
 		currentClaim.setMy_indicator(null);
+		
+		
 		System.out.println("Thread " + Thread.currentThread() + " adding V5427HC1 object to ConcurrentMapofResponse");
 		response.getResponse_map_all_claims().put(position_of_claim_in_requestlist, currentClaim);
 		System.out.println("Thread " + Thread.currentThread() + " Added V5427HC1 object to ConcurrentMapofResponse");
-
+		
+		
+		return currentClaim;
 	}
 
 	/**
@@ -271,3 +277,4 @@ public class OneClaimTask implements Runnable {
 		return currentClaim;
 	}
 }
+

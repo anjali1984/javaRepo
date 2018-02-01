@@ -1,12 +1,13 @@
 package com.optum.tops.J5427HC1.services;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.optum.tops.J5427HC1.concurrency.CallableClaimTask;
 import com.optum.tops.J5427HC1.concurrency.OneClaimTask;
 import com.optum.tops.J5427HC1.models.HC1Response;
 import com.optum.tops.J5427HC1.models.Hc1Request;
@@ -46,7 +47,7 @@ public class RequestProcessor{
 	public HC1Response process (Hc1Request request){
 		boolean threadPool = true ; 
 		
-		if (threadPool){ //Each claim in the incoming request will get a new thread of its own (Basic Design) 
+		if (!threadPool){ //Each claim in the incoming request will get a new thread of its own (Basic Design) 
 			HC1Response response = new HC1Response() ; //to be sent back to the HC1Controller
 			List<ReqClaimEntry> claims_to_be_serviced = request.getClaimEntries() ; 
 			
@@ -76,10 +77,44 @@ public class RequestProcessor{
 			System.out.println("Response size is " + response.getResponse_map_all_claims().size());
 			return response ;
 		}
-		else{ //Design of Thread pools, So all the claims will 
+		else{ //Design of Thread pools, So all the claims will be served from the threadPool of fixed size
 			
-			
+			System.out.println("Doing it the Threadpool way ??????$$$$$$$$$$&&&&&&&&&&&&&&&&&&&&&&&");
 			HC1Response response = new HC1Response() ; //to be sent back to the HC1Controller
+			List<ReqClaimEntry> claims_to_be_serviced = request.getClaimEntries() ; 
+			
+			ExecutorService executor = Executors.newFixedThreadPool(15);
+			
+			List<Future<V5427HC1>> futuresList = new ArrayList<Future<V5427HC1>>(); //In here all the returned claims will be added. 
+			
+			for(ReqClaimEntry individual_claim : claims_to_be_serviced){
+				CallableClaimTask task = new CallableClaimTask(individual_claim, response, claims_to_be_serviced.indexOf(individual_claim), cobclaimcheck, opshcfacheck,cobln2121,cobln2131,instlRed2140,instlLoad2150,profRed2160,profLoad2170) ;
+				Future<V5427HC1> f = executor.submit(task); //Submits a value-returning task for execution and returns a Future representing the pending results of the task.
+				futuresList.add(f);
+			}
+			
+			/*boolean all_done =false ;  
+			while(all_done != true){
+				for(Future<V5427HC1> future : futuresList){
+					all_done &= future.isDone(); // check if future is done
+				}
+			}
+			
+			*/
+			
+			// No more threads can be submitted to the executor service!
+			executor.shutdown();
+			
+			// Blocks until all 100 submitted threads have finished!
+		    try {
+				executor.awaitTermination(Long.MAX_VALUE, TimeUnit.MINUTES);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			System.out.println("All Child Threads Finished their Job");
+			System.out.println("Response size is " + response.getResponse_map_all_claims().size());
 			return response ;
 		}
 	}
