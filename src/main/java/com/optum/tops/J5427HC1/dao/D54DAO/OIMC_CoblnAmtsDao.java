@@ -27,7 +27,7 @@ public class OIMC_CoblnAmtsDao {
 	private String OIMC_CoblnAmtsDao_Query;
 	
 	public List<COBLN_2131> getData(String ICN, String Icn_Sufx_Cd){
-		System.out.println("In OIMC_CoblnAmtsDao ");
+		//System.out.println("In OIMC_CoblnAmtsDao ");
 		List<COBLN_2131> return_data = new ArrayList<COBLN_2131>() ;
 		/*
 		query.setLength(0); // To ensure its cleared of previous query
@@ -62,8 +62,8 @@ public class OIMC_CoblnAmtsDao {
 			ps.setString(1, ICN);
 			ps.setString(2, Icn_Sufx_Cd);
 			
-			System.out.println(ICN);
-			System.out.println(Icn_Sufx_Cd);
+			//System.out.println(ICN);
+			//System.out.println(Icn_Sufx_Cd);
 			
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){

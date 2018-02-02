@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 BuildVersion: 
-Built-By: kbran
+Built-By: mpanto2
 WorkSpaceDate: 
 SVNPath: 
-Build-Jdk: 1.8.0_91
+Build-Jdk: 1.8.0_152
 Created-By: Maven Integration for Eclipse
 

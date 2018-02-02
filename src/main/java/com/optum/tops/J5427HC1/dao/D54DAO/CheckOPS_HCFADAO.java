@@ -51,7 +51,7 @@ public class CheckOPS_HCFADAO {
 			// this returns false if the cursor is not before the first record
 			// or if there are no rows in the ResultSet.
 			if(!rs.next()){
-				System.out.println("No data returned by query in CheckOPS_HCFADAO setOPS_HCFA_INDICATOR to \"N\" ");
+				//System.out.println("No data returned by query in CheckOPS_HCFADAO setOPS_HCFA_INDICATOR to \"N\" ");
 				claim.getMy_indicator().setOPS_HCFA_INDICATOR("N");
 			}
 			else{

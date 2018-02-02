@@ -62,24 +62,24 @@ public class RequestProcessor{
 				t.start();
 			}
 	
-			System.out.println("Waiting for Child Threads to die");
+			//System.out.println("Waiting for Child Threads to die");
 	
 		    for (Thread thread : threadList) {
 		        try {
 		            thread.join();
-		            System.out.println(thread.getName() + " Finished its job");             
+		            //System.out.println(thread.getName() + " Finished its job");             
 		        } catch (InterruptedException e) {
 		            System.out.println("Interrupted Exception thrown by : "
 		                    + thread.getName());                
 		        }
 		    }
-		    System.out.println("All Child Threads Finished their Job");
-			System.out.println("Response size is " + response.getResponse_map_all_claims().size());
+		    //System.out.println("All Child Threads Finished their Job");
+			//System.out.println("Response size is " + response.getResponse_map_all_claims().size());
 			return response ;
 		}
 		else{ //Design of Thread pools, So all the claims will be served from the threadPool of fixed size
 			
-			System.out.println("Doing it the Threadpool way ??????$$$$$$$$$$&&&&&&&&&&&&&&&&&&&&&&&");
+			//System.out.println("Doing it the Threadpool way ??????$$$$$$$$$$&&&&&&&&&&&&&&&&&&&&&&&");
 			HC1Response response = new HC1Response() ; //to be sent back to the HC1Controller
 			List<ReqClaimEntry> claims_to_be_serviced = request.getClaimEntries() ; 
 			
@@ -113,8 +113,8 @@ public class RequestProcessor{
 				e.printStackTrace();
 			}
 
-			System.out.println("All Child Threads Finished their Job");
-			System.out.println("Response size is " + response.getResponse_map_all_claims().size());
+			//System.out.println("All Child Threads Finished their Job");
+			//System.out.println("Response size is " + response.getResponse_map_all_claims().size());
 			return response ;
 		}
 	}

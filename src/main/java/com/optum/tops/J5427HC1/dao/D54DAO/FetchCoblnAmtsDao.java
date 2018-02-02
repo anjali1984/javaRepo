@@ -83,20 +83,20 @@ public class FetchCoblnAmtsDao {
 			ps.setString(4, incoming_Claim.getHc1_REQ_CLM_PROC_TM());
 			ps.setString(5, incoming_Claim.getHc1_REQ_CLM_PROC_DT());
 			
-			System.out.println(incoming_Claim.getHc1_REQ_CLM_INVN_CTL_NBR());
-			System.out.println(suffix_cd);
-			System.out.println(incoming_Claim.getHc1_REQ_CLM_DRFT_NBR());
-			System.out.println(incoming_Claim.getHc1_REQ_CLM_PROC_TM());
-			System.out.println(incoming_Claim.getHc1_REQ_CLM_PROC_DT());
+			//System.out.println(incoming_Claim.getHc1_REQ_CLM_INVN_CTL_NBR());
+			//System.out.println(suffix_cd);
+			//System.out.println(incoming_Claim.getHc1_REQ_CLM_DRFT_NBR());
+			//System.out.println(incoming_Claim.getHc1_REQ_CLM_PROC_TM());
+			//System.out.println(incoming_Claim.getHc1_REQ_CLM_PROC_DT());
 			
 			
 			ResultSet rs = ps.executeQuery();
 			
-			System.out.println("RESULT SET LINE IDS ORDER");
+			//System.out.println("RESULT SET LINE IDS ORDER");
 			while(rs.next()){
 				COBLN_LINE_FLDS returned_record = new COBLN_LINE_FLDS(); 
 				returned_record.setLN_ID(rs.getInt("LN_ID"));
-				System.out.println(rs.getInt("LN_ID"));
+				//System.out.println(rs.getInt("LN_ID"));
 				returned_record.setRPTG_LN_ALLW_AMT(rs.getBigDecimal("RPTG_LN_ALLW_AMT"));
 				returned_record.setLN_SRVC_CD(rs.getString("SRVC_CD"));
 				returned_record.setLN_PMT_SVC_CD(rs.getString("PMT_SVC_CD"));

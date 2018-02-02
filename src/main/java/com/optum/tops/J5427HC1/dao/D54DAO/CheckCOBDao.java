@@ -27,7 +27,7 @@ public class CheckCOBDao {
 	private String cobClaimQuery; 
 
 	public V5427HC1 am_i_COB_claim(ReqClaimEntry claim) {
-		System.out.println("IN CHECKCOBDao ");
+		//System.out.println("IN CHECKCOBDao ");
 		/*query.setLength(0); // To ensure its cleared of previous query
 		query.append("SELECT BKE2.ICN_SUFX_CD ");
 		query.append(" ,BKE2.ICN_SUFX_VERS_NBR ");
@@ -80,7 +80,7 @@ public class CheckCOBDao {
 
 			//rs.next();//Query returns only 1 row, so to get to the 1st row 
 			if(!rs.next()){
-				System.out.println("No data returned by query in CheckCOBDao");
+				//System.out.println("No data returned by query in CheckCOBDao");
 			}else{
 				// Set the indicator values in the indicator_object of V5427HC1
 				// (Claim object)
@@ -108,8 +108,8 @@ public class CheckCOBDao {
 						indicator_object.setNYSTATE_COB_CLAIM_PAIDTO("S");
 					else if(rs.getString("DIAG_B_NBR").trim().contains("P"))
 						indicator_object.setNYSTATE_COB_CLAIM_PAIDTO("P");
-					else
-						System.out.println("Invalid Value in CheckCOBDao for NYSTATE");
+					//else
+						//System.out.println("Invalid Value in CheckCOBDao for NYSTATE");
 				}
 
 				//Determine if claim qualifies for Penny Process, To be used later in 2000-Processing 

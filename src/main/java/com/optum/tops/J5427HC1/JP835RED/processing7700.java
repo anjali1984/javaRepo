@@ -430,7 +430,7 @@ public class processing7700 {
 				if(rs.isFirst())
 				{
 					ws_ln=rs.getBigDecimal("LN_ID").intValue()-1;
-					System.out.println("ws_ln "+ws_ln);
+					//System.out.println("ws_ln "+ws_ln);
 					ws_sub=1;
 				}else
 				{
@@ -447,7 +447,7 @@ public class processing7700 {
 
 				}
 				ws_ln=rs.getBigDecimal("LN_ID").intValue();
-				System.out.println("ws_ln "+ws_ln);
+				//System.out.println("ws_ln "+ws_ln);
 
 				ret835LineLvl[ws_ln].setRET_835_20LN_SVC_ID(rs.getBigDecimal("LN_ID"));
 				//what if therse no element in tbl for ws_ln index

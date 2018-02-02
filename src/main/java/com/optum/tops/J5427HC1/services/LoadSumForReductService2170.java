@@ -26,7 +26,7 @@ public class LoadSumForReductService2170 {
 		List<LineReductionHold> reductLines = claimToBeSent.getMy_indicator().getWS_LINE_REDUCTION_TABLE(); //WS table for all line amounts 0 to 6 index
 		List<HC1_COB_LINE_ENTRY> lines_in_return = claimToBeSent.getHC1_COB_LNE_DATA_AREA(); 
 		
-		System.out.println("Size of the Reduction table is" + reductLines.size() ) ;
+		//System.out.println("Size of the Reduction table is" + reductLines.size() ) ;
 		//for (int ln_sub=0;ln_sub<7;ln_sub++)
 		for(LineReductionHold each_line : reductLines)
 		{
@@ -102,12 +102,12 @@ public class LoadSumForReductService2170 {
 					if(each_line.getLN_MEDC_PAID_AMT().compareTo(BigDecimal.ZERO)>0)
 					{
 						claimToBeSent.setHC1_COB_MEDC_PAID_AMT(claimToBeSent.getHC1_COB_MEDC_PAID_AMT().add(each_line.getLN_MEDC_PAID_AMT().negate()));
-						System.out.println("69 transcd");
+						//System.out.println("69 transcd");
 					}
 				}else
 				{
 					claimToBeSent.setHC1_COB_MEDC_PAID_AMT(claimToBeSent.getHC1_COB_MEDC_PAID_AMT().add(line_to_be_added.getHC1_COB_LN_EOB_MEDC_PAID_AMT()));
-					System.out.println("not 69 transcd"+claimToBeSent.getHC1_COB_MEDC_PAID_AMT());
+					//System.out.println("not 69 transcd"+claimToBeSent.getHC1_COB_MEDC_PAID_AMT());
 
 				}
 

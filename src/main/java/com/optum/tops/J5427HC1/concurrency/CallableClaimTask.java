@@ -63,7 +63,7 @@ public class CallableClaimTask implements Callable<V5427HC1> {
 
 	private V5427HC1 processOneClaimTask(ReqClaimEntry individual_claim, HC1Response response, int index) {
 		// TODO Auto-generated method stub
-		System.out.println("========================================NEW REQUESTED CLAIM==============================");
+		//System.out.println("========================================NEW REQUESTED CLAIM==============================");
 		int position_of_claim_in_requestlist = index; // claims_to_be_serviced.indexOf(individual_claim);
 		V5427HC1 currentClaim; // Claim instance to be put in the return object
 		currentClaim = cobclaimcheck.COB_claim_check(individual_claim); // Sets
@@ -125,7 +125,7 @@ public class CallableClaimTask implements Callable<V5427HC1> {
 		// Institutional Claims
 		if (currentClaim.getHC1_COB_INST_OR_PROF().equals("I")
 				&& currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("Y")) {
-			System.out.println("In 2140, 2150 sections");
+			//System.out.println("In 2140, 2150 sections");
 			if (currentClaim.getMy_indicator().getCXINT_CLAIM_INDICATOR().equals("N")) { // If
 																							// this
 																							// is
@@ -154,7 +154,7 @@ public class CallableClaimTask implements Callable<V5427HC1> {
 									|| currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("M")))
 					|| (currentClaim.getHC1_COB_INST_OR_PROF().equals("I")
 							&& currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("M"))) {
-				System.out.println("In 2160, 2170 sections");
+				//System.out.println("In 2160, 2170 sections");
 				// Perform 2160 , 2170 [i.e. Call DP835RED with func cd = 2]
 				currentClaim = profRed2160.do2160Section(individual_claim, currentClaim);
 				profLoad2170.do2170(currentClaim, individual_claim.getHc1_REQ_CLM_TRANS_CD().trim());
@@ -166,7 +166,7 @@ public class CallableClaimTask implements Callable<V5427HC1> {
 		 * 2200-WRTOFF-CALC
 		 */
 		if (currentClaim.getHC1_COB_COB_CLAIM_INDICATOR().equals("Y")) {
-			System.out.println("Doing 2200-WRTOFF-CALC");
+			//System.out.println("Doing 2200-WRTOFF-CALC");
 			currentClaim = WriteOff2200(currentClaim);
 		}
 		
@@ -175,13 +175,13 @@ public class CallableClaimTask implements Callable<V5427HC1> {
 		currentClaim.setMy_indicator(null);
 		
 		
-		System.out.println("Thread " + Thread.currentThread() + " adding V5427HC1 object to ConcurrentMapofResponse");
+		//System.out.println("Thread " + Thread.currentThread() + " adding V5427HC1 object to ConcurrentMapofResponse");
 		
 		synchronized(response){
 		response.getResponse_map_all_claims().put(position_of_claim_in_requestlist, currentClaim);
 		}
 		
-		System.out.println("Thread " + Thread.currentThread() + " Added V5427HC1 object to ConcurrentMapofResponse");
+		//System.out.println("Thread " + Thread.currentThread() + " Added V5427HC1 object to ConcurrentMapofResponse");
 		
 		
 		return currentClaim;
@@ -220,7 +220,7 @@ public class CallableClaimTask implements Callable<V5427HC1> {
 						|| currentClaim.getHC1_COB_INST_OR_PROF().equals("P"))
 						&& currentClaim.getHC1_COB_COB_835_PROC_IND().equals("M")) {
 					currentClaim.setHC1_COB_MEDC_PAID_AMT(BigDecimal.ZERO);
-					System.out.println("in 2200 med amnt " + currentClaim.getHC1_COB_MEDC_PAID_AMT());
+					//System.out.println("in 2200 med amnt " + currentClaim.getHC1_COB_MEDC_PAID_AMT());
 				}
 				int cobDxCnt = 0;
 
@@ -243,9 +243,9 @@ public class CallableClaimTask implements Callable<V5427HC1> {
 									.getHC1_COB_LN_EOB_MEDC_PAID_AMT())
 							.subtract(currentClaim.getHC1_COB_LNE_DATA_AREA().get(cobDxCnt)
 									.getHC1_COB_LN_EOB_OI_PAID_AMT());
-					System.out.println(
-							"In 2200, modifying the prv_wrt_off amount of the line, based on the 4 other line level amounts:  "
-									+ compute);
+//					System.out.println(
+//							"In 2200, modifying the prv_wrt_off amount of the line, based on the 4 other line level amounts:  "
+//									+ compute);
 					currentClaim.getHC1_COB_LNE_DATA_AREA().get(cobDxCnt).setHC1_COB_LN_COB_PRV_WRT_OFF(compute);
 					/*
 					 * Provider write-off changed to BigDecimal.ZERO at line
@@ -268,7 +268,7 @@ public class CallableClaimTask implements Callable<V5427HC1> {
 								.subtract(currentClaim.getHC1_COB_MEDC_PAID_AMT()))
 										.subtract(currentClaim.getHC1_COB_OI_PAID_AMT());
 				currentClaim.setHC1_COB_PRV_WRT_OFF(compute);
-				System.out.println("currentClaim.setHC1_COB_PRV_WRT_OFF() " + compute);
+				//System.out.println("currentClaim.setHC1_COB_PRV_WRT_OFF() " + compute);
 
 				for (int i = 0; i < 7; i++)
 					currentClaim.getHC1_COB_LNE_DATA_AREA().get(i).setHC1_COB_LN_COB_PRV_WRT_OFF(BigDecimal.ZERO);

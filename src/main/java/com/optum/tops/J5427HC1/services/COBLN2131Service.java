@@ -24,11 +24,11 @@ public class COBLN2131Service {
 		results = OimcCobAmtsDao.getData(incoming_claim.getHc1_REQ_CLM_INVN_CTL_NBR(), outbound_claim.getMy_indicator().getDBKE2_ICN_SUFX_CD()); 
 		BigDecimal ln_chrg_amt, ln_nc_amt , ln_medc_paid_amt;
 		List<LineReductionHold> lineRedDataTable = outbound_claim.getMy_indicator().getWS_LINE_REDUCTION_TABLE(); //On a claim level
-		System.out.println("Size of the redcution table in 2131 Service " +lineRedDataTable.size());
+		//System.out.println("Size of the redcution table in 2131 Service " +lineRedDataTable.size());
 		
 		
 		for(COBLN_2131 each_record: results){
-			System.out.println(" Each line in COBLN2131Service " + each_record.getOrig_Ln_Corr_Id() );
+			//System.out.println(" Each line in COBLN2131Service " + each_record.getOrig_Ln_Corr_Id() );
 			
 			/*NEEDS REFACTORING because of 
 			 * how Ln_CORR_ID and Ln_Id are 
@@ -46,7 +46,7 @@ public class COBLN2131Service {
 					lineRedDataTable.get(index).setLN_MEDC_PAID_AMT(temp);
 				}
 			}catch(IndexOutOfBoundsException e ){
-				System.out.println("ERROR: Skipping Chrg and Nc amounts for a line just like COBOL program. ");
+				//System.out.println("ERROR: Skipping Chrg and Nc amounts for a line just like COBOL program. ");
 			}
 			
 			

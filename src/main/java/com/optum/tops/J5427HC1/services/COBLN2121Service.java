@@ -53,7 +53,7 @@ public class COBLN2121Service {
 			
 			if( (line_pmt_svc_cd.contains("OI") || line_pmt_svc_cd.contains("OIM") || line_pmt_svc_cd.contains("OIMEDI")) 
 					|| (requestedClaim.getHc1_REQ_CLM_TRANS_CD().contains("69") && !line.getLN_RMRK_CD().contains("69"))){
-				System.out.println("Line " + line.getLN_ID() + " will ONLY be added for avoiding exception of adding to Arraylist, redcution table. OI,OM, OIMEDI COBLN2121Service ");
+				//System.out.println("Line " + line.getLN_ID() + " will ONLY be added for avoiding exception of adding to Arraylist, redcution table. OI,OM, OIMEDI COBLN2121Service ");
 				indicatorObject.getWS_LINE_DATA_AREA_TABLE().add(index, line_data);
 				indicatorObject.getWS_LINE_REDUCTION_TABLE().add(index, line_reduction_data);
 				continue; 
@@ -62,7 +62,7 @@ public class COBLN2121Service {
 																			
 			List<COB_835_INFO> enumValues = Arrays.asList(COB_835_INFO.values()); // Gets all 
 			if (enumValues.contains("COB_835_INFO." + line_pmt_svc_cd)) {
-				System.out.println("Line " + line.getLN_ID() + " will ONLY be added for avoiding exception of adding to Arraylist, redcution table. COB_835_INFO COBLN2121Service ");
+				//System.out.println("Line " + line.getLN_ID() + " will ONLY be added for avoiding exception of adding to Arraylist, redcution table. COB_835_INFO COBLN2121Service ");
 				indicatorObject.getWS_LINE_DATA_AREA_TABLE().add(index, line_data);
 				indicatorObject.getWS_LINE_REDUCTION_TABLE().add(index, line_reduction_data);
 				continue;
@@ -82,7 +82,7 @@ public class COBLN2121Service {
 						indicatorObject.setNYS_SERV_LINE_SW(false);
 					}
 					if (indicatorObject.getCXINT_CLAIM_INDICATOR().equals("Y")) {
-						System.out.println("Line " + line.getLN_ID() + " will ONLY be added for avoiding exception of adding to Arraylist, redcution table. CXINT_CLAIM_INDICATOR Y COBLN2121Service ");
+						//System.out.println("Line " + line.getLN_ID() + " will ONLY be added for avoiding exception of adding to Arraylist, redcution table. CXINT_CLAIM_INDICATOR Y COBLN2121Service ");
 						indicatorObject.getWS_LINE_DATA_AREA_TABLE().add(index, line_data);
 						indicatorObject.getWS_LINE_REDUCTION_TABLE().add(index, line_reduction_data);
 						continue;
