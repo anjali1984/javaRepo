@@ -18,22 +18,22 @@ public class RedProcessor {
 	com.optum.tops.J5427HC1.JP835RED.processing7700 processing7700; //DAO
 	
 	
-	public JP54RedReturn InstClaim2100(JP54RedRequest request_to_red){
+	public JP54RedReturn InstClaim2100(JP54RedRequest request_to_red, String logId){
 	     /*read data from adjudicated tables for Institutional Claims 
 		  *  It then calls the following sections:
 		  *  7701, 7702, 7703, 7708 
 		  *  did not add logic for the following: program = d5427MID, then it calls 7712) 
 		  */
 		JP54RedReturn return_to_D54Hc1 = new JP54RedReturn(); 
-		return_to_D54Hc1.setRet835ClmRedTbl(processing7700.do7701(request_to_red));
-		return_to_D54Hc1.setRet835ClmRarcTbl(processing7700.do7702(request_to_red));
-		return_to_D54Hc1.setRet835ClmErrTbl(processing7700.do7703(request_to_red));
-		return_to_D54Hc1.setRetUB92_835_AdjdSvcInfo(processing7700.do7708(request_to_red));
+		return_to_D54Hc1.setRet835ClmRedTbl(processing7700.do7701(request_to_red,logId));
+		return_to_D54Hc1.setRet835ClmRarcTbl(processing7700.do7702(request_to_red,logId));
+		return_to_D54Hc1.setRet835ClmErrTbl(processing7700.do7703(request_to_red,logId));
+		return_to_D54Hc1.setRetUB92_835_AdjdSvcInfo(processing7700.do7708(request_to_red,logId));
 
 		return return_to_D54Hc1;
 	}
 	
-	public JP54RedReturn ProClaim2200(JP54RedRequest request_to_red){
+	public JP54RedReturn ProClaim2200(JP54RedRequest request_to_red, String logId){
 		/*read data from adjudicated tables for a professional claim
 		 * 
 		 * This calls: 
@@ -43,12 +43,12 @@ public class RedProcessor {
 		 */
 		JP54RedReturn return_to_D54Hc1 = new JP54RedReturn();
 		
-		return_to_D54Hc1.setRet835ReductArea(processing7700.do7704(request_to_red));
-		return_to_D54Hc1.setRet835LineLvl(processing7700.do7705(request_to_red));
-		return_to_D54Hc1.setRet835PrcLvl(processing7700.do7706(request_to_red));
-		return_to_D54Hc1.setRet835ClmRarcTbl(processing7700.do7702(request_to_red));
-		return_to_D54Hc1.setRet835ClmErrTbl(processing7700.do7703(request_to_red));
-		return_to_D54Hc1.setRetUB92_835_AdjdSvcInfo(processing7700.do7708(request_to_red));
+		return_to_D54Hc1.setRet835ReductArea(processing7700.do7704(request_to_red,logId));
+		return_to_D54Hc1.setRet835LineLvl(processing7700.do7705(request_to_red,logId));
+		return_to_D54Hc1.setRet835PrcLvl(processing7700.do7706(request_to_red,logId));
+		return_to_D54Hc1.setRet835ClmRarcTbl(processing7700.do7702(request_to_red,logId));
+		return_to_D54Hc1.setRet835ClmErrTbl(processing7700.do7703(request_to_red,logId));
+		return_to_D54Hc1.setRetUB92_835_AdjdSvcInfo(processing7700.do7708(request_to_red,logId));
 		
 		return return_to_D54Hc1;
 

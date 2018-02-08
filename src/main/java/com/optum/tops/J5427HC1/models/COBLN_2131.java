@@ -7,8 +7,8 @@ public class COBLN_2131 {
 	private String Invn_Ctl_Nbr; 
 	private String Icn_Sufx_Cd; 
 	private int Orig_Ln_Corr_Id; 
-	private BigDecimal Medcr_Pd_Amt; 
-	private BigDecimal Oi_Pd_Ln_Amt;
+	private BigDecimal Medcr_Pd_Amt=BigDecimal.ZERO; 
+	private BigDecimal Oi_Pd_Ln_Amt=BigDecimal.ZERO;
 	public String getInvn_Ctl_Nbr() {
 		return Invn_Ctl_Nbr;
 	}

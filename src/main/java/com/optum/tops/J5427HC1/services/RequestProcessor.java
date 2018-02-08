@@ -3,6 +3,7 @@ package com.optum.tops.J5427HC1.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
+import org.apache.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import com.optum.tops.J5427HC1.concurrency.OneClaimTask;
 import com.optum.tops.J5427HC1.models.HC1Response;
 import com.optum.tops.J5427HC1.models.Hc1Request;
 import com.optum.tops.J5427HC1.models.ReqClaimEntry;
+import com.optum.tops.J5427HC1.models.ReqClaimEntryVO;
 import com.optum.tops.J5427HC1.models.V5427HC1;
 
 //Single Service that relies on all other services to process the incoming request and sends a HC1Response to the Controller
@@ -35,78 +37,90 @@ public class RequestProcessor{
 
 	@Autowired 
 	LoadCobLnLineAmtsService2150 instlLoad2150; 
-	
+
 	@Autowired
 	ProfReduction2160Service profRed2160;
-	
+
 	@Autowired
 	LoadSumForReductService2170 profLoad2170;
 	
-	
-	
+	@Autowired
+	COBONL2200Service cOBONL2200Service;
+
+
+
 	public HC1Response process (Hc1Request request){
 		boolean threadPool = false ; 
-		
+		Logger logger=Logger.getLogger("genLogger");
+		String location="J5427HC1.services.RequestProcessor.process(Hc1Request)";
+
 		if (!threadPool){ //Each claim in the incoming request will get a new thread of its own (Basic Design) 
+			logger.info(location.concat(" Not using thread Pool"));
 			HC1Response response = new HC1Response() ; //to be sent back to the HC1Controller
 			List<ReqClaimEntry> claims_to_be_serviced = request.getClaimEntries() ; 
-			
+
 			List<Thread> threadList = new ArrayList<>(); 
-			
+
 			//For Each ReqClaimEntry service it by creating a V5427HC1 instance, put it in the response_list_all_claims field of HC1Response
-			for(ReqClaimEntry individual_claim : claims_to_be_serviced){
-				OneClaimTask task = new OneClaimTask(individual_claim, response, claims_to_be_serviced.indexOf(individual_claim), cobclaimcheck, opshcfacheck,cobln2121,cobln2131,instlRed2140,instlLoad2150,profRed2160,profLoad2170) ;
+			for(ReqClaimEntry eachClaim : claims_to_be_serviced){
+				ReqClaimEntryVO individual_claim=new ReqClaimEntryVO();
+				individual_claim.setReqClaimEntry(eachClaim);
+				individual_claim.setLogId(eachClaim.getHc1_REQ_CLM_INVN_CTL_NBR().concat(eachClaim.getHc1_REQ_CLM_DRFT_NBR()));
+				OneClaimTask task = new OneClaimTask(individual_claim, response, claims_to_be_serviced.indexOf(individual_claim), cobclaimcheck, opshcfacheck,cobln2121,cobln2131,instlRed2140,instlLoad2150,profRed2160,profLoad2170,cOBONL2200Service) ;
 				Thread t = new Thread(task); 
 				t.setName("" + claims_to_be_serviced.indexOf(individual_claim));
 				threadList.add(t);
 				t.start();
 			}
-	
+
 			//System.out.println("Waiting for Child Threads to die");
-	
-		    for (Thread thread : threadList) {
-		        try {
-		            thread.join();
-		            //System.out.println(thread.getName() + " Finished its job");             
-		        } catch (InterruptedException e) {
-		            System.out.println("Interrupted Exception thrown by : "
-		                    + thread.getName());                
-		        }
-		    }
-		    //System.out.println("All Child Threads Finished their Job");
+
+			for (Thread thread : threadList) {
+				try {
+					thread.join();
+					//System.out.println(thread.getName() + " Finished its job");             
+				} catch (InterruptedException e) {
+					System.out.println("Interrupted Exception thrown by : "
+							+ thread.getName());                
+				}
+			}
+			//System.out.println("All Child Threads Finished their Job");
 			//System.out.println("Response size is " + response.getResponse_map_all_claims().size());
 			return response ;
 		}
 		else{ //Design of Thread pools, So all the claims will be served from the threadPool of fixed size
-			
-			//System.out.println("Doing it the Threadpool way ??????$$$$$$$$$$&&&&&&&&&&&&&&&&&&&&&&&");
+
+			logger.info(location.concat("Using thread Pool"));
 			HC1Response response = new HC1Response() ; //to be sent back to the HC1Controller
 			List<ReqClaimEntry> claims_to_be_serviced = request.getClaimEntries() ; 
-			
+
 			ExecutorService executor = Executors.newFixedThreadPool(15);
-			
+
 			List<Future<V5427HC1>> futuresList = new ArrayList<Future<V5427HC1>>(); //In here all the returned claims will be added. 
-			
-			for(ReqClaimEntry individual_claim : claims_to_be_serviced){
-				CallableClaimTask task = new CallableClaimTask(individual_claim, response, claims_to_be_serviced.indexOf(individual_claim), cobclaimcheck, opshcfacheck,cobln2121,cobln2131,instlRed2140,instlLoad2150,profRed2160,profLoad2170) ;
+
+			for(ReqClaimEntry eachClaim : claims_to_be_serviced){
+				ReqClaimEntryVO individual_claim=new ReqClaimEntryVO();
+				individual_claim.setReqClaimEntry(eachClaim);
+				individual_claim.setLogId(eachClaim.getHc1_REQ_CLM_INVN_CTL_NBR().concat(eachClaim.getHc1_REQ_CLM_DRFT_NBR()));
+				CallableClaimTask task = new CallableClaimTask(individual_claim, response, claims_to_be_serviced.indexOf(individual_claim), cobclaimcheck, opshcfacheck,cobln2121,cobln2131,instlRed2140,instlLoad2150,profRed2160,profLoad2170,cOBONL2200Service) ;
 				Future<V5427HC1> f = executor.submit(task); //Submits a value-returning task for execution and returns a Future representing the pending results of the task.
 				futuresList.add(f);
 			}
-			
+
 			/*boolean all_done =false ;  
 			while(all_done != true){
 				for(Future<V5427HC1> future : futuresList){
 					all_done &= future.isDone(); // check if future is done
 				}
 			}
-			
-			*/
-			
+
+			 */
+
 			// No more threads can be submitted to the executor service!
 			executor.shutdown();
-			
+
 			// Blocks until all submitted threads tasks have finished!
-		    try {
+			try {
 				executor.awaitTermination(Long.MAX_VALUE, TimeUnit.MINUTES);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block

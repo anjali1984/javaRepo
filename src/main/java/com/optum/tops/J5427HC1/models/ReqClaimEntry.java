@@ -16,7 +16,7 @@ public class ReqClaimEntry {
 	private String hc1_REQ_CLM_PROC_TM;
 	private String hc1_REQ_CLM_TRANS_CD;
 	private String hc1_REQ_CLM_COB_IND;
-	private BigDecimal hc1_REQ_RESPONSE_CODE;
+	private BigDecimal hc1_REQ_RESPONSE_CODE=BigDecimal.ZERO;
 	public String getReqPolNbr() {
 		return reqPolNbr;
 	}

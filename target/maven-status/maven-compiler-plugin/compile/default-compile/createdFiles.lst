@@ -10,6 +10,7 @@ com\optum\tops\JP835RED\models\Ub92_835AdjdSvc.class
 com\optum\tops\J5427HC1\controllers\HC1Controller.class
 com\optum\tops\JP835RED\models\Ret835ClmErr.class
 com\optum\tops\J5427HC1\models\V5427HC1.class
+com\optum\tops\J5427HC1\services\COBONL2200Service.class
 com\optum\tops\J5427HC1\dao\D54DAO\FetchCoblnAmtsDao.class
 com\optum\tops\J5427HC1\JP835RED\RedProcessor.class
 com\optum\tops\J5427HC1\services\RequestProcessor.class
@@ -18,6 +19,7 @@ com\optum\tops\J5427HC1\J5427Hc1Application.class
 com\optum\tops\J5427HC1\models\COBLN_LINE_FLDS.class
 com\optum\tops\JP835RED\models\JP54RedReturn.class
 com\optum\tops\JP835RED\models\Ret835LnRarcTbl.class
+com\optum\tops\J5427HC1\models\ReqClaimEntryVO.class
 com\optum\tops\J5427HC1\dao\D54DAO\CheckOPS_HCFADAO.class
 com\optum\tops\VYCKSERV\enums\PAY_SERV.class
 com\optum\tops\J5427HC1\services\COBLN2121Service.class

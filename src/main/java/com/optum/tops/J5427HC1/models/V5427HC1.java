@@ -8,10 +8,10 @@ import java.util.List;
 public class V5427HC1 {
 
 	private String HC1_COB_INVENTORY_CONTROL_DT;
-	private String HC1_COB_COB_CLAIM_INDICATOR;    //Cob claim indicator
+	private String HC1_COB_COB_CLAIM_INDICATOR="N";    //Cob claim indicator
 	private String HC1_COB_COB_835_PROC_IND;
 	private String HC1_COB_INST_OR_PROF;        
-	       
+	private String error="";   
 	private String HC1_COB_ALLOW_AMT_IND;       
 	private BigDecimal HC1_COB_835_RPT_ALLOW_AMT=BigDecimal.ZERO;   
 	private BigDecimal HC1_COB_OI_PAID_AMT=BigDecimal.ZERO;         
@@ -227,6 +227,14 @@ public class V5427HC1 {
 
 	public void setHC1_COB_COB_CLAIM_INDICATOR(String hC1_COB_COB_CLAIM_INDICATOR) {
 		HC1_COB_COB_CLAIM_INDICATOR = hC1_COB_COB_CLAIM_INDICATOR;
+	}
+
+	public String getError() {
+		return error;
+	}
+
+	public void setError(String error) {
+		this.error = error;
 	}
 
 }

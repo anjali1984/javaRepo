@@ -3,11 +3,15 @@ package com.optum.tops.J5427HC1.concurrency;
 import java.math.BigDecimal;
 import java.util.concurrent.Callable;
 
+import org.apache.log4j.Logger;
+
 import com.optum.tops.J5427HC1.models.HC1Response;
 import com.optum.tops.J5427HC1.models.ReqClaimEntry;
+import com.optum.tops.J5427HC1.models.ReqClaimEntryVO;
 import com.optum.tops.J5427HC1.models.V5427HC1;
 import com.optum.tops.J5427HC1.services.COBLN2121Service;
 import com.optum.tops.J5427HC1.services.COBLN2131Service;
+import com.optum.tops.J5427HC1.services.COBONL2200Service;
 import com.optum.tops.J5427HC1.services.CheckCOBClaim;
 import com.optum.tops.J5427HC1.services.InstlReduction2140Service;
 import com.optum.tops.J5427HC1.services.LoadCobLnLineAmtsService2150;
@@ -16,7 +20,7 @@ import com.optum.tops.J5427HC1.services.OpsHcfaService;
 import com.optum.tops.J5427HC1.services.ProfReduction2160Service;
 
 public class CallableClaimTask implements Callable<V5427HC1> {
-	ReqClaimEntry individual_claim;
+	ReqClaimEntryVO individual_claim;
 	HC1Response response_this_thread_will_add_to; // COMMON resource across all
 													// threads
 	int index_to_put; // The key for the Concurrent HashMap in which the
@@ -33,12 +37,15 @@ public class CallableClaimTask implements Callable<V5427HC1> {
 	LoadCobLnLineAmtsService2150 instlLoad2150;
 	ProfReduction2160Service profRed2160;
 	LoadSumForReductService2170 profLoad2170;
+COBONL2200Service cOBONL2200Service;
+	
+	Logger logger=Logger.getLogger("genLogger");
 
 	// Constructor for the Task,
-	public CallableClaimTask(ReqClaimEntry individual_claim, HC1Response reponse, int index, CheckCOBClaim cobclaimcheck,
+	public CallableClaimTask(ReqClaimEntryVO individual_claim, HC1Response reponse, int index, CheckCOBClaim cobclaimcheck,
 			OpsHcfaService opshcfacheck, COBLN2121Service cobln2121, COBLN2131Service cobln2131,
 			InstlReduction2140Service instlRed2140, LoadCobLnLineAmtsService2150 instlLoad2150,
-			ProfReduction2160Service profRed2160, LoadSumForReductService2170 profLoad2170) {
+			ProfReduction2160Service profRed2160, LoadSumForReductService2170 profLoad2170,COBONL2200Service cOBONL2200Service) {
 		// store parameter for later user
 		this.individual_claim = individual_claim;
 		this.response_this_thread_will_add_to = reponse;
@@ -51,6 +58,8 @@ public class CallableClaimTask implements Callable<V5427HC1> {
 		this.instlLoad2150 = instlLoad2150;
 		this.profRed2160=profRed2160;
 		this.profLoad2170=profLoad2170;
+		this.cOBONL2200Service=cOBONL2200Service;
+
 	}
 
 	@Override
@@ -61,9 +70,10 @@ public class CallableClaimTask implements Callable<V5427HC1> {
 
 	}
 
-	private V5427HC1 processOneClaimTask(ReqClaimEntry individual_claim, HC1Response response, int index) {
+	private V5427HC1 processOneClaimTask(ReqClaimEntryVO individual_claim, HC1Response response, int index) {
 		// TODO Auto-generated method stub
 		//System.out.println("========================================NEW REQUESTED CLAIM==============================");
+		String location="J5427HC1.concurrency.CallableClaimTask.processOneClaimTask(ReqClaimEntryVO, HC1Response, int)";
 		int position_of_claim_in_requestlist = index; // claims_to_be_serviced.indexOf(individual_claim);
 		V5427HC1 currentClaim; // Claim instance to be put in the return object
 		currentClaim = cobclaimcheck.COB_claim_check(individual_claim); // Sets
@@ -120,12 +130,19 @@ public class CallableClaimTask implements Callable<V5427HC1> {
 
 		if (currentClaim.getMy_indicator().getCALL_OIMC_TBL_INDICATOR().equals("Y")) {
 			// PERFORM 2130-GET-COB-SERV-CALC-DATA (2131-FETCH-COB-SERV-CALCS)
+			logger.info(location.concat(" Start do2131Logic as CALL_OIMC_TBL_INDICATOR is  ")
+					.concat("[").concat(currentClaim.getMy_indicator().getCALL_OIMC_TBL_INDICATOR()).concat("]").concat(" LOGID:").concat("[").concat(individual_claim.getLogId()).concat("]"));
+
 			currentClaim = cobln2131.do2131Logic(individual_claim, currentClaim);
+			logger.info(location.concat(" do2131Logic Completed  ").concat(" LOGID:").concat("[").concat(individual_claim.getLogId()).concat("]"));
+
 		}
 		// Institutional Claims
 		if (currentClaim.getHC1_COB_INST_OR_PROF().equals("I")
 				&& currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("Y")) {
 			//System.out.println("In 2140, 2150 sections");
+			logger.info(location.concat("Inside If- Institutional Claim before 2140/2150 ").concat("COB_INST_OR_PROF():").concat("[").concat(currentClaim.getHC1_COB_INST_OR_PROF()).concat("]").concat(" LOGID:").concat("[").concat(individual_claim.getLogId()).concat("]"));
+
 			if (currentClaim.getMy_indicator().getCXINT_CLAIM_INDICATOR().equals("N")) { // If
 																							// this
 																							// is
@@ -142,12 +159,24 @@ public class CallableClaimTask implements Callable<V5427HC1> {
 																							// sections
 				// Perform 2140-GET-Instl-Reductions [i.e. Call DP835RED with
 				// func cd = 1]
+				logger.info(location.concat(" Start do2140Section as CXINT_CLAIM_INDICATOR is  ")
+						.concat("[").concat(currentClaim.getMy_indicator().getCXINT_CLAIM_INDICATOR()).concat("]").concat(" LOGID:").concat("[").concat(individual_claim.getLogId()).concat("]"));
+
 				currentClaim = instlRed2140.do2140Section(individual_claim, currentClaim);
+				logger.info(location.concat(" do2140Section Completed  ").concat(" LOGID:").concat("[").concat(individual_claim.getLogId()).concat("]"));
+
 			}
 			// 2150-LOAD-COBLN-LINE-AMTS
-			currentClaim = instlLoad2150.do2150Section(currentClaim, individual_claim.getHc1_REQ_CLM_TRANS_CD().trim());
+			logger.info(location.concat(" Start do2150Section ")
+					.concat(" LOGID:").concat("[").concat(individual_claim.getLogId()).concat("]"));
+		
+			currentClaim = instlLoad2150.do2150Section(currentClaim, individual_claim);
+			logger.info(location.concat(" do2150Section Completed  ").concat(" LOGID:").concat("[").concat(individual_claim.getLogId()).concat("]"));
+
 		} else {
 			// Professional Claims
+			logger.info(location.concat("Inside else  ").concat("COB_INST_OR_PROF():").concat("[").concat(currentClaim.getHC1_COB_INST_OR_PROF()).concat("]").concat(" LOGID:").concat("[").concat(individual_claim.getLogId()).concat("]"));
+
 			if ((currentClaim.getHC1_COB_INST_OR_PROF().equals("P")
 					|| currentClaim.getHC1_COB_INST_OR_PROF().trim().equals("")
 							&& (currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("Y")
@@ -156,8 +185,17 @@ public class CallableClaimTask implements Callable<V5427HC1> {
 							&& currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("M"))) {
 				//System.out.println("In 2160, 2170 sections");
 				// Perform 2160 , 2170 [i.e. Call DP835RED with func cd = 2]
+				logger.info(location.concat(" Start do2160Section ")
+						.concat(" LOGID:").concat("[").concat(individual_claim.getLogId()).concat("]"));
 				currentClaim = profRed2160.do2160Section(individual_claim, currentClaim);
-				profLoad2170.do2170(currentClaim, individual_claim.getHc1_REQ_CLM_TRANS_CD().trim());
+				logger.info(location.concat(" do2160Section Completed  ").concat(" LOGID:").concat("[").concat(individual_claim.getLogId()).concat("]"));
+
+
+				logger.info(location.concat(" Start do2170Section ")
+						.concat(" LOGID:").concat("[").concat(individual_claim.getLogId()).concat("]"));
+
+				profLoad2170.do2170(currentClaim, individual_claim);
+				logger.info(location.concat(" do2170Section Completed  ").concat(" LOGID:").concat("[").concat(individual_claim.getLogId()).concat("]"));
 
 			}
 		}
@@ -166,8 +204,10 @@ public class CallableClaimTask implements Callable<V5427HC1> {
 		 * 2200-WRTOFF-CALC
 		 */
 		if (currentClaim.getHC1_COB_COB_CLAIM_INDICATOR().equals("Y")) {
-			//System.out.println("Doing 2200-WRTOFF-CALC");
+			logger.info(location.concat("Perform 2200-WRTOFF-CALC if HC1_COB_COB_CLAIM_INDICATOR= ").concat("[").concat(currentClaim.getHC1_COB_COB_CLAIM_INDICATOR()).concat("]").concat(" LOGID:").concat("[").concat(individual_claim.getLogId()).concat("]"));
 			currentClaim = WriteOff2200(currentClaim);
+			logger.info(location.concat(" 2200-WRTOFF-CALC Completed ").concat(" LOGID:").concat("[").concat(individual_claim.getLogId()).concat("]"));
+
 		}
 		
 		// Doing this because these working storage fields are not required by

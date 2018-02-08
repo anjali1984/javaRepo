@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import com.optum.tops.J5427HC1.models.ClaimIndicatorValues;
 import com.optum.tops.J5427HC1.models.LineHold;
 import com.optum.tops.J5427HC1.models.LineReductionHold;
 import com.optum.tops.J5427HC1.models.ReqClaimEntry;
+import com.optum.tops.J5427HC1.models.ReqClaimEntryVO;
 import com.optum.tops.J5427HC1.models.V5427HC1;
 import com.optum.tops.VYCKSERV.enums.ACN_NO_SURCHRG_SERV;
 import com.optum.tops.VYCKSERV.enums.COB_835_INFO;
@@ -25,10 +27,13 @@ import com.optum.tops.VYCKSERV.enums.PROMPT_PAY_SERV;
 public class COBLN2121Service {
 	@Autowired 
 	FetchCoblnAmtsDao CoblnAmtsDao ;
+	Logger logger=Logger.getLogger("genLogger");
 	
-	public V5427HC1 getResultsCobln_Line_Flds(ReqClaimEntry requestedClaim, V5427HC1 outboundClaim){
+	public V5427HC1 getResultsCobln_Line_Flds(ReqClaimEntryVO individual_claim2, V5427HC1 outboundClaim){
+		String location="J5427HC1.services.COBLN2121Service.getResultsCobln_Line_Flds(ReqClaimEntryVO, V5427HC1)";
 		
-		List<COBLN_LINE_FLDS> results = CoblnAmtsDao.getCoblnFlds(requestedClaim, outboundClaim.getMy_indicator().getDBKE2_ICN_SUFX_CD()) ; // result of query in COBLN-LINE-FLDS cursor
+		List<COBLN_LINE_FLDS> results = CoblnAmtsDao.getCoblnFlds(individual_claim2, outboundClaim.getMy_indicator().getDBKE2_ICN_SUFX_CD()) ; // result of query in COBLN-LINE-FLDS cursor
+		
 		//All business logic in 2121-FETCH_COBLN-LINE-AMTS 
 		
 		ClaimIndicatorValues indicatorObject = outboundClaim.getMy_indicator();
@@ -48,12 +53,17 @@ public class COBLN2121Service {
 			
 			//If Penny Process perform 2122-PENNY-PROCESS-ADJUST-SECT
 			if(indicatorObject.getPENNY_PROC_INDICATOR().equals("Y")){
+				logger.info(location.concat(" Start Penny Process as PENNY_PROC_INDICATOR is  ").concat("[").concat(indicatorObject.getPENNY_PROC_INDICATOR()).concat("]").concat(" LOGID:").concat("[").concat(individual_claim2.getLogId()).concat("]"));
 				outboundClaim = penny_process_adjustment (line, outboundClaim); 
+				logger.info(location.concat(" Penny Process Performed  ").concat(" LOGID:").concat("[").concat(individual_claim2.getLogId()).concat("]"));
+
 			}
 			
 			if( (line_pmt_svc_cd.contains("OI") || line_pmt_svc_cd.contains("OIM") || line_pmt_svc_cd.contains("OIMEDI")) 
-					|| (requestedClaim.getHc1_REQ_CLM_TRANS_CD().contains("69") && !line.getLN_RMRK_CD().contains("69"))){
+					|| (individual_claim2.getReqClaimEntry().getHc1_REQ_CLM_TRANS_CD().contains("69") && !line.getLN_RMRK_CD().contains("69"))){
 				//System.out.println("Line " + line.getLN_ID() + " will ONLY be added for avoiding exception of adding to Arraylist, redcution table. OI,OM, OIMEDI COBLN2121Service ");
+				logger.info(location.concat(" Line at index:").concat("[").concat(Integer.toString(line.getLN_ID())).concat("]").concat("is not a cob line and will not be added to Response object").concat(" LOGID:").concat("[").concat(individual_claim2.getLogId()).concat("]"));
+
 				indicatorObject.getWS_LINE_DATA_AREA_TABLE().add(index, line_data);
 				indicatorObject.getWS_LINE_REDUCTION_TABLE().add(index, line_reduction_data);
 				continue; 
@@ -117,7 +127,7 @@ public class COBLN2121Service {
 				line_reduction_data.setLN_RPT_ALLOW_AMT(line.getRPTG_LN_ALLW_AMT());
 				indicatorObject.getWS_LINE_REDUCTION_TABLE().add(index, line_reduction_data);
 				
-				if(requestedClaim.getHc1_REQ_CLM_TRANS_CD().equals("00")){
+				if(individual_claim2.getReqClaimEntry().getHc1_REQ_CLM_TRANS_CD().equals("00")){
 					indicatorObject.setLN_TOT_RPT_ALL_AMT( indicatorObject.getLN_TOT_RPT_ALL_AMT().add(line_reduction_data.getLN_RPT_ALLOW_AMT()));
 				}
 				
@@ -157,7 +167,7 @@ public class COBLN2121Service {
 					}else{
 						BigDecimal temp ; 
 						BigDecimal temp2 ;
-						if(requestedClaim.getHc1_REQ_CLM_TRANS_CD().trim().equals("69")){
+						if(individual_claim2.getReqClaimEntry().getHc1_REQ_CLM_TRANS_CD().trim().equals("69")){
 							temp = line.getLN_CHRG_AMT().subtract(WS_TEMP_RPT_ALLOW_AMT);
 							indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).setLN_PRV_WRT_OFF(temp);
 							WS_TEMP_RPT_ALLOW_AMT = indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).getLN_RPT_ALLOW_AMT().multiply
@@ -168,7 +178,7 @@ public class COBLN2121Service {
 						}
 					}
 					
-					if(requestedClaim.getHc1_REQ_CLM_TRANS_CD().trim().equals("00") && 
+					if(individual_claim2.getReqClaimEntry().getHc1_REQ_CLM_TRANS_CD().trim().equals("00") && 
 						(line.getLN_OVR_CD().trim().equals("20") || line.getLN_OVR_CD().trim().equals("30") || line.getLN_OVR_CD().trim().equals("X0") || line.getLN_OVR_CD().trim().equals("Y0") )	){
 						indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).setLN_PRV_WRT_OFF(BigDecimal.ZERO);
 					}

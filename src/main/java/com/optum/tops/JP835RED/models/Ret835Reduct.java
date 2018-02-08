@@ -19,7 +19,7 @@ public class Ret835Reduct {
 	private String RET_835_RD_GRP_ID;
 	private String RET_835_RD_CARC_CD;
 	private String RET_835_RD_RARC_CD;
-	private BigDecimal RET_835_RD_PD_AMT;
+	private BigDecimal RET_835_RD_PD_AMT=BigDecimal.ZERO;
 	
 	public int getRET_835_RD_SVC_ID() {
 		return RET_835_RD_SVC_ID;

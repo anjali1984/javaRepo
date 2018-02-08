@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Repository;
 
 import com.optum.tops.J5427HC1.models.COBLN_LINE_FLDS;
 import com.optum.tops.J5427HC1.models.ReqClaimEntry;
+import com.optum.tops.J5427HC1.models.ReqClaimEntryVO;
 
 @Repository
 @PropertySource("queries.properties")
@@ -28,48 +30,12 @@ public class FetchCoblnAmtsDao {
 	@Value("${hc1.getCoblnFlds_Query}")
 	private String getCoblnFlds_Query;
 	
-	public List<COBLN_LINE_FLDS> getCoblnFlds(ReqClaimEntry incoming_Claim, String suffix_cd){
-		/*query.setLength(0); // To ensure its cleared of previous query
-		query.append("SELECT LN.LN_ID ");
-		query.append(" ,CB.RPTG_LN_ALLW_AMT ");
-		//query.append(" ,IFNULL(CB.RPTG_LN_ALLW_AMT,0) ");
-		query.append(" ,LN.SRVC_CD ");
-		query.append(" ,LN.PMT_SVC_CD ");
-		query.append(" ,LN.RMRK_CD ");
-		query.append(" ,LN.OVR_CD ");
-		query.append(" ,LN.AUTH_PROC_CD ");
-		query.append(" ,LN.CHRG_AMT  "); 
-		query.append(" ,LN.NC_AMT ");
-		query.append(" ,LN.FST_DT ");
-		query.append(" ,LN.LST_SRVC_DT ");
-		query.append(" ,LN.OI_PD_LN_AMT ");
-		query.append(" ,LN.MEDC_L04_AMT ");
-		query.append(" ,LN.ALLW_AMT_DTRM_CD  ");
-		query.append(" ,LN.LN_PROV_WRITE_OFF ");
-		query.append(" ,LN.MM_DED_AMT ");
-		query.append(" ,LN.NYSCHG_DED_MM_AMT");
-		query.append(" ,LN.ORIG_LN_CORR_ID  ");
-		query.append(" ,LN.ORIG_LN_CHRG_AMT  ");
-//		query.append(" FROM  T5410DTA.ADJD_CLMSFLN_COB   	CB ");
-//		query.append(" ,ADJD_CLMSF_LN    		  	LN ");
-		query.append(" FROM  T5410DTA.ADJD_CLMSF_LN          LN ") ;
-		query.append(" LEFT OUTER JOIN T5410DTA.ADJD_CLMSFLN_COB   CB ") ;
-		query.append("ON  CB.INVN_CTL_NBR      = LN.INVN_CTL_NBR ") ;
-		query.append("AND  CB.ICN_SUFX_CD       = LN.ICN_SUFX_CD  ") ;
-		query.append("AND  CB.PROC_DT           = LN.PROC_DT ") ;
-		query.append("AND  CB.PROC_TM           = LN.PROC_TM  ") ;
-		query.append("AND  CB.ICN_SUFX_VERS_NBR = LN.ICN_SUFX_VERS_NBR ") ;
-		query.append("AND  CB.LN_ID             = LN.LN_ID ") ;
-		query.append("WHERE  LN.INVN_CTL_NBR      = ? "); 
-		query.append("AND  LN.ICN_SUFX_CD       = ? ");
-		query.append("AND  LN.DFT_NBR           = ? ");
-		query.append("AND  LN.PROC_TM           = ? ");
-		query.append("AND  LN.PROC_DT           = ? ");
-		query.append(" ORDER BY LN.LN_ID ASC "); // ADDED so that the index out of bounds is solved for arraylist
-		query.append("FOR FETCH ONLY ");
-		*/
+	private  Logger logger=Logger.getLogger("genLogger");
+
+	public List<COBLN_LINE_FLDS> getCoblnFlds(ReqClaimEntryVO individual_claim2, String suffix_cd){
+	
 		
-		
+		String location="J5427HC1.dao.D54DAO.FetchCoblnAmtsDao.getCoblnFlds(ReqClaimEntryVO, String)";
 		Connection con = null;
 		PreparedStatement ps = null;
 		List<COBLN_LINE_FLDS> query_results = new ArrayList<COBLN_LINE_FLDS>(); 
@@ -77,11 +43,11 @@ public class FetchCoblnAmtsDao {
 		try{
 			con = ds.getConnection();
 			ps = con.prepareStatement(getCoblnFlds_Query.toString());
-			ps.setString(1, incoming_Claim.getHc1_REQ_CLM_INVN_CTL_NBR()); // Sets the icn variable in the query
+			ps.setString(1, individual_claim2.getReqClaimEntry().getHc1_REQ_CLM_INVN_CTL_NBR()); // Sets the icn variable in the query
 			ps.setString(2, suffix_cd);
-			ps.setString(3, incoming_Claim.getHc1_REQ_CLM_DRFT_NBR());
-			ps.setString(4, incoming_Claim.getHc1_REQ_CLM_PROC_TM());
-			ps.setString(5, incoming_Claim.getHc1_REQ_CLM_PROC_DT());
+			ps.setString(3, individual_claim2.getReqClaimEntry().getHc1_REQ_CLM_DRFT_NBR());
+			ps.setString(4, individual_claim2.getReqClaimEntry().getHc1_REQ_CLM_PROC_TM());
+			ps.setString(5, individual_claim2.getReqClaimEntry().getHc1_REQ_CLM_PROC_DT());
 			
 			//System.out.println(incoming_Claim.getHc1_REQ_CLM_INVN_CTL_NBR());
 			//System.out.println(suffix_cd);
@@ -93,7 +59,13 @@ public class FetchCoblnAmtsDao {
 			ResultSet rs = ps.executeQuery();
 			
 			//System.out.println("RESULT SET LINE IDS ORDER");
-			while(rs.next()){
+			if(!rs.next()){
+				logger.info(location.concat(" Empty Resultset;No Cob lines returned").concat(" LOGID:").concat("[").concat(individual_claim2.getLogId()).concat("]"));
+
+			}else{
+
+				do{
+			
 				COBLN_LINE_FLDS returned_record = new COBLN_LINE_FLDS(); 
 				returned_record.setLN_ID(rs.getInt("LN_ID"));
 				//System.out.println(rs.getInt("LN_ID"));
@@ -124,6 +96,7 @@ public class FetchCoblnAmtsDao {
 				
 				query_results.add(returned_record); 
 				
+			}while(rs.next());
 			}
 		}catch (SQLException e) {
 			e.printStackTrace();
@@ -137,6 +110,9 @@ public class FetchCoblnAmtsDao {
 				e.printStackTrace();
 			}
 		}
+		logger.info(location.concat("No of Cob lines returned from Resultset").concat("[").concat(Integer.toString(query_results.size())).concat("]")
+				.concat(" LOGID:").concat("[").concat(individual_claim2.getLogId()).concat("]"));
+
 		return query_results;
 		
 	}

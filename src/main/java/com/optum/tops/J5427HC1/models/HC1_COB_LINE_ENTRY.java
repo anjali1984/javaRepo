@@ -6,20 +6,20 @@ public class HC1_COB_LINE_ENTRY {
 	
 	private String HC1_COB_LN_SRV_ID;             
 	private String HC1_COB_LN_ALLOW_AMT_IND;      
-	private BigDecimal HC1_COB_LN_835_RPT_ALLOW_AMT;  
-	private BigDecimal HC1_COB_LN_EOB_OI_PAID_AMT;    
-	private BigDecimal HC1_COB_LN_EOB_MEDC_PAID_AMT;  
-	private BigDecimal HC1_COB_LN_COB_PRV_WRT_OFF;    
-	private BigDecimal HC1_COB_LN_835_COB_PRIM_IMPAC; 
-	private BigDecimal HC1_COB_LN_835_PAT_RESP_OVERC; 
-	private BigDecimal HC1_COB_LN_835_PAT_RESP_DEDUC; 
-	private BigDecimal HC1_COB_LN_835_PAT_RESP_COPAY; 
-	private BigDecimal HC1_COB_LN_835_PAT_RESP_COINS; 
-	private BigDecimal HC1_COB_LN_835_PAT_RESP_NTCOV; 
-	private BigDecimal HC1_COB_LN_835_MEDC_EST_AMT;   
-	private BigDecimal HC1_COB_LN_835_PAT_RESP_TOTAL; 
-	private BigDecimal HC1_COB_LN_835_PRV_NC_AMT;     
-	private BigDecimal HC1_COB_LN_835_DENY_NC_AMT;    
+	private BigDecimal HC1_COB_LN_835_RPT_ALLOW_AMT=BigDecimal.ZERO;  
+	private BigDecimal HC1_COB_LN_EOB_OI_PAID_AMT=BigDecimal.ZERO;    
+	private BigDecimal HC1_COB_LN_EOB_MEDC_PAID_AMT=BigDecimal.ZERO;  
+	private BigDecimal HC1_COB_LN_COB_PRV_WRT_OFF=BigDecimal.ZERO;    
+	private BigDecimal HC1_COB_LN_835_COB_PRIM_IMPAC=BigDecimal.ZERO; 
+	private BigDecimal HC1_COB_LN_835_PAT_RESP_OVERC=BigDecimal.ZERO; 
+	private BigDecimal HC1_COB_LN_835_PAT_RESP_DEDUC=BigDecimal.ZERO; 
+	private BigDecimal HC1_COB_LN_835_PAT_RESP_COPAY=BigDecimal.ZERO; 
+	private BigDecimal HC1_COB_LN_835_PAT_RESP_COINS=BigDecimal.ZERO; 
+	private BigDecimal HC1_COB_LN_835_PAT_RESP_NTCOV=BigDecimal.ZERO; 
+	private BigDecimal HC1_COB_LN_835_MEDC_EST_AMT=BigDecimal.ZERO;   
+	private BigDecimal HC1_COB_LN_835_PAT_RESP_TOTAL=BigDecimal.ZERO; 
+	private BigDecimal HC1_COB_LN_835_PRV_NC_AMT=BigDecimal.ZERO;     
+	private BigDecimal HC1_COB_LN_835_DENY_NC_AMT=BigDecimal.ZERO;    
 	
 	private int HC1_COB_LINE_LN_ID;       
 	private String HC1_COB_LINE_SRVC_CD;     
@@ -27,7 +27,7 @@ public class HC1_COB_LINE_ENTRY {
 	private String HC1_COB_LINE_AUTH_PROC_CD;
 	private String HC1_COB_LINE_FST_DT;      
 	private String HC1_COB_LINE_LST_SRVC_DT; 
-	private BigDecimal HC1_COB_LINE_CHRG_AMT;
+	private BigDecimal HC1_COB_LINE_CHRG_AMT=BigDecimal.ZERO;
 	
 	public String getHC1_COB_LN_SRV_ID() {
 		return HC1_COB_LN_SRV_ID;

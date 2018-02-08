@@ -3,12 +3,14 @@ package com.optum.tops.J5427HC1.services;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.optum.tops.J5427HC1.JP835RED.RedProcessor;
 import com.optum.tops.J5427HC1.models.ADJD_CLMSF_ORIGHDR_LINE;
 import com.optum.tops.J5427HC1.models.ReqClaimEntry;
+import com.optum.tops.J5427HC1.models.ReqClaimEntryVO;
 import com.optum.tops.J5427HC1.models.V5427HC1;
 import com.optum.tops.JP835RED.models.JP54RedRequest;
 import com.optum.tops.JP835RED.models.JP54RedReturn;
@@ -20,15 +22,21 @@ public class InstlReduction2140Service {
 
 	@Autowired
 	RedProcessor red_Processor ; 
+	Logger logger=Logger.getLogger("genLogger");
+
 	
-	public V5427HC1 do2140Section(ReqClaimEntry requestedClaim, V5427HC1 claimToBeSent){
+	public V5427HC1 do2140Section(ReqClaimEntryVO individual_claim2, V5427HC1 claimToBeSent){
+		String location="J5427HC1.services.InstlReduction2140Service.do2140Section(ReqClaimEntryVO, V5427HC1)";
 		JP54RedRequest request_to_RED = new JP54RedRequest() ; 
-		request_to_RED.setRED_INV_CTL_NBR(requestedClaim.getHc1_REQ_CLM_INVN_CTL_NBR());
+		request_to_RED.setRED_INV_CTL_NBR(individual_claim2.getReqClaimEntry().getHc1_REQ_CLM_INVN_CTL_NBR());
 		request_to_RED.setRED_ICN_SUFX_CD(claimToBeSent.getMy_indicator().getDBKE2_ICN_SUFX_CD());
-		request_to_RED.setRED_PROC_DT(requestedClaim.getHc1_REQ_CLM_PROC_DT());
-		request_to_RED.setRED_PROC_TM(requestedClaim.getHc1_REQ_CLM_PROC_TM());
-		JP54RedReturn red_return = red_Processor.InstClaim2100(request_to_RED); //Data returned from 835RED
-		
+		request_to_RED.setRED_PROC_DT(individual_claim2.getReqClaimEntry().getHc1_REQ_CLM_PROC_DT());
+		request_to_RED.setRED_PROC_TM(individual_claim2.getReqClaimEntry().getHc1_REQ_CLM_PROC_TM());
+		logger.info(location.concat(" Start red_Processor.InstClaim2100 ")
+				.concat(" LOGID:").concat("[").concat(individual_claim2.getLogId()).concat("]"));
+		JP54RedReturn red_return = red_Processor.InstClaim2100(request_to_RED,individual_claim2.getLogId()); //Data returned from 835RED
+		logger.info(location.concat(" red_Processor.InstClaim2100 Completed  ").concat(" LOGID:").concat("[").concat(individual_claim2.getLogId()).concat("]"));
+
 		List<Ret835ClmRed> ret835ClmRedTbl = red_return.getRet835ClmRedTbl(); 
 		int clm_sub = 0 ; 
 		//while (clm_sub < 10 && !ret835ClmRedTbl.get(clm_sub).getCLM_RD_CATGY_ID().equals("")) {
@@ -41,12 +49,21 @@ public class InstlReduction2140Service {
 				clm_sub++;
 				continue;
 			}
+			logger.info(location.concat(" Start do2141Section for ret835ClmRedTbl element:")
+					.concat(" LOGID:").concat("[").concat(Integer.toString(clm_sub)).concat("]")
+					.concat(" LOGID:").concat("[").concat(individual_claim2.getLogId()).concat("]"));
 			
-			claimToBeSent = do2141Section(claimToBeSent,red_return,clm_sub); 
+			claimToBeSent = do2141Section(claimToBeSent,red_return,clm_sub,individual_claim2.getLogId()); 
+			
+			logger.info(location.concat(" do2141Section Completed for ret835ClmRedTbl element: ")
+					.concat(" LOGID:").concat("[").concat(Integer.toString(clm_sub)).concat("]")
+					.concat(" LOGID:").concat("[").concat(individual_claim2.getLogId()).concat("]"));
+
 			clm_sub++;
 		}
 		
 		//2140 remaining part
+		//anjali:need to be tested :8 feb 2018
 		if (claimToBeSent.getMy_indicator().getNYSTATE_COB_CLAIM_PAIDTO().equals("S")
 				&& claimToBeSent.getMy_indicator().isNYS_SERV_LINE_SW() ) {
 			int counter = 0 ; 
@@ -83,7 +100,7 @@ public class InstlReduction2140Service {
      */
 	
 	// claim.getMy_indicator().getHC1_ADJD_CLMSF_ORIGHDR_DATAAREA(). 2002-GET-ORIGHDR-DETAILS fills in this structure in CheckOPS_HCFADAO
-	private V5427HC1 do2141Section(V5427HC1 claimToBeSent, JP54RedReturn red_return, int clm_sub) {
+	private V5427HC1 do2141Section(V5427HC1 claimToBeSent, JP54RedReturn red_return, int clm_sub, String logId) {
 
 		List<Ret835ClmRed> ret835ClmRedTbl = red_return.getRet835ClmRedTbl();
 		String ws_grp_cd = ret835ClmRedTbl.get(clm_sub).getCLM_RD_GRP_CD().trim();

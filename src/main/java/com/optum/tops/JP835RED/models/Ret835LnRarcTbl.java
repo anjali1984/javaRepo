@@ -10,8 +10,8 @@ import java.math.BigDecimal;
 public class Ret835LnRarcTbl {
 	private String RET_835_LN_RARC_CD;
 	private String RET_835_LN_RMRK_CD;
-	private BigDecimal RET_835_LN_REV_ID;
-	private BigDecimal RET_835_LN_REV_CD;
+	private BigDecimal RET_835_LN_REV_ID=BigDecimal.ZERO;
+	private BigDecimal RET_835_LN_REV_CD=BigDecimal.ZERO;
 	private String RET_835_LN_PROC_CD;
 	private String RET_835_LN_PROC_TYP_CD;
 	

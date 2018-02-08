@@ -2,12 +2,14 @@ package com.optum.tops.J5427HC1.services;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.optum.tops.J5427HC1.JP835RED.RedProcessor;
 import com.optum.tops.J5427HC1.models.LineReductionHold;
 import com.optum.tops.J5427HC1.models.ReqClaimEntry;
+import com.optum.tops.J5427HC1.models.ReqClaimEntryVO;
 import com.optum.tops.J5427HC1.models.V5427HC1;
 import com.optum.tops.JP835RED.models.JP54RedRequest;
 import com.optum.tops.JP835RED.models.JP54RedReturn;
@@ -20,18 +22,26 @@ public class ProfReduction2160Service {
 
 	@Autowired
 	RedProcessor red_Processor ;
+	Logger logger=Logger.getLogger("genLogger");
 
-	public V5427HC1 do2160Section(ReqClaimEntry requestedClaim, V5427HC1 claimToBeSent)
+	public V5427HC1 do2160Section(ReqClaimEntryVO individual_claim2, V5427HC1 claimToBeSent)
 	{
+		String location="com.optum.tops.J5427HC1.services.ProfReduction2160Service.do2160Section(ReqClaimEntryVO, V5427HC1)";
 		JP54RedRequest request_to_RED = new JP54RedRequest() ; 
-		request_to_RED.setRED_INV_CTL_NBR(requestedClaim.getHc1_REQ_CLM_INVN_CTL_NBR());
+		request_to_RED.setRED_INV_CTL_NBR(individual_claim2.getReqClaimEntry().getHc1_REQ_CLM_INVN_CTL_NBR());
 		request_to_RED.setRED_ICN_SUFX_CD(claimToBeSent.getMy_indicator().getDBKE2_ICN_SUFX_CD());
-		request_to_RED.setRED_PROC_DT(requestedClaim.getHc1_REQ_CLM_PROC_DT());
-		request_to_RED.setRED_PROC_TM(requestedClaim.getHc1_REQ_CLM_PROC_TM());
+		request_to_RED.setRED_PROC_DT(individual_claim2.getReqClaimEntry().getHc1_REQ_CLM_PROC_DT());
+		request_to_RED.setRED_PROC_TM(individual_claim2.getReqClaimEntry().getHc1_REQ_CLM_PROC_TM());
+		logger.info(location.concat(" Start red_Processor.ProClaim2200").concat(" LOGID:").concat("[").concat(individual_claim2.getLogId()).concat("]"));
+
+		JP54RedReturn red_return = red_Processor.ProClaim2200(request_to_RED,individual_claim2.getLogId());
 		
-		JP54RedReturn red_return = red_Processor.ProClaim2200(request_to_RED);
+		logger.info(location.concat(" red_Processor.ProClaim2200 Completed  ").concat(" LOGID:").concat("[").concat(individual_claim2.getLogId()).concat("]"));
+
 		List<Ret835Reduct> ret835Reduct = red_return.getRet835ReductArea(); 
 		int clm_sub = 0 ; 
+		logger.info(location.concat(" size of ret835Reduct returned from ProClaim2200:").concat("[").concat(Integer.toString(ret835Reduct.size())).concat("]").concat(" LOGID:").concat("[").concat(individual_claim2.getLogId()).concat("]"));
+
 		while (clm_sub < ret835Reduct.size())
 		{
 			if (claimToBeSent.getMy_indicator().getNYSTATE_COB_CLAIM_PAIDTO().equals("S")
@@ -41,15 +51,17 @@ public class ProfReduction2160Service {
 				continue;
 			}
 			//perform 2161
-			claimToBeSent=do2161Section(claimToBeSent,red_return,clm_sub);
+			claimToBeSent=do2161Section(claimToBeSent,red_return,clm_sub,individual_claim2.getLogId());
 			clm_sub++;
 		}
-		claimToBeSent=do2003PennySection(claimToBeSent,red_return);
+		claimToBeSent=do2003PennySection(claimToBeSent,red_return,individual_claim2.getLogId());
 		return claimToBeSent;
 	}
 
-	public V5427HC1 do2161Section(V5427HC1 claimToBeSent, JP54RedReturn red_return, int clm_sub)
+	public V5427HC1 do2161Section(V5427HC1 claimToBeSent, JP54RedReturn red_return, int clm_sub, String logId)
 	{
+		
+		String location="J5427HC1.services.ProfReduction2160Service.do2161Section(V5427HC1, JP54RedReturn, int, String)";
 		List<Ret835Reduct> ret835Reduct = red_return.getRet835ReductArea(); 
 
 		String ws_group_cd=ret835Reduct.get(clm_sub).getRET_835_RD_GRP_ID().trim();
@@ -73,6 +85,8 @@ public class ProfReduction2160Service {
 		{
 			return claimToBeSent;
 		}
+		logger.info(location.concat(" ws_group_cd:").concat("[").concat(ws_group_cd.trim()).concat("]").concat(" ws_carc_cd:").concat("[").concat(ws_carc_cd.trim()).concat("]").concat(" LOGID:").concat("[").concat(logId).concat("]"));
+
 		if(ws_group_cd.trim().equalsIgnoreCase("PR")){
 			LINE_REDUCTION_HOLD.setPR_TOTAL(LINE_REDUCTION_HOLD.getPR_TOTAL().add(ret835Reduct.get(clm_sub).getRET_835_RD_PD_AMT()));
 			switch(ws_carc_cd){
@@ -126,6 +140,7 @@ public class ProfReduction2160Service {
 		}
 
 		LINE_REDUCTION_HOLD.setSVC_LN_ID(new BigDecimal(ret835Reduct.get(clm_sub).getRET_835_RD_SVC_ID()));
+		logger.info(location.concat(" SVC_LN_ID:").concat("[").concat(LINE_REDUCTION_HOLD.getSVC_LN_ID().toString()).concat("]").concat(" LOGID:").concat("[").concat(logId).concat("]"));
 
 		return claimToBeSent;
 	}
@@ -133,13 +148,17 @@ public class ProfReduction2160Service {
 	 *  
 	 * @param claimToBeSent
 	 * @param red_return
+	 * @param logId 
 	 * @return
 	 */
-	public V5427HC1 do2003PennySection(V5427HC1 claimToBeSent, JP54RedReturn red_return)
+	public V5427HC1 do2003PennySection(V5427HC1 claimToBeSent, JP54RedReturn red_return, String logId)
 	{
+		String location="J5427HC1.services.ProfReduction2160Service.do2003PennySection(V5427HC1, JP54RedReturn, String)";
 		int rev_sub=0;
 		int svc_sub=0;		
 		boolean SVC_LINE_PENNY_IND_ENTRY[]=claimToBeSent.getMy_indicator().getSVC_LINE_PENNY_IND_ENTRY();
+		logger.info(location.concat(" size of Ret835PrcLvl :").concat("[").concat(Integer.toString(red_return.getRet835PrcLvl().size())).concat("]").concat(" LOGID:").concat("[").concat(logId).concat("]"));
+
 		while(rev_sub < red_return.getRet835PrcLvl().size())
 			/*	anjali to be done:|| red_return.getRet835PrcLvl().get(rev_sub).getRET_835_ERR_SVC_ID()!=numeric)*/ 
 		{

@@ -3,14 +3,19 @@ package com.optum.tops.J5427HC1.services;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.optum.tops.J5427HC1.models.HC1_COB_LINE_ENTRY;
 import com.optum.tops.J5427HC1.models.LineReductionHold;
+import com.optum.tops.J5427HC1.models.ReqClaimEntryVO;
 import com.optum.tops.J5427HC1.models.V5427HC1;
 
 @Service
 public class LoadSumForReductService2170 {
+
+	
+	Logger logger=Logger.getLogger("genLogger");
 
 	/**
 	 * 2170-LOAD-SUM-FOR-REDUCTIONS
@@ -18,14 +23,17 @@ public class LoadSumForReductService2170 {
 	 * V5427HC1 only when one of the reduction each occurrence has dollar amts > zeros.
 	 * @param req
 	 * @param claimToBeSent
+	 * @param logId 
 	 * @param trnsCd
 	 * @return
 	 */
-	public V5427HC1 do2170(V5427HC1 claimToBeSent,String reqTrnsCd)
+	public V5427HC1 do2170(V5427HC1 claimToBeSent,ReqClaimEntryVO  individual_claim)
 	{
+String location="J5427HC1.services.LoadSumForReductService2170.do2170(V5427HC1, String, String)";
 		List<LineReductionHold> reductLines = claimToBeSent.getMy_indicator().getWS_LINE_REDUCTION_TABLE(); //WS table for all line amounts 0 to 6 index
 		List<HC1_COB_LINE_ENTRY> lines_in_return = claimToBeSent.getHC1_COB_LNE_DATA_AREA(); 
-		
+		logger.info(location.concat(" Size of the Reduction table is:").concat("[").concat(Integer.toString(reductLines.size())).concat("]").concat(" LOGID:").concat("[").concat(individual_claim.getLogId()).concat("]"));
+
 		//System.out.println("Size of the Reduction table is" + reductLines.size() ) ;
 		//for (int ln_sub=0;ln_sub<7;ln_sub++)
 		for(LineReductionHold each_line : reductLines)
@@ -88,7 +96,7 @@ public class LoadSumForReductService2170 {
 				claimToBeSent.setHC1_COB_835_RPT_ALLOW_AMT(claimToBeSent.getHC1_COB_835_RPT_ALLOW_AMT().add(line_to_be_added.getHC1_COB_LN_835_RPT_ALLOW_AMT()));
 			
 				line_to_be_added.setHC1_COB_LN_EOB_OI_PAID_AMT(each_line.getLN_OI_PAID_AMT());
-				if(reqTrnsCd.equals("69")){
+				if(individual_claim.getReqClaimEntry().getHc1_REQ_CLM_TRANS_CD().trim().equals("69")){
 					if(each_line.getLN_OI_PAID_AMT().compareTo(BigDecimal.ZERO)>0){
 						claimToBeSent.setHC1_COB_OI_PAID_AMT(claimToBeSent.getHC1_COB_OI_PAID_AMT().add(each_line.getLN_OI_PAID_AMT().negate()));
 					}
@@ -98,7 +106,7 @@ public class LoadSumForReductService2170 {
 				}
 
 				line_to_be_added.setHC1_COB_LN_EOB_MEDC_PAID_AMT(each_line.getLN_MEDC_PAID_AMT());
-				if(reqTrnsCd.equals("69")){
+				if(individual_claim.getReqClaimEntry().getHc1_REQ_CLM_TRANS_CD().trim().equals("69")){
 					if(each_line.getLN_MEDC_PAID_AMT().compareTo(BigDecimal.ZERO)>0)
 					{
 						claimToBeSent.setHC1_COB_MEDC_PAID_AMT(claimToBeSent.getHC1_COB_MEDC_PAID_AMT().add(each_line.getLN_MEDC_PAID_AMT().negate()));
@@ -127,6 +135,7 @@ public class LoadSumForReductService2170 {
 			lines_in_return.add(line_to_be_added);//will setup the HC1_COB_LNE_DATA_AREA
 		}
 		claimToBeSent.setHC1_COB_NBR_LINES(lines_in_return.size());
+		logger.info(location.concat(" No of Reduction lines to be returned:").concat("[").concat(Integer.toString(claimToBeSent.getHC1_COB_NBR_LINES())).concat("]").concat(" LOGID:").concat("[").concat(individual_claim.getLogId()).concat("]"));
 
 		return claimToBeSent;
 

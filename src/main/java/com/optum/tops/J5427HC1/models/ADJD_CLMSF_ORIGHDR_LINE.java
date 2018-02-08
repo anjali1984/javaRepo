@@ -12,8 +12,8 @@ public class ADJD_CLMSF_ORIGHDR_LINE {
 	private int LN_NBR ; 
 	private String ORIG_PL_OF_SRVC_CD ; 
 	private String UB92_RVNU_CD ; 
-	private BigDecimal UB92_CHRG_AMT; 
-	private BigDecimal UB92_NOT_COV_AMT; 
+	private BigDecimal UB92_CHRG_AMT=BigDecimal.ZERO; 
+	private BigDecimal UB92_NOT_COV_AMT=BigDecimal.ZERO; 
 	private String  UB92_PROC_CD  ;
 	private String HCFA_SRVC_PLC_CD ; 
 	private String UB92_OVR_CD ; 
