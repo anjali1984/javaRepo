@@ -370,7 +370,6 @@ public class processing7700 {
 	public Ret835LineLvl[] do7705(JP54RedRequest req, String logId){
 		String location="J5427HC1.JP835RED.processing7700.do7705(JP54RedRequest, String)";
 
-
 		Connection con = null ; 
 		PreparedStatement ps = null;
 /*		List<Ret835LineLvl> ret835LineLvlList = new ArrayList<Ret835LineLvl>();

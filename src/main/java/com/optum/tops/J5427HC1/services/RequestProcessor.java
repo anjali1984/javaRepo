@@ -66,9 +66,8 @@ public class RequestProcessor{
 				ReqClaimEntryVO individual_claim=new ReqClaimEntryVO();
 				individual_claim.setReqClaimEntry(eachClaim);
 				individual_claim.setLogId(eachClaim.getHc1_REQ_CLM_INVN_CTL_NBR().concat(eachClaim.getHc1_REQ_CLM_DRFT_NBR()));
-				OneClaimTask task = new OneClaimTask(individual_claim, response, claims_to_be_serviced.indexOf(individual_claim), cobclaimcheck, opshcfacheck,cobln2121,cobln2131,instlRed2140,instlLoad2150,profRed2160,profLoad2170,cOBONL2200Service) ;
-				Thread t = new Thread(task); 
-				t.setName("" + claims_to_be_serviced.indexOf(individual_claim));
+				OneClaimTask task = new OneClaimTask(individual_claim, response, claims_to_be_serviced.indexOf(eachClaim), cobclaimcheck, opshcfacheck,cobln2121,cobln2131,instlRed2140,instlLoad2150,profRed2160,profLoad2170,cOBONL2200Service) ;				Thread t = new Thread(task); 
+				t.setName("" + claims_to_be_serviced.indexOf(eachClaim));
 				threadList.add(t);
 				t.start();
 			}
