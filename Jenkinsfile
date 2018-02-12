@@ -12,7 +12,7 @@ import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 // import com.optum.jenkins.pipeline.library.scm.Git
-
+ 
 
 // This is an example Jenkinfile where we build and then execute a Sonar Scan
 // The Jenkins Global Pipeline Library that is being used is: https://github.optum.com/jenkins-pipelines/global-pipeline-library
@@ -34,7 +34,7 @@ pipeline {
     JENKINS_CREDS = 'tops_ose'
     DOCKER_NAMESPACE = 'tops-soa'
 
-    OSE_URL = 'https://ose-elr-core.optum.com'
+    OSE_URL = 'https://origin-elr-core.optum.com'
     OSE_PROJ = 'tops-java-modernization'
     OSE_PORT = '8080'
 
