@@ -12,7 +12,7 @@ import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 // import com.optum.jenkins.pipeline.library.scm.Git
-
+ 
 
 // This is an example Jenkinfile where we build and then execute a Sonar Scan
 // The Jenkins Global Pipeline Library that is being used is: https://github.optum.com/jenkins-pipelines/global-pipeline-library
