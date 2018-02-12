@@ -26,8 +26,6 @@ COPY /target/J5427HC1-0.0.1-SNAPSHOT.jar /opt/optum/J5427HC1-0.0.1-SNAPSHOT.jar
 USER root
 RUN chown -R 1001:1001 /opt/optum/
 RUN chown -R 1001:1001 /logs
-RUN chown -R 1001:1001 /HC1logsmulti
-RUN chown -R 1001:1001 /HC1logs
 USER 1001
 RUN chmod 777 -R /HC1logsmulti
 RUN chmod 777 -R /HC1logs
