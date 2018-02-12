@@ -34,7 +34,7 @@ pipeline {
     JENKINS_CREDS = 'tops_ose'
     DOCKER_NAMESPACE = 'tops-soa'
 
-    OSE_URL = 'https://ose-elr-core.optum.com'
+    OSE_URL = 'https://origin-elr-core.optum.com'
     OSE_PROJ = 'tops-java-modernization'
     OSE_PORT = '8080'
 
