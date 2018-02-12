@@ -14,6 +14,11 @@ RUN touch /logs/output.log
 COPY /src/main/resources/ /opt/optum/
 COPY /target/J5427HC1-0.0.1-SNAPSHOT.jar /opt/optum/J5427HC1-0.0.1-SNAPSHOT.jar
 
+RUN mkdir -p /HC1logsmulti/
+RUN mkdir -p /HC1logs
+RUN touch /HC1logsmulti/HC1logfile_2018-02-12-19.log
+RUN touch /HC1logs/HC1MethodTracelogfile_2018-02-12-19.log
+
 USER root
 RUN chown -R 1001:1001 /opt/optum/
 RUN chown -R 1001:1001 /logs
