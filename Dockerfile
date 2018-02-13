@@ -7,7 +7,7 @@ ENV JAVA_ALPINE_VERSION 8.92.14-r0
 RUN apk add --no-cache openjdk8="$JAVA_ALPINE_VERSION"
 
 EXPOSE 8080 8443
-
+ 
 RUN mkdir -p /opt/optum/
 RUN mkdir -p /logs
 RUN mkdir -p /HC1logsmulti/
