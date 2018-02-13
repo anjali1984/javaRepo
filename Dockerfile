@@ -13,6 +13,9 @@ RUN mkdir -p /logs
 RUN mkdir -p /HC1logsmulti/
 RUN mkdir -p /HC1logs
 RUN touch /logs/output.log
+RUN touch /HC1logfile_2018-02-13-14.log
+RUN touch /HC1MethodTracelogfile_2018-02-13-14.log
+
 RUN touch /HC1logsmulti/HC1logfile_2018-02-13-14.log
 RUN touch /HC1logs/HC1MethodTracelogfile_2018-02-13-14.log
 
