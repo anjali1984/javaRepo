@@ -17,8 +17,8 @@ COPY /src/main/resources/ /opt/optum/
 COPY /target/J5427HC1-0.0.1-SNAPSHOT.jar /opt/optum/J5427HC1-0.0.1-SNAPSHOT.jar
 
 USER root
-RUN chown -R 1001:1001 /opt/optum/
-RUN chown -R 1001:1001 /logs
+RUN chown -R root:root /opt/optum/
+RUN chown -R root:root /logs
 RUN chmod -R 777 /opt
 # USER 1001
 
