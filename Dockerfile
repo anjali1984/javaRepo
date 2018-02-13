@@ -11,8 +11,8 @@ EXPOSE 8080 8443
 RUN mkdir -p /opt/optum/
 RUN mkdir -p /logs
 RUN touch /logs/output.log
-RUN touch /opt/optum/HC1logfile_2018-02-13-14.log
-RUN touch /opt/optum/HC1MethodTracelogfile_2018-02-13-14.log
+RUN touch /opt/optum/HC1logfile_2018-02-13-10.log
+RUN touch /opt/optum/HC1MethodTracelogfile_2018-02-13-10.log
 COPY /src/main/resources/ /opt/optum/
 COPY /target/J5427HC1-0.0.1-SNAPSHOT.jar /opt/optum/J5427HC1-0.0.1-SNAPSHOT.jar
 
