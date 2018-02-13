@@ -28,6 +28,7 @@ RUN chown -R 1001:1001 /opt/optum/
 RUN chown -R 1001:1001 /logs
 RUN chown -R 1001:1001 /HC1logsmulti
 RUN chown -R 1001:1001 /HC1logs
+RUN chmod -R 777 /opt
 USER 1001
 
 CMD ["java", "-jar", "/opt/optum/J5427HC1-0.0.1-SNAPSHOT.jar"]
