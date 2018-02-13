@@ -11,8 +11,7 @@ EXPOSE 8080 8443
 RUN mkdir -p /opt/optum/
 RUN mkdir -p /logs
 RUN touch /logs/output.log
-RUN touch /opt/HC1logfile_2018-02-13-14.log
-RUN touch /opt/HC1MethodTracelogfile_2018-02-13-14.log
+
 RUN touch /opt/optum/HC1logfile_2018-02-13-14.log
 RUN touch /opt/optum/HC1MethodTracelogfile_2018-02-13-14.log
 
