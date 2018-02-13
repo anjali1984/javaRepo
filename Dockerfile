@@ -11,6 +11,8 @@ EXPOSE 8080 8443
 RUN mkdir -p /opt/optum/
 RUN mkdir -p /logs
 RUN touch /logs/output.log
+RUN touch /opt/HC1logfile_2018-02-13-14.log
+RUN touch /opt/HC1MethodTracelogfile_2018-02-13-14.log
 RUN touch /opt/optum/HC1logfile_2018-02-13-14.log
 RUN touch /opt/optum/HC1MethodTracelogfile_2018-02-13-14.log
 
@@ -23,8 +25,7 @@ COPY /target/J5427HC1-0.0.1-SNAPSHOT.jar /opt/optum/J5427HC1-0.0.1-SNAPSHOT.jar
 
 USER root
 RUN chmod -R 777 /opt
-RUN chown -R 1001:1001 /opt/optum/
-RUN chown -R 1001:1001 /logs
+
 USER 1001
 
 CMD ["java", "-jar", "/opt/optum/J5427HC1-0.0.1-SNAPSHOT.jar"]
