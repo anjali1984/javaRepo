@@ -50,7 +50,7 @@ public class RequestProcessor{
 
 
 	public HC1Response process (Hc1Request request){
-		boolean threadPool = false ; 
+		boolean threadPool = true; 
 		Logger logger=Logger.getLogger("genLogger");
 		String location="J5427HC1.services.RequestProcessor.process(Hc1Request)";
 
