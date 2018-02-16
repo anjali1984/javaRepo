@@ -93,7 +93,7 @@ public class RequestProcessor{
 			HC1Response response = new HC1Response() ; //to be sent back to the HC1Controller
 			List<ReqClaimEntry> claims_to_be_serviced = request.getClaimEntries() ; 
 
-			ExecutorService executor = Executors.newFixedThreadPool(15);
+			ExecutorService executor = Executors.newFixedThreadPool(5);
 
 			List<Future<V5427HC1>> futuresList = new ArrayList<Future<V5427HC1>>(); //In here all the returned claims will be added. 
 
@@ -101,7 +101,7 @@ public class RequestProcessor{
 				ReqClaimEntryVO individual_claim=new ReqClaimEntryVO();
 				individual_claim.setReqClaimEntry(eachClaim);
 				individual_claim.setLogId(eachClaim.getHc1_REQ_CLM_INVN_CTL_NBR().concat(eachClaim.getHc1_REQ_CLM_DRFT_NBR()));
-				CallableClaimTask task = new CallableClaimTask(individual_claim, response, claims_to_be_serviced.indexOf(individual_claim), cobclaimcheck, opshcfacheck,cobln2121,cobln2131,instlRed2140,instlLoad2150,profRed2160,profLoad2170,cOBONL2200Service) ;
+				CallableClaimTask task = new CallableClaimTask(individual_claim, response, claims_to_be_serviced.indexOf(eachClaim), cobclaimcheck, opshcfacheck,cobln2121,cobln2131,instlRed2140,instlLoad2150,profRed2160,profLoad2170,cOBONL2200Service) ;
 				Future<V5427HC1> f = executor.submit(task); //Submits a value-returning task for execution and returns a Future representing the pending results of the task.
 				futuresList.add(f);
 			}
