@@ -99,14 +99,17 @@ public class processing7700 {
 			}
 
 		}catch (SQLException e) {
+			logger.error(location.concat("  LOGID:").concat("[").concat(logId).concat("]"),e);
 			e.printStackTrace();
 		} catch (Exception e) {
+			logger.error(location.concat("  LOGID:").concat("[").concat(logId).concat("]"),e);
 			e.printStackTrace();
 		} finally {
 			try {
 				ps.close();
 				con.close();
 			} catch (SQLException e) {
+				logger.error(location.concat("  LOGID:").concat("[").concat(logId).concat("]"),e);
 				e.printStackTrace();
 			}
 		}
@@ -118,16 +121,6 @@ public class processing7700 {
 		/*
 		 * read data from adjd_clmsf_facl_pd_rduc table and move them to CB variables
 		 */
-		/*query.setLength(0);
-		query.append("SELECT   CLM_RARC_CD ");
-		query.append(",CLM_RMRK_CD ");
-		query.append("FROM T5410DBA.ADJD_CLMSF_RARC_CD ");
-		query.append("WHERE  INVN_CTL_NBR       =  ? ");
-		query.append("AND ICN_SUFX_CD           = ? ");
-		query.append("AND PROC_DT               = ? ");
-		query.append("AND PROC_TM               = ? ");
-		query.append("AND ICN_SUFX_VERS_NBR     = ");
-		query.append(maxSufxVersNbr(req) + " "); */
 		String location="J5427HC1.JP835RED.processing7700.do7702(JP54RedRequest, String)";
 
 		Connection con = null ; 
@@ -161,14 +154,17 @@ public class processing7700 {
 			}
 
 		}catch (SQLException e) {
+			logger.error(location.concat("  LOGID:").concat("[").concat(logId).concat("]"),e);
 			e.printStackTrace();
 		} catch (Exception e) {
+			logger.error(location.concat("  LOGID:").concat("[").concat(logId).concat("]"),e);
 			e.printStackTrace();
 		} finally {
 			try {
 				ps.close();
 				con.close();
 			} catch (SQLException e) {
+				logger.error(location.concat("  LOGID:").concat("[").concat(logId).concat("]"),e);
 				e.printStackTrace();
 			}
 		}
@@ -179,17 +175,7 @@ public class processing7700 {
 		/*
 		 * read data from ADJD_CLMSF_RARC_CD  table and move them to CB variables
 		 */
-		/*query.setLength(0);
-		query.append("SELECT   CLM_ERR_CD ");
-		query.append(",CLM_LN_ERR_TYP_CD ");
-		query.append("FROM T5410DBA.ADJD_CLMSF_ERR_CD ");
-		query.append("WHERE  INVN_CTL_NBR       = ? ");
-		query.append("AND ICN_SUFX_CD           = ? ");
-		query.append(" AND PROC_DT              = ? ");
-		query.append("AND PROC_TM               = ? ");
-		query.append("AND ICN_SUFX_VERS_NBR     = "); 
-		query.append(maxSufxVersNbr(req) + " ");
-		*/
+	
 		String location="J5427HC1.JP835RED.processing7700.do7703(JP54RedRequest, String)";
 
 		Connection con = null ; 
@@ -224,14 +210,17 @@ public class processing7700 {
 			}
 
 		}catch (SQLException e) {
+			logger.error(location.concat("  LOGID:").concat("[").concat(logId).concat("]"),e);
 			e.printStackTrace();
 		} catch (Exception e) {
+			logger.error(location.concat("  LOGID:").concat("[").concat(logId).concat("]"),e);
 			e.printStackTrace();
 		} finally {
 			try {
 				ps.close();
 				con.close();
 			} catch (SQLException e) {
+				logger.error(location.concat("  LOGID:").concat("[").concat(logId).concat("]"),e);
 				e.printStackTrace();
 			}
 		}
@@ -248,30 +237,6 @@ public class processing7700 {
 	 */
 	public List<Ret835Reduct> do7704(JP54RedRequest req, String logId){
 
-		/*query.setLength(0);
-		query.append("SELECT   PD_AMT_RDUC_CATGY_ID ");
-		query.append(",PD_AMT_RDUC_AMT ");
-		query.append(",PD_AMT_RDUC_GRP_CD ");
-		query.append(",PD_AMT_RDUC_CARC_CD ");
-		query.append(",PD_AMT_RDUC_RARC_CD ");
-		query.append(",LN_ID ");
-		query.append(",RVNU_CD ");
-		query.append(",PROC_CD ");
-		query.append(",PROC_TYP_CD ");
-		query.append(",ORIG_HDR_SEQ_NBR ");
-		query.append(" FROM ADJD_CLMSFLN_PD_AMT_RDUC ");
-		query.append("WHERE  INVN_CTL_NBR          = ? ");
-		query.append("AND ICN_SUFX_CD           = ? ");
-		query.append("AND PROC_DT               = ? ");
-		query.append("AND PROC_TM               = ? ");
-		query.append("AND ICN_SUFX_VERS_NBR     = ");
-		query.append("(SELECT MAX(ICN_SUFX_VERS_NBR) ");
-		query.append("FROM ADJD_CLMSFLN_PD_AMT_RDUC C ");
-		query.append("WHERE C.INVN_CTL_NBR  = ? ");
-		query.append("AND C.ICN_SUFX_CD   = ? ");
-		query.append("AND C.PROC_DT       = ? ");
-		query.append("AND C.PROC_TM       = ?) ");
-		*/
 		String location="J5427HC1.JP835RED.processing7700.do7704(JP54RedRequest, String)";
 
 		Connection con = null ; 
@@ -323,40 +288,21 @@ public class processing7700 {
 			return ClmRed;
 
 		}catch (SQLException e) {
+			logger.error(location.concat("  LOGID:").concat("[").concat(logId).concat("]"),e);
 			e.printStackTrace();
 		} catch (Exception e) {
+			logger.error(location.concat("  LOGID:").concat("[").concat(logId).concat("]"),e);
 			e.printStackTrace();
 		} finally {
 			try {
 				ps.close();
 				con.close();
 			} catch (SQLException e) {
+				logger.error(location.concat("  LOGID:").concat("[").concat(logId).concat("]"),e);
 				e.printStackTrace();
 			}
 		}
 
-		/*SELECT   PD_AMT_RDUC_CATGY_ID 
-		,PD_AMT_RDUC_AMT 
-		,PD_AMT_RDUC_GRP_CD 
-		,PD_AMT_RDUC_CARC_CD 
-		,PD_AMT_RDUC_RARC_CD 
-		,LN_ID 
-		,RVNU_CD 
-		,PROC_CD 
-		,PROC_TYP_CD 
-		,ORIG_HDR_SEQ_NBR 
-		 FROM ADJD_CLMSFLN_PD_AMT_RDUC 
-		WHERE  INVN_CTL_NBR          = ? 
-				AND ICN_SUFX_CD           = ? 
-				AND PROC_DT               = ? 
-				AND PROC_TM               = ? 
-				AND ICN_SUFX_VERS_NBR     = 
-				(SELECT MAX(ICN_SUFX_VERS_NBR) 
-				FROM ADJD_CLMSFLN_PD_AMT_RDUC C 
-				WHERE C.INVN_CTL_NBR  = ? 
-				AND C.ICN_SUFX_CD   = ? 
-				AND C.PROC_DT       = ? 
-				AND C.PROC_TM       = ?) */
 		return ClmRed;
 
 	}
@@ -403,25 +349,16 @@ public class processing7700 {
 			ResultSet  rs =ps.executeQuery();
 			int ws_ln=0;
 			int ws_sub=0;
-
-			/*if (rs.isBeforeFirst()) {
-				rs.next();
-				ws_ln=rs.getBigDecimal("LN_ID").intValue();
-				System.out.println("ws_ln "+ws_ln);
-				ws_sub=1;
-			}
-*/
+	
 			if(!rs.next()){
 				logger.info(location.concat(" Empty Resultset for Ret835LineLvl Table").concat(" LOGID:").concat("[").concat(logId).concat("]"));
 
 			}else{
 				do//makes the first row as current ,then second the current and so on 
 				{
-				/*anjali:needs review*/
 				if(rs.isFirst())
 				{
 					ws_ln=rs.getBigDecimal("LN_ID").intValue()-1;
-					//System.out.println("ws_ln "+ws_ln);
 					ws_sub=1;
 				}else
 				{
@@ -438,10 +375,8 @@ public class processing7700 {
 
 				}
 				ws_ln=rs.getBigDecimal("LN_ID").intValue();
-				//System.out.println("ws_ln "+ws_ln);
 
 				ret835LineLvl[ws_ln].setRET_835_20LN_SVC_ID(rs.getBigDecimal("LN_ID"));
-				//what if therse no element in tbl for ws_ln index
 				ret835LineLvl[ws_ln].getRet835LnRarcTbl()[ws_sub].setRET_835_LN_RARC_CD(rs.getString("CLM_LN_RARC_CD"));
 				ret835LineLvl[ws_ln].getRet835LnRarcTbl()[ws_sub].setRET_835_LN_RMRK_CD(rs.getString("CLM_LN_RMRK_CD"));
 				ret835LineLvl[ws_ln].getRet835LnRarcTbl()[ws_sub].setRET_835_LN_REV_CD(rs.getBigDecimal("RVNU_CD"));
@@ -452,13 +387,14 @@ public class processing7700 {
 			}
 			return ret835LineLvl;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			logger.error(location.concat("  LOGID:").concat("[").concat(logId).concat("]"),e);
 			e.printStackTrace();
 		}finally {
 			try {
 				ps.close();
 				con.close();
 			} catch (SQLException e) {
+				logger.error(location.concat("  LOGID:").concat("[").concat(logId).concat("]"),e);
 				e.printStackTrace();
 			}
 		}
@@ -514,13 +450,14 @@ public class processing7700 {
 			return ret835PrcLvlList;
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			logger.error(location.concat("  LOGID:").concat("[").concat(logId).concat("]"),e);
 			e.printStackTrace();
 		}finally {
 			try {
 				ps.close();
 				con.close();
 			} catch (SQLException e) {
+				logger.error(location.concat("  LOGID:").concat("[").concat(logId).concat("]"),e);
 				e.printStackTrace();
 			}
 		}
@@ -531,28 +468,7 @@ public class processing7700 {
 		/*
 		 * EXTRACT 835 PRORATED DATA AND POPULATE THE INTO RETURN AREA  
 		 */
-		/*query.setLength(0);
-		query.append("SELECT   RPT_835_PD_AMT ");
-		query.append(",RPT_835_RVNU_CD ");
-		query.append(",RPT_835_PROC_CD ");
-		query.append(",RPT_835_PROC_MOD_1_CD ");
-		query.append(",RPT_835_PROC_MOD_2_CD ");
-		query.append(",RPT_835_PROC_MOD_3_CD ");
-		query.append(",RPT_835_PROC_MOD_4_CD ");
-		query.append(",LN_NBR ");
-		query.append(",PROC_TYP_CD ");
-		query.append(",LN_CORR_ID ");
-		query.append(",UB92_RVNU_CD ");
-		query.append(",UB92_CHRG_AMT ");
-		query.append(",UB92_ALLW_AMT ");
-		query.append("FROM T5410DBA.ADJD_CLMSF_ORIGHDR ");
-		query.append("WHERE INVN_CTL_NBR       = ? ");
-		query.append("AND ICN_SUFX_CD          = ? ");
-		query.append("AND PROC_DT              = ? ");
-		query.append("AND PROC_TM              = ? ");
-		query.append("AND ICN_SUFX_VERS_NBR    = ");
-		query.append(maxSufxVersNbr(req) + " "); 
-		*/
+		
 		String location="J5427HC1.JP835RED.processing7700.do7708(JP54RedRequest, String)";
 
 		Connection con = null ; 
@@ -601,14 +517,17 @@ public class processing7700 {
 
 			//PROCESS THE RESULTS 
 		}catch (SQLException e) {
+			logger.error(location.concat("  LOGID:").concat("[").concat(logId).concat("]"),e);
 			e.printStackTrace();
 		} catch (Exception e) {
+			logger.error(location.concat("  LOGID:").concat("[").concat(logId).concat("]"),e);
 			e.printStackTrace();
 		} finally {
 			try {
 				ps.close();
 				con.close();
 			} catch (SQLException e) {
+				logger.error(location.concat("  LOGID:").concat("[").concat(logId).concat("]"),e);
 				e.printStackTrace();
 			}
 		}

@@ -48,17 +48,9 @@ public class FetchCoblnAmtsDao {
 			ps.setString(3, individual_claim2.getReqClaimEntry().getHc1_REQ_CLM_DRFT_NBR());
 			ps.setString(4, individual_claim2.getReqClaimEntry().getHc1_REQ_CLM_PROC_TM());
 			ps.setString(5, individual_claim2.getReqClaimEntry().getHc1_REQ_CLM_PROC_DT());
-			
-			//System.out.println(incoming_Claim.getHc1_REQ_CLM_INVN_CTL_NBR());
-			//System.out.println(suffix_cd);
-			//System.out.println(incoming_Claim.getHc1_REQ_CLM_DRFT_NBR());
-			//System.out.println(incoming_Claim.getHc1_REQ_CLM_PROC_TM());
-			//System.out.println(incoming_Claim.getHc1_REQ_CLM_PROC_DT());
-			
-			
+		
 			ResultSet rs = ps.executeQuery();
 			
-			//System.out.println("RESULT SET LINE IDS ORDER");
 			if(!rs.next()){
 				logger.info(location.concat(" Empty Resultset;No Cob lines returned").concat(" LOGID:").concat("[").concat(individual_claim2.getLogId()).concat("]"));
 
@@ -68,7 +60,6 @@ public class FetchCoblnAmtsDao {
 			
 				COBLN_LINE_FLDS returned_record = new COBLN_LINE_FLDS(); 
 				returned_record.setLN_ID(rs.getInt("LN_ID"));
-				//System.out.println(rs.getInt("LN_ID"));
 				returned_record.setRPTG_LN_ALLW_AMT(rs.getBigDecimal("RPTG_LN_ALLW_AMT"));
 				returned_record.setLN_SRVC_CD(rs.getString("SRVC_CD"));
 				returned_record.setLN_PMT_SVC_CD(rs.getString("PMT_SVC_CD"));
@@ -99,14 +90,17 @@ public class FetchCoblnAmtsDao {
 			}while(rs.next());
 			}
 		}catch (SQLException e) {
+			logger.error(location.concat("  LOGID:").concat("[").concat(individual_claim2.getLogId()).concat("]"),e);
 			e.printStackTrace();
 		} catch (Exception e) {
+			logger.error(location.concat("  LOGID:").concat("[").concat(individual_claim2.getLogId()).concat("]"),e);
 			e.printStackTrace();
 		} finally {
 			try {
 				ps.close();
 				con.close();
 			} catch (SQLException e) {
+				logger.error(location.concat("  LOGID:").concat("[").concat(individual_claim2.getLogId()).concat("]"),e);
 				e.printStackTrace();
 			}
 		}

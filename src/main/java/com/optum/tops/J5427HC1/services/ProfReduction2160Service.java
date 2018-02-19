@@ -62,85 +62,90 @@ public class ProfReduction2160Service {
 	{
 		
 		String location="J5427HC1.services.ProfReduction2160Service.do2161Section(V5427HC1, JP54RedReturn, int, String)";
-		List<Ret835Reduct> ret835Reduct = red_return.getRet835ReductArea(); 
+		try {
+			List<Ret835Reduct> ret835Reduct = red_return.getRet835ReductArea(); 
 
-		String ws_group_cd=ret835Reduct.get(clm_sub).getRET_835_RD_GRP_ID().trim();
-		String ws_carc_cd=ret835Reduct.get(clm_sub).getRET_835_RD_CARC_CD().trim();
-		String ws_rarc_Cd=ret835Reduct.get(clm_sub).getRET_835_RD_RARC_CD().trim();
-		int svc_ln_sub=ret835Reduct.get(clm_sub).getRET_835_RD_SVC_ID() - 1;
-		/*anjali:test BigDecimal.ONE.negate()*/
-		
-		LineReductionHold LINE_REDUCTION_HOLD =claimToBeSent.getMy_indicator().getWS_LINE_REDUCTION_TABLE().get(svc_ln_sub);
+			String ws_group_cd=ret835Reduct.get(clm_sub).getRET_835_RD_GRP_ID().trim();
+			String ws_carc_cd=ret835Reduct.get(clm_sub).getRET_835_RD_CARC_CD().trim();
+			String ws_rarc_Cd=ret835Reduct.get(clm_sub).getRET_835_RD_RARC_CD().trim();
+			int svc_ln_sub=ret835Reduct.get(clm_sub).getRET_835_RD_SVC_ID() - 1;
+			/*anjali:test BigDecimal.ONE.negate()*/
+			
+			LineReductionHold LINE_REDUCTION_HOLD =claimToBeSent.getMy_indicator().getWS_LINE_REDUCTION_TABLE().get(svc_ln_sub);
 
-		if (ret835Reduct.get(clm_sub).getRET_835_RD_PD_AMT().equals(BigDecimal.ONE.negate()))
-		{
-			return claimToBeSent;
-		}                                                                                                       
+			if (ret835Reduct.get(clm_sub).getRET_835_RD_PD_AMT().equals(BigDecimal.ONE.negate()))
+			{
+				return claimToBeSent;
+			}                                                                                                       
 
-		
-		int svc_sub=ret835Reduct.get(clm_sub).getRET_835_RD_SVC_ID() - 1;
-		
-		boolean svc_line_penny_ind[]=claimToBeSent.getMy_indicator().getSVC_LINE_PENNY_IND_ENTRY();
-		if(svc_line_penny_ind[svc_sub] && ret835Reduct.get(clm_sub).getRET_835_RD_PROC_CD().equals(""))
-		{
-			return claimToBeSent;
-		}
-		logger.info(location.concat(" ws_group_cd:").concat("[").concat(ws_group_cd.trim()).concat("]").concat(" ws_carc_cd:").concat("[").concat(ws_carc_cd.trim()).concat("]").concat(" LOGID:").concat("[").concat(logId).concat("]"));
+			
+			int svc_sub=ret835Reduct.get(clm_sub).getRET_835_RD_SVC_ID() - 1;
+			
+			boolean svc_line_penny_ind[]=claimToBeSent.getMy_indicator().getSVC_LINE_PENNY_IND_ENTRY();
+			if(svc_line_penny_ind[svc_sub] && ret835Reduct.get(clm_sub).getRET_835_RD_PROC_CD().equals(""))
+			{
+				return claimToBeSent;
+			}
+			logger.info(location.concat(" ws_group_cd:").concat("[").concat(ws_group_cd.trim()).concat("]").concat(" ws_carc_cd:").concat("[").concat(ws_carc_cd.trim()).concat("]").concat(" LOGID:").concat("[").concat(logId).concat("]"));
 
-		if(ws_group_cd.trim().equalsIgnoreCase("PR")){
-			LINE_REDUCTION_HOLD.setPR_TOTAL(LINE_REDUCTION_HOLD.getPR_TOTAL().add(ret835Reduct.get(clm_sub).getRET_835_RD_PD_AMT()));
-			switch(ws_carc_cd){
-			case "45"://PR-OVER-RC
-				LINE_REDUCTION_HOLD.setPR_OVERC(LINE_REDUCTION_HOLD.getPR_OVERC().add(ret835Reduct.get(clm_sub).getRET_835_RD_PD_AMT()));
-				break;
-			case "1"://PR-DEDUCT
-				LINE_REDUCTION_HOLD.setPR_DEDUC(LINE_REDUCTION_HOLD.getPR_DEDUC().add(ret835Reduct.get(clm_sub).getRET_835_RD_PD_AMT()));
-				break;
-			case "3"://PR-COPAY
-				LINE_REDUCTION_HOLD.setPR_COPAY(LINE_REDUCTION_HOLD.getPR_COPAY().add(ret835Reduct.get(clm_sub).getRET_835_RD_PD_AMT()));
-				break;
-			case "2"://PR-COINS
-				LINE_REDUCTION_HOLD.setPR_COINS(LINE_REDUCTION_HOLD.getPR_COINS().add(ret835Reduct.get(clm_sub).getRET_835_RD_PD_AMT()));
-				break;
-			case "96"://PR-MEDC-EST-DENY
-				if (ws_rarc_Cd.equals("N536"))
-				{
-					LINE_REDUCTION_HOLD.getPR_DENY_AMT().add(ret835Reduct.get(clm_sub).getRET_835_RD_PD_AMT());
-				}else{
-					if (claimToBeSent.getHC1_COB_COB_835_PROC_IND().equals("M") && ws_rarc_Cd.equals("N12"))
+			if(ws_group_cd.trim().equalsIgnoreCase("PR")){
+				LINE_REDUCTION_HOLD.setPR_TOTAL(LINE_REDUCTION_HOLD.getPR_TOTAL().add(ret835Reduct.get(clm_sub).getRET_835_RD_PD_AMT()));
+				switch(ws_carc_cd){
+				case "45"://PR-OVER-RC
+					LINE_REDUCTION_HOLD.setPR_OVERC(LINE_REDUCTION_HOLD.getPR_OVERC().add(ret835Reduct.get(clm_sub).getRET_835_RD_PD_AMT()));
+					break;
+				case "1"://PR-DEDUCT
+					LINE_REDUCTION_HOLD.setPR_DEDUC(LINE_REDUCTION_HOLD.getPR_DEDUC().add(ret835Reduct.get(clm_sub).getRET_835_RD_PD_AMT()));
+					break;
+				case "3"://PR-COPAY
+					LINE_REDUCTION_HOLD.setPR_COPAY(LINE_REDUCTION_HOLD.getPR_COPAY().add(ret835Reduct.get(clm_sub).getRET_835_RD_PD_AMT()));
+					break;
+				case "2"://PR-COINS
+					LINE_REDUCTION_HOLD.setPR_COINS(LINE_REDUCTION_HOLD.getPR_COINS().add(ret835Reduct.get(clm_sub).getRET_835_RD_PD_AMT()));
+					break;
+				case "96"://PR-MEDC-EST-DENY
+					if (ws_rarc_Cd.equals("N536"))
 					{
+						LINE_REDUCTION_HOLD.getPR_DENY_AMT().add(ret835Reduct.get(clm_sub).getRET_835_RD_PD_AMT());
+					}else{
+						if (claimToBeSent.getHC1_COB_COB_835_PROC_IND().equals("M") && ws_rarc_Cd.equals("N12"))
+						{
 
-						LINE_REDUCTION_HOLD.setPR_MEDC_EST_AMT(LINE_REDUCTION_HOLD.getPR_MEDC_EST_AMT().add(ret835Reduct.get(clm_sub).getRET_835_RD_PD_AMT()));
+							LINE_REDUCTION_HOLD.setPR_MEDC_EST_AMT(LINE_REDUCTION_HOLD.getPR_MEDC_EST_AMT().add(ret835Reduct.get(clm_sub).getRET_835_RD_PD_AMT()));
+						}
+					}
+					break;
+				default:
+					LINE_REDUCTION_HOLD.setPR_NTCOV(LINE_REDUCTION_HOLD.getPR_NTCOV().add(ret835Reduct.get(clm_sub).getRET_835_RD_PD_AMT()));
+					break;
+				}
+			}else
+			{
+				if(ws_group_cd.equals("OA") && ws_carc_cd.equals("23"))
+				{
+					LINE_REDUCTION_HOLD.setCOB_PRIM_IMPAC(LINE_REDUCTION_HOLD.getCOB_PRIM_IMPAC().add(ret835Reduct.get(clm_sub).getRET_835_RD_PD_AMT()));
+				}
+				else
+				{
+					if(ws_group_cd.equals("CO"))
+					{
+						if(ws_carc_cd.equals("94") || ws_carc_cd.equals("97"))
+						{
+							LINE_REDUCTION_HOLD.setCAT_ID(LINE_REDUCTION_HOLD.getCAT_ID().add(BigDecimal.ONE));
+						}else
+						{
+							LINE_REDUCTION_HOLD.setPRV_NC_AMT(LINE_REDUCTION_HOLD.getPRV_NC_AMT().add(ret835Reduct.get(clm_sub).getRET_835_RD_PD_AMT()));
+						}
 					}
 				}
-				break;
-			default:
-				LINE_REDUCTION_HOLD.setPR_NTCOV(LINE_REDUCTION_HOLD.getPR_NTCOV().add(ret835Reduct.get(clm_sub).getRET_835_RD_PD_AMT()));
-				break;
 			}
-		}else
-		{
-			if(ws_group_cd.equals("OA") && ws_carc_cd.equals("23"))
-			{
-				LINE_REDUCTION_HOLD.setCOB_PRIM_IMPAC(LINE_REDUCTION_HOLD.getCOB_PRIM_IMPAC().add(ret835Reduct.get(clm_sub).getRET_835_RD_PD_AMT()));
-			}
-			else
-			{
-				if(ws_group_cd.equals("CO"))
-				{
-					if(ws_carc_cd.equals("94") || ws_carc_cd.equals("97"))
-					{
-						LINE_REDUCTION_HOLD.setCAT_ID(LINE_REDUCTION_HOLD.getCAT_ID().add(BigDecimal.ONE));
-					}else
-					{
-						LINE_REDUCTION_HOLD.setPRV_NC_AMT(LINE_REDUCTION_HOLD.getPRV_NC_AMT().add(ret835Reduct.get(clm_sub).getRET_835_RD_PD_AMT()));
-					}
-				}
-			}
-		}
 
-		LINE_REDUCTION_HOLD.setSVC_LN_ID(new BigDecimal(ret835Reduct.get(clm_sub).getRET_835_RD_SVC_ID()));
-		logger.info(location.concat(" SVC_LN_ID:").concat("[").concat(LINE_REDUCTION_HOLD.getSVC_LN_ID().toString()).concat("]").concat(" LOGID:").concat("[").concat(logId).concat("]"));
+			LINE_REDUCTION_HOLD.setSVC_LN_ID(new BigDecimal(ret835Reduct.get(clm_sub).getRET_835_RD_SVC_ID()));
+			logger.info(location.concat(" SVC_LN_ID:").concat("[").concat(LINE_REDUCTION_HOLD.getSVC_LN_ID().toString()).concat("]").concat(" LOGID:").concat("[").concat(logId).concat("]"));
+		} catch (Exception e) {
+			logger.error(location.concat("  LOGID:").concat("[").concat(logId).concat("]"),e);
+			e.printStackTrace();
+		}
 
 		return claimToBeSent;
 	}
@@ -156,42 +161,47 @@ public class ProfReduction2160Service {
 		String location="J5427HC1.services.ProfReduction2160Service.do2003PennySection(V5427HC1, JP54RedReturn, String)";
 		int rev_sub=0;
 		int svc_sub=0;		
-		boolean SVC_LINE_PENNY_IND_ENTRY[]=claimToBeSent.getMy_indicator().getSVC_LINE_PENNY_IND_ENTRY();
-		logger.info(location.concat(" size of Ret835PrcLvl :").concat("[").concat(Integer.toString(red_return.getRet835PrcLvl().size())).concat("]").concat(" LOGID:").concat("[").concat(logId).concat("]"));
+		try {
+			boolean SVC_LINE_PENNY_IND_ENTRY[]=claimToBeSent.getMy_indicator().getSVC_LINE_PENNY_IND_ENTRY();
+			logger.info(location.concat(" size of Ret835PrcLvl :").concat("[").concat(Integer.toString(red_return.getRet835PrcLvl().size())).concat("]").concat(" LOGID:").concat("[").concat(logId).concat("]"));
 
-		while(rev_sub < red_return.getRet835PrcLvl().size())
-			/*	anjali to be done:|| red_return.getRet835PrcLvl().get(rev_sub).getRET_835_ERR_SVC_ID()!=numeric)*/ 
-		{
-			if(red_return.getRet835PrcLvl().get(rev_sub).getRET_835_ERR_CD().equals("H30211"))
+			while(rev_sub < red_return.getRet835PrcLvl().size())
+				/*	anjali to be done:|| red_return.getRet835PrcLvl().get(rev_sub).getRET_835_ERR_SVC_ID()!=numeric)*/ 
 			{
-				svc_sub=red_return.getRet835PrcLvl().get(rev_sub).getRET_835_ERR_SVC_ID().intValue();
-				claimToBeSent.getMy_indicator().getSVC_LINE_PENNY_IND_ENTRY();
-				if(!SVC_LINE_PENNY_IND_ENTRY[svc_sub])
+				if(red_return.getRet835PrcLvl().get(rev_sub).getRET_835_ERR_CD().equals("H30211"))
 				{
-					return claimToBeSent;
-				}
-			}
-			rev_sub++;
-		}
-		svc_sub=0;
-		while(svc_sub<7)
-		{
-			if(SVC_LINE_PENNY_IND_ENTRY[svc_sub])
-			{
-				int clm_sub=0;
-				while(clm_sub<3)
-				{
-					if(claimToBeSent.getHC1_COB_835_OOB_ERROR().get(clm_sub).equals("H30203")
-							||claimToBeSent.getHC1_COB_835_OOB_ERROR().get(clm_sub).equals("H30205")
-							||claimToBeSent.getHC1_COB_835_OOB_ERROR().get(clm_sub).equals("H30206")
-							)
+					svc_sub=red_return.getRet835PrcLvl().get(rev_sub).getRET_835_ERR_SVC_ID().intValue();
+					claimToBeSent.getMy_indicator().getSVC_LINE_PENNY_IND_ENTRY();
+					if(!SVC_LINE_PENNY_IND_ENTRY[svc_sub])
 					{
-						claimToBeSent.getHC1_COB_835_OOB_ERROR().set(clm_sub, "");
-						clm_sub=7;
+						return claimToBeSent;
 					}
 				}
+				rev_sub++;
 			}
-			svc_sub++;
+			svc_sub=0;
+			while(svc_sub<7)
+			{
+				if(SVC_LINE_PENNY_IND_ENTRY[svc_sub])
+				{
+					int clm_sub=0;
+					while(clm_sub<3)
+					{
+						if(claimToBeSent.getHC1_COB_835_OOB_ERROR().get(clm_sub).equals("H30203")
+								||claimToBeSent.getHC1_COB_835_OOB_ERROR().get(clm_sub).equals("H30205")
+								||claimToBeSent.getHC1_COB_835_OOB_ERROR().get(clm_sub).equals("H30206")
+								)
+						{
+							claimToBeSent.getHC1_COB_835_OOB_ERROR().set(clm_sub, "");
+							clm_sub=7;
+						}
+					}
+				}
+				svc_sub++;
+			}
+		} catch (Exception e) {
+			logger.error(location.concat("  LOGID:").concat("[").concat(logId).concat("]"),e);
+			e.printStackTrace();
 		}
 		return claimToBeSent;
 	}

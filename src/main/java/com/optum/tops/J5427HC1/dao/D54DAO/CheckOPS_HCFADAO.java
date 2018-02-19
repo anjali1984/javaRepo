@@ -72,14 +72,17 @@ public class CheckOPS_HCFADAO {
 			}
 
 		} catch (SQLException e) {
+			logger.error(location.concat("  LOGID:").concat("[").concat(individual_claim2.getLogId()).concat("]"),e);
 			e.printStackTrace();
 		} catch (Exception e) {
+			logger.error(location.concat("  LOGID:").concat("[").concat(individual_claim2.getLogId()).concat("]"),e);
 			e.printStackTrace();
 		} finally {
 			try {
 				ps.close();
 				con.close();
 			} catch (SQLException e) {
+				logger.error(location.concat("  LOGID:").concat("[").concat(individual_claim2.getLogId()).concat("]"),e);
 				e.printStackTrace();
 			}
 		}
@@ -132,14 +135,17 @@ public class CheckOPS_HCFADAO {
 				}while(rs.next() && i < 150 );
 			}
 		}catch (SQLException e) {
+			logger.error(location.concat("  LOGID:").concat("[").concat(incoming_claim.getLogId()).concat("]"),e);
 			e.printStackTrace();
 		} catch (Exception e) {
+			logger.error(location.concat("  LOGID:").concat("[").concat(incoming_claim.getLogId()).concat("]"),e);
 			e.printStackTrace();
 		} finally {
 			try {
 				ps.close();
 				con.close();
 			} catch (SQLException e) {
+				logger.error(location.concat("  LOGID:").concat("[").concat(incoming_claim.getLogId()).concat("]"),e);
 				e.printStackTrace();
 			}
 		}

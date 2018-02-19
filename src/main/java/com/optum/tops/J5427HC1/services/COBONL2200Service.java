@@ -91,7 +91,7 @@ public class COBONL2200Service {
 			}
 			return currentClaim;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			logger.error(location.concat("  LOGID:").concat("[").concat(individual_claim.getLogId()).concat("]"),e);
 			e.printStackTrace();
 		}
 		finally{

@@ -310,7 +310,7 @@ COBONL2200Service cOBONL2200Service;
 				currentClaim.setHC1_COB_PRV_WRT_OFF(compute);
 				//System.out.println("currentClaim.setHC1_COB_PRV_WRT_OFF() " + compute);
 
-				for (int i = 0; i < 7; i++)
+				for (int i = 0; i < currentClaim.getHC1_COB_LNE_DATA_AREA().size(); i++)
 					currentClaim.getHC1_COB_LNE_DATA_AREA().get(i).setHC1_COB_LN_COB_PRV_WRT_OFF(BigDecimal.ZERO);
 			}
 			return currentClaim;

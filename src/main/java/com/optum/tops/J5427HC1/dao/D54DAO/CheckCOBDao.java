@@ -104,8 +104,8 @@ String location="J5427HC1.dao.D54DAO.CheckCOBDao.am_i_COB_claim(ReqClaimEntryVO)
 				}
 			}
 		} catch (SQLException e) {
-			logger.info(location.concat("No Rows returned").concat(" LOGID:").concat("[").concat(individual_claim2.getLogId()).concat("]"));
-
+			//logger.info(location.concat("No Rows returned").concat(" LOGID:").concat("[").concat(individual_claim2.getLogId()).concat("]"));
+			logger.error(location.concat("  LOGID:").concat("[").concat(individual_claim2.getLogId()).concat("]"),e);
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();

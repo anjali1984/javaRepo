@@ -29,30 +29,8 @@ public class OIMC_CoblnAmtsDao {
 	private  Logger logger=Logger.getLogger("genLogger");
 
 	public List<COBLN_2131> getData(String ICN, String Icn_Sufx_Cd, String logId){
-		//System.out.println("In OIMC_CoblnAmtsDao ");
 		List<COBLN_2131> return_data = new ArrayList<COBLN_2131>() ;
-		/*
-		query.setLength(0); // To ensure its cleared of previous query
-		query.append("SELECT SRVC.INVN_CTL_NBR "); 
-		query.append(",SRVC.ICN_SUFX_CD ");
-		query.append(",SRVC.ORIG_LN_CORR_ID ");
-		query.append(",SRVC.MEDCR_PD_AMT ");
-		query.append(",SRVC.OI_PD_LN_AMT ");
-		//query.append(",(CASE WHEN (SRVC.MEDCR_PD_AMT = -1 ) ");
-		//query.append("THEN 0 ELSE SRVC.MEDCR_PD_AMT   END )  ");
-		//query.append(",(CASE WHEN (SRVC.OI_PD_LN_AMT = -1 ) ");
-		//query.append("THEN 0 ELSE SRVC.OI_PD_LN_AMT  END ) ");
-		query.append("FROM  T5410DBA.COB_SRVC_CALC_DATA SRVC ");
-		query.append("WHERE SRVC.INVN_CTL_NBR  =  ? ");
-		query.append("AND SRVC.ICN_SUFX_CD   = ? ");
-		query.append("AND SRVC.LST_UPDT_DTTM = ");
-		query.append("(SELECT MAX(SRVC2.LST_UPDT_DTTM) ");
-		query.append("FROM  T5410DBA.COB_SRVC_CALC_DATA    SRVC2  ");
-		query.append("WHERE SRVC2.INVN_CTL_NBR    = SRVC.INVN_CTL_NBR ");
-		query.append("AND SRVC2.ICN_SUFX_CD     = SRVC.ICN_SUFX_CD ");
-		query.append("AND SRVC2.ORIG_LN_CORR_ID = SRVC.ORIG_LN_CORR_ID) ");
-		query.append("FOR FETCH ONLY ");
-		 */
+		
 
 		String location="J5427HC1.dao.D54DAO.OIMC_CoblnAmtsDao.getData(String, String)";
 			Connection con = null;
@@ -64,9 +42,7 @@ public class OIMC_CoblnAmtsDao {
 			ps.setString(1, ICN);
 			ps.setString(2, Icn_Sufx_Cd);
 
-			//System.out.println(ICN);
-			//System.out.println(Icn_Sufx_Cd);
-
+		
 			ResultSet rs = ps.executeQuery();
 			if(!rs.next()){
 				logger.info(location.concat(" Empty Resultset for OIMC_CoblnAmtsDao_Query").concat(" LOGID:").concat("[").concat(logId).concat("]"));
@@ -95,14 +71,17 @@ public class OIMC_CoblnAmtsDao {
 			}
 
 		}catch (SQLException e) {
+			logger.error(location.concat("  LOGID:").concat("[").concat(logId).concat("]"),e);
 			e.printStackTrace();
 		} catch (Exception e) {
+			logger.error(location.concat("  LOGID:").concat("[").concat(logId).concat("]"),e);
 			e.printStackTrace();
 		} finally {
 			try {
 				ps.close();
 				con.close();
 			} catch (SQLException e) {
+				logger.error(location.concat("  LOGID:").concat("[").concat(logId).concat("]"),e);
 				e.printStackTrace();
 			}
 		}
