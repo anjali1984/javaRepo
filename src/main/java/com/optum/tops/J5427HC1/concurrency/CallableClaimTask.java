@@ -205,7 +205,7 @@ COBONL2200Service cOBONL2200Service;
 		 */
 		if (currentClaim.getHC1_COB_COB_CLAIM_INDICATOR().equals("Y")) {
 			logger.info(location.concat("Perform 2200-WRTOFF-CALC if HC1_COB_COB_CLAIM_INDICATOR= ").concat("[").concat(currentClaim.getHC1_COB_COB_CLAIM_INDICATOR()).concat("]").concat(" LOGID:").concat("[").concat(individual_claim.getLogId()).concat("]"));
-			currentClaim = WriteOff2200(currentClaim);
+			currentClaim=cOBONL2200Service.WriteOff2200(currentClaim,individual_claim);
 			logger.info(location.concat(" 2200-WRTOFF-CALC Completed ").concat(" LOGID:").concat("[").concat(individual_claim.getLogId()).concat("]"));
 
 		}
@@ -227,100 +227,6 @@ COBONL2200Service cOBONL2200Service;
 		return currentClaim;
 	}
 
-	/**
-	 * java version of 2200-WRTOFF-CALC section of COBOL program D5427HC1
-	 * Functionality: 1.When a cob claim, initializes the write off for
-	 * recalculation 2.Separate calculations based on if the claim a
-	 * professional or institutional claim
-	 * 
-	 * @param currentClaim
-	 */
-	private V5427HC1 WriteOff2200(V5427HC1 currentClaim) {
-
-		/* anjali:sysout and compute can be removed once tested. */
-
-		try {
-			currentClaim.setHC1_COB_PRV_WRT_OFF(BigDecimal.ZERO);
-			/*
-			 * Recalculation for professional or medicare estimated service
-			 * lines
-			 */
-
-			if (((currentClaim.getHC1_COB_INST_OR_PROF().equals("P")
-					|| currentClaim.getHC1_COB_INST_OR_PROF().equals(""))
-					&& (currentClaim.getHC1_COB_COB_835_PROC_IND().equals("Y")
-							|| currentClaim.getHC1_COB_COB_835_PROC_IND().equals("M")))
-					|| (currentClaim.getHC1_COB_INST_OR_PROF().equals("I")
-							&& currentClaim.getHC1_COB_COB_835_PROC_IND().equals("M"))) {
-				/*
-				 * BigDecimal.ZEROing out medicare paid on claim leve for
-				 * institutional and professional medicare claims
-				 */
-				if ((currentClaim.getHC1_COB_INST_OR_PROF().equals("I")
-						|| currentClaim.getHC1_COB_INST_OR_PROF().equals("P"))
-						&& currentClaim.getHC1_COB_COB_835_PROC_IND().equals("M")) {
-					currentClaim.setHC1_COB_MEDC_PAID_AMT(BigDecimal.ZERO);
-					//System.out.println("in 2200 med amnt " + currentClaim.getHC1_COB_MEDC_PAID_AMT());
-				}
-				int cobDxCnt = 0;
-
-				while (cobDxCnt < currentClaim.getHC1_COB_NBR_LINES()) {
-					/*
-					 * For inst. and prof medicare claims BigDecimal.ZEROes to
-					 * medicare paid amount on all line levels
-					 */
-					if ((currentClaim.getHC1_COB_INST_OR_PROF().equals("I")
-							|| currentClaim.getHC1_COB_INST_OR_PROF().equals("P"))
-							&& currentClaim.getHC1_COB_COB_835_PROC_IND().equals("M")) {
-						currentClaim.getHC1_COB_LNE_DATA_AREA().get(cobDxCnt)
-								.setHC1_COB_LN_EOB_MEDC_PAID_AMT(BigDecimal.ZERO);
-					}
-					BigDecimal compute = currentClaim.getHC1_COB_LNE_DATA_AREA().get(cobDxCnt)
-							.getHC1_COB_LN_835_PRV_NC_AMT()
-							.add(currentClaim.getHC1_COB_LNE_DATA_AREA().get(cobDxCnt)
-									.getHC1_COB_LN_835_COB_PRIM_IMPAC())
-							.subtract(currentClaim.getHC1_COB_LNE_DATA_AREA().get(cobDxCnt)
-									.getHC1_COB_LN_EOB_MEDC_PAID_AMT())
-							.subtract(currentClaim.getHC1_COB_LNE_DATA_AREA().get(cobDxCnt)
-									.getHC1_COB_LN_EOB_OI_PAID_AMT());
-//					System.out.println(
-//							"In 2200, modifying the prv_wrt_off amount of the line, based on the 4 other line level amounts:  "
-//									+ compute);
-					currentClaim.getHC1_COB_LNE_DATA_AREA().get(cobDxCnt).setHC1_COB_LN_COB_PRV_WRT_OFF(compute);
-					/*
-					 * Provider write-off changed to BigDecimal.ZERO at line
-					 * level for inst. medicare estimated claims
-					 */
-					if (currentClaim.getHC1_COB_COB_835_PROC_IND().equals("M")
-							&& currentClaim.getHC1_COB_INST_OR_PROF().equals("I")) {
-						currentClaim.getHC1_COB_LNE_DATA_AREA().get(cobDxCnt)
-								.setHC1_COB_LN_COB_PRV_WRT_OFF(BigDecimal.ZERO);
-					}
-					currentClaim.setHC1_COB_PRV_WRT_OFF(currentClaim.getHC1_COB_LNE_DATA_AREA().get(cobDxCnt)
-							.getHC1_COB_LN_COB_PRV_WRT_OFF().add(currentClaim.getHC1_COB_PRV_WRT_OFF()));
-					cobDxCnt++;
-				}
-			}
-			if (currentClaim.getHC1_COB_INST_OR_PROF().equals("I")
-					&& currentClaim.getHC1_COB_COB_835_PROC_IND().equals("Y")) {
-				BigDecimal compute = ((currentClaim.getHC1_COB_835_PRV_NC_AMT()
-						.add(currentClaim.getHC1_COB_835_COB_PRIM_IMPAC()))
-								.subtract(currentClaim.getHC1_COB_MEDC_PAID_AMT()))
-										.subtract(currentClaim.getHC1_COB_OI_PAID_AMT());
-				currentClaim.setHC1_COB_PRV_WRT_OFF(compute);
-				//System.out.println("currentClaim.setHC1_COB_PRV_WRT_OFF() " + compute);
-
-				for (int i = 0; i < currentClaim.getHC1_COB_LNE_DATA_AREA().size(); i++)
-					currentClaim.getHC1_COB_LNE_DATA_AREA().get(i).setHC1_COB_LN_COB_PRV_WRT_OFF(BigDecimal.ZERO);
-			}
-			return currentClaim;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-
-		}
-		return currentClaim;
-	}
+	
 }
 
