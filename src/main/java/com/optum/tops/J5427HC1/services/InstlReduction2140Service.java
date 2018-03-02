@@ -41,10 +41,12 @@ public class InstlReduction2140Service {
 			int clm_sub = 0 ; 
 			//while (clm_sub < 10 && !ret835ClmRedTbl.get(clm_sub).getCLM_RD_CATGY_ID().equals("")) {
 			while(clm_sub < ret835ClmRedTbl.size() ){
+
 				// PERFORM 2141-SUM-CATEGORIES THRU 2141-EXIT only if its not a
 				// NY-COB-PAOD-TO-STATE and NYS-SERV-LINE
-				if (claimToBeSent.getMy_indicator().getNYSTATE_COB_CLAIM_PAIDTO().equals("S")
-						&& claimToBeSent.getMy_indicator().isNYS_SERV_LINE_SW() ) { /// ASSUMPTION WS-NYS-SERV-LINE-SW (NYS_SERV_LINE) is a Claim level field that get overridden by the loop in 2121-Section																									/// ******
+				/*if (claimToBeSent.getMy_indicator().getNYSTATE_COB_CLAIM_PAIDTO().equals("S")
+						&& claimToBeSent.getMy_indicator().isNYS_SERV_LINE_SW() )*/ 
+				if (ret835ClmRedTbl.get(clm_sub).getCLM_RD_CATGY_ID().equals("0")){ /// ASSUMPTION WS-NYS-SERV-LINE-SW (NYS_SERV_LINE) is a Claim level field that get overridden by the loop in 2121-Section																									/// ******
 					// Go onto the next record, No need to do 2141
 					clm_sub++;
 					continue;
@@ -121,14 +123,18 @@ public class InstlReduction2140Service {
 				} catch (NumberFormatException nfe) {
 					fmt_rvn_cd = 0;
 				}
-				if (red_return.getRet835ReductArea().get(clm_sub).getRET_835_RD_SVC_ID() == claimToBeSent.getMy_indicator()
+				/*
+				 * this logic  is there in cobol D5427hc1 but in java it doesnt make sense as
+				 * Ret835ReductArea area will never be populated bfr this in the institutional flow
+				 */
+				/*if (red_return.getRet835ReductArea().get(clm_sub).getRET_835_RD_SVC_ID() == claimToBeSent.getMy_indicator()
 						.getLast_line_id()
 						&& fmt_rvn_cd == red_return.getRet835ReductArea().get(clm_sub).getRET_835_RD_REV_CD()
 						&& HVA_HOST_VARIABLE_LIST.get(rev_sub).getPROC_CD().trim()
 						.equalsIgnoreCase(red_return.getRet835ReductArea().get(clm_sub).getRET_835_RD_PROC_CD())
 						&& HVA_HOST_VARIABLE_LIST.get(rev_sub).getREV_LINE_PENNY_INDICATOR().equalsIgnoreCase("Y")) {
 					return claimToBeSent; // Exit out of 2141,
-				}
+				}*/
 
 				rev_sub++;
 			}

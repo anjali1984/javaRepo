@@ -32,16 +32,16 @@ public class processing7700 {
 
 	@Autowired
 	private DataSource ds;
-	
+
 	@Value("${hc1.7701.query}")
 	private String hc17701Query;
-	
+
 	@Value("${hc1.7702.query}")
 	private String hc17702Query;
-	
+
 	@Value("${hc1.7703.query}")
 	private String hc17703Query;
-	
+
 	@Value("${hc1.7704.query}")
 	private String hc17704Query;
 
@@ -50,7 +50,7 @@ public class processing7700 {
 
 	@Value("${hc1.7706.query}")
 	private String hc17706Query;
-	
+
 	@Value("${hc1.7708.query}")
 	private String hc17708Query;
 	private  Logger logger=Logger.getLogger("genLogger");
@@ -59,8 +59,8 @@ public class processing7700 {
 		/*
 		 * read data from ADJD_CLMSF_RARC_CD  table and move them to CB variables
 		 */
-		
-		
+
+
 		String location="J5427HC1.JP835RED.processing7700.do7701(JP54RedRequest, String)";
 
 		Connection con = null ; 
@@ -76,6 +76,7 @@ public class processing7700 {
 			ps.setString(4, req.getRED_PROC_TM());
 			ps.setString(5, req.getRED_INV_CTL_NBR());
 			ps.setString(6, req.getRED_ICN_SUFX_CD());
+			System.out.println("sufx "+req.getRED_ICN_SUFX_CD());
 			ps.setString(7, req.getRED_PROC_DT());
 			ps.setString(8, req.getRED_PROC_TM());
 			ResultSet rs = ps.executeQuery();	
@@ -86,16 +87,17 @@ public class processing7700 {
 
 			}else{
 				do{
-			
-				Ret835ClmRed obj = new Ret835ClmRed(); 
-				obj.setCLM_RD_CATGY_ID(rs.getString("PD_AMT_RDUC_CATGY_ID"));
-				obj.setCLM_RD_PD_AMT(rs.getBigDecimal("FACL_PD_AMT_RDUC_AMT"));
-				obj.setCLM_RD_GRP_CD(rs.getString("PD_AMT_RDUC_GRP_CD"));
-				obj.setCLM_RD_CARC_CD(rs.getString("PD_AMT_RDUC_CARC_CD"));
-				obj.setCLM_RD_RARC_CD(rs.getString("PD_AMT_RDUC_RARC_CD"));
-				Clm835RedTbl.add(obj);
-				runner++; 
-			}while(runner < 10 && rs.next() );
+
+					Ret835ClmRed obj = new Ret835ClmRed(); 
+					obj.setCLM_RD_CATGY_ID(rs.getString("PD_AMT_RDUC_CATGY_ID"));
+					obj.setCLM_RD_PD_AMT(rs.getBigDecimal("FACL_PD_AMT_RDUC_AMT"));
+					System.out.println("obj.getCLM_RD_PD_AMT "+obj.getCLM_RD_PD_AMT());
+					obj.setCLM_RD_GRP_CD(rs.getString("PD_AMT_RDUC_GRP_CD"));
+					obj.setCLM_RD_CARC_CD(rs.getString("PD_AMT_RDUC_CARC_CD"));
+					obj.setCLM_RD_RARC_CD(rs.getString("PD_AMT_RDUC_RARC_CD"));
+					Clm835RedTbl.add(obj);
+					runner++; 
+				}while(runner < 10 && rs.next() );
 			}
 
 		}catch (SQLException e) {
@@ -145,12 +147,12 @@ public class processing7700 {
 
 			}else{
 				do{
-				Ret835ClmRarc obj = new Ret835ClmRarc(); 
-				obj.setCLM_RC_RARC_CD(rs.getString("CLM_RARC_CD"));
-				obj.setCLM_RC_RMRK_CD(rs.getString("CLM_RMRK_CD"));
-				ClmRarcTbl.add(obj);
-				runner++ ; 
-			}while( runner < 3 && rs.next());
+					Ret835ClmRarc obj = new Ret835ClmRarc(); 
+					obj.setCLM_RC_RARC_CD(rs.getString("CLM_RARC_CD"));
+					obj.setCLM_RC_RMRK_CD(rs.getString("CLM_RMRK_CD"));
+					ClmRarcTbl.add(obj);
+					runner++ ; 
+				}while( runner < 3 && rs.next());
 			}
 
 		}catch (SQLException e) {
@@ -175,7 +177,7 @@ public class processing7700 {
 		/*
 		 * read data from ADJD_CLMSF_RARC_CD  table and move them to CB variables
 		 */
-	
+
 		String location="J5427HC1.JP835RED.processing7700.do7703(JP54RedRequest, String)";
 
 		Connection con = null ; 
@@ -200,13 +202,13 @@ public class processing7700 {
 
 			}else{
 				do{
-				Ret835ClmErr temp = new Ret835ClmErr();
-				temp.setCLM_ERR_CD(rs.getString("CLM_ERR_CD"));
-				temp.setCLM_ERR_TYP_CD(rs.getString("CLM_LN_ERR_TYP_CD"));
-				ClmErrTbl.add(temp);
-				counter++; 
-			}while(counter < 3 && rs.next());
-				
+					Ret835ClmErr temp = new Ret835ClmErr();
+					temp.setCLM_ERR_CD(rs.getString("CLM_ERR_CD"));
+					temp.setCLM_ERR_TYP_CD(rs.getString("CLM_LN_ERR_TYP_CD"));
+					ClmErrTbl.add(temp);
+					counter++; 
+				}while(counter < 3 && rs.next());
+
 			}
 
 		}catch (SQLException e) {
@@ -228,7 +230,7 @@ public class processing7700 {
 		return ClmErrTbl;
 
 	}
-	
+
 	/**
 	 * read data from ADJD_CLMSFLN_PD_AMT_RDUC  table and moved them to Ret835Reduct object 
 	 * @param req
@@ -264,25 +266,25 @@ public class processing7700 {
 			}else{
 				do
 				{
-			
-				Ret835Reduct temp=new Ret835Reduct();
-				temp.setRET_835_RD_SVC_ID(rs.getInt("LN_ID"));
-				temp.setRET_835_RD_CATGY_ID(rs.getInt("PD_AMT_RDUC_CATGY_ID"));
-				temp.setRET_835_RD_PD_AMT(rs.getBigDecimal("PD_AMT_RDUC_AMT"));
 
-				if(req.getRED_835_TRAN_TYPE().equals("87"))
-				{
-					temp.setRET_835_RD_PD_AMT(temp.getRET_835_RD_PD_AMT().multiply((BigDecimal.ONE).negate()));
-				}
-				temp.setRET_835_RD_GRP_ID(rs.getString("PD_AMT_RDUC_GRP_CD"));
-				temp.setRET_835_RD_CARC_CD(rs.getString("PD_AMT_RDUC_CARC_CD"));
-				temp.setRET_835_RD_RARC_CD(rs.getString("PD_AMT_RDUC_RARC_CD"));
-				temp.setRET_835_RD_REV_CD(rs.getInt("RVNU_CD"));
-				temp.setRET_835_RD_PROC_CD(rs.getString("PROC_CD"));
-				temp.setRET_835_RD_PROC_TYP_CD(rs.getString("PROC_TYP_CD"));
-				temp.setRET_835_RD_REV_ID(rs.getInt("ORIG_HDR_SEQ_NBR"));
-				ClmRed.add(temp);
-			}while(counter<150 && rs.next());
+					Ret835Reduct temp=new Ret835Reduct();
+					temp.setRET_835_RD_SVC_ID(rs.getInt("LN_ID"));
+					temp.setRET_835_RD_CATGY_ID(rs.getInt("PD_AMT_RDUC_CATGY_ID"));
+					temp.setRET_835_RD_PD_AMT(rs.getBigDecimal("PD_AMT_RDUC_AMT"));
+					System.out.println("temp.setRET_835_RD_PD_AMT "+temp.getRET_835_RD_PD_AMT());
+					if(req.getRED_835_TRAN_TYPE().equals("87"))
+					{
+						temp.setRET_835_RD_PD_AMT(temp.getRET_835_RD_PD_AMT().multiply((BigDecimal.ONE).negate()));
+					}
+					temp.setRET_835_RD_GRP_ID(rs.getString("PD_AMT_RDUC_GRP_CD"));
+					temp.setRET_835_RD_CARC_CD(rs.getString("PD_AMT_RDUC_CARC_CD"));
+					temp.setRET_835_RD_RARC_CD(rs.getString("PD_AMT_RDUC_RARC_CD"));
+					temp.setRET_835_RD_REV_CD(rs.getInt("RVNU_CD"));
+					temp.setRET_835_RD_PROC_CD(rs.getString("PROC_CD"));
+					temp.setRET_835_RD_PROC_TYP_CD(rs.getString("PROC_TYP_CD"));
+					temp.setRET_835_RD_REV_ID(rs.getInt("ORIG_HDR_SEQ_NBR"));
+					ClmRed.add(temp);
+				}while(counter<150 && rs.next());
 			}
 
 			return ClmRed;
@@ -306,7 +308,7 @@ public class processing7700 {
 		return ClmRed;
 
 	}
-	
+
 	/**
 	 * read data from ADJD_CLMSFLN_RARC_CD  table and move them to CB variables
 	 * @param req
@@ -318,8 +320,8 @@ public class processing7700 {
 
 		Connection con = null ; 
 		PreparedStatement ps = null;
-/*		List<Ret835LineLvl> ret835LineLvlList = new ArrayList<Ret835LineLvl>();
-*/			
+		/*		List<Ret835LineLvl> ret835LineLvlList = new ArrayList<Ret835LineLvl>();
+		 */			
 		Ret835LineLvl[] ret835LineLvl=new Ret835LineLvl[7];
 		/**
 		 * initialize array ret835LineLvl
@@ -329,7 +331,7 @@ public class processing7700 {
 			ret835LineLvl[i]=new Ret835LineLvl();
 			for (int j=0;j<3;j++)
 			{
-			ret835LineLvl[i].getRet835LnRarcTbl()[j]=new Ret835LnRarcTbl();	
+				ret835LineLvl[i].getRet835LnRarcTbl()[j]=new Ret835LnRarcTbl();	
 			}
 		}
 
@@ -349,40 +351,40 @@ public class processing7700 {
 			ResultSet  rs =ps.executeQuery();
 			int ws_ln=0;
 			int ws_sub=0;
-	
+
 			if(!rs.next()){
 				logger.info(location.concat(" Empty Resultset for Ret835LineLvl Table").concat(" LOGID:").concat("[").concat(logId).concat("]"));
 
 			}else{
 				do//makes the first row as current ,then second the current and so on 
 				{
-				if(rs.isFirst())
-				{
-					ws_ln=rs.getBigDecimal("LN_ID").intValue()-1;
-					ws_sub=1;
-				}else
-				{
-					if(rs.getBigDecimal("LN_ID").intValue()==ws_ln)
+					if(rs.isFirst())
 					{
-						ws_sub++;
-					}
-					else
+						ws_ln=rs.getBigDecimal("LN_ID").intValue()-1;
+						ws_sub=1;
+					}else
 					{
-						ws_sub=0;
-						ret835LineLvl[ws_ln].setRET_835_20LN_SVC_ID(rs.getBigDecimal("LN_ID"));
+						if(rs.getBigDecimal("LN_ID").intValue()==ws_ln)
+						{
+							ws_sub++;
+						}
+						else
+						{
+							ws_sub=0;
+							ret835LineLvl[ws_ln].setRET_835_20LN_SVC_ID(rs.getBigDecimal("LN_ID"));
+
+						}
 
 					}
+					ws_ln=rs.getBigDecimal("LN_ID").intValue();
 
-				}
-				ws_ln=rs.getBigDecimal("LN_ID").intValue();
-
-				ret835LineLvl[ws_ln].setRET_835_20LN_SVC_ID(rs.getBigDecimal("LN_ID"));
-				ret835LineLvl[ws_ln].getRet835LnRarcTbl()[ws_sub].setRET_835_LN_RARC_CD(rs.getString("CLM_LN_RARC_CD"));
-				ret835LineLvl[ws_ln].getRet835LnRarcTbl()[ws_sub].setRET_835_LN_RMRK_CD(rs.getString("CLM_LN_RMRK_CD"));
-				ret835LineLvl[ws_ln].getRet835LnRarcTbl()[ws_sub].setRET_835_LN_REV_CD(rs.getBigDecimal("RVNU_CD"));
-				ret835LineLvl[ws_ln].getRet835LnRarcTbl()[ws_sub].setRET_835_LN_PROC_CD(rs.getString("PROC_CD"));
-				ret835LineLvl[ws_ln].getRet835LnRarcTbl()[ws_sub].setRET_835_LN_PROC_TYP_CD(rs.getString("PROC_TYP_CD"));
-				ret835LineLvl[ws_ln].getRet835LnRarcTbl()[ws_sub].setRET_835_LN_REV_ID(rs.getBigDecimal("ORIG_HDR_SEQ_NBR"));
+					ret835LineLvl[ws_ln].setRET_835_20LN_SVC_ID(rs.getBigDecimal("LN_ID"));
+					ret835LineLvl[ws_ln].getRet835LnRarcTbl()[ws_sub].setRET_835_LN_RARC_CD(rs.getString("CLM_LN_RARC_CD"));
+					ret835LineLvl[ws_ln].getRet835LnRarcTbl()[ws_sub].setRET_835_LN_RMRK_CD(rs.getString("CLM_LN_RMRK_CD"));
+					ret835LineLvl[ws_ln].getRet835LnRarcTbl()[ws_sub].setRET_835_LN_REV_CD(rs.getBigDecimal("RVNU_CD"));
+					ret835LineLvl[ws_ln].getRet835LnRarcTbl()[ws_sub].setRET_835_LN_PROC_CD(rs.getString("PROC_CD"));
+					ret835LineLvl[ws_ln].getRet835LnRarcTbl()[ws_sub].setRET_835_LN_PROC_TYP_CD(rs.getString("PROC_TYP_CD"));
+					ret835LineLvl[ws_ln].getRet835LnRarcTbl()[ws_sub].setRET_835_LN_REV_ID(rs.getBigDecimal("ORIG_HDR_SEQ_NBR"));
 				}while (rs.next());
 			}
 			return ret835LineLvl;
@@ -434,16 +436,16 @@ public class processing7700 {
 			}else{
 				do
 				{
-				Ret835PrcLvl ret835PrcLvl=new Ret835PrcLvl();
-				ret835PrcLvl.setRET_835_ERR_CD(rs.getString("CLM_LN_ERR_CD"));
-				ret835PrcLvl.setRET_835_ERR_PROC_TYP_CD(rs.getString("CLM_LN_ERR_TYP_CD"));
-				ret835PrcLvl.setRET_835_ERR_SVC_ID(rs.getBigDecimal("LN_ID"));
-				ret835PrcLvl.setRET_835_ERR_REV_CD(rs.getBigDecimal("RVNU_CD"));	
-				ret835PrcLvl.setRET_835_ERR_PROC_CD(rs.getString("PROC_CD"));
-				ret835PrcLvl.setRET_835_ERR_PROC_TYP_CD(rs.getString("PROC_TYP_CD"));
-				ret835PrcLvl.setRET_835_ERR_REV_ID(rs.getBigDecimal("ORIG_HDR_SEQ_NBR"));
-				ret835PrcLvlList.add(ret835PrcLvl);
-				cntr++;
+					Ret835PrcLvl ret835PrcLvl=new Ret835PrcLvl();
+					ret835PrcLvl.setRET_835_ERR_CD(rs.getString("CLM_LN_ERR_CD"));
+					ret835PrcLvl.setRET_835_ERR_PROC_TYP_CD(rs.getString("CLM_LN_ERR_TYP_CD"));
+					ret835PrcLvl.setRET_835_ERR_SVC_ID(rs.getBigDecimal("LN_ID"));
+					ret835PrcLvl.setRET_835_ERR_REV_CD(rs.getBigDecimal("RVNU_CD"));	
+					ret835PrcLvl.setRET_835_ERR_PROC_CD(rs.getString("PROC_CD"));
+					ret835PrcLvl.setRET_835_ERR_PROC_TYP_CD(rs.getString("PROC_TYP_CD"));
+					ret835PrcLvl.setRET_835_ERR_REV_ID(rs.getBigDecimal("ORIG_HDR_SEQ_NBR"));
+					ret835PrcLvlList.add(ret835PrcLvl);
+					cntr++;
 				}while (cntr<=60 && rs.next());
 
 			}
@@ -468,7 +470,7 @@ public class processing7700 {
 		/*
 		 * EXTRACT 835 PRORATED DATA AND POPULATE THE INTO RETURN AREA  
 		 */
-		
+
 		String location="J5427HC1.JP835RED.processing7700.do7708(JP54RedRequest, String)";
 
 		Connection con = null ; 
@@ -493,25 +495,25 @@ public class processing7700 {
 
 			}else{
 				do{
-				Ub92_835AdjdSvc temp = new Ub92_835AdjdSvc(); 
-				temp.setUB92_835_ADJD_PAID_AMT(rs.getBigDecimal("RPT_835_PD_AMT"));
-				temp.setUB92_835_ADJD_REV_CD(rs.getString("RPT_835_RVNU_CD"));
-				temp.setUB92_835_ADJD_PROC_CD(rs.getString("RPT_835_PROC_CD"));
-				temp.setUB92_835_ADJD_PROC_MOD_1_CD(rs.getString("RPT_835_PROC_MOD_1_CD"));
-				temp.setUB92_835_ADJD_PROC_MOD_2_CD(rs.getString("RPT_835_PROC_MOD_2_CD"));
-				temp.setUB92_835_ADJD_PROC_MOD_3_CD(rs.getString("RPT_835_PROC_MOD_3_CD"));
-				temp.setUB92_835_ADJD_PROC_MOD_4_CD(rs.getString("RPT_835_PROC_MOD_4_CD"));
-				temp.setORIG_HDR_SEQ_NBR(rs.getInt("LN_NBR"));
-				temp.setORIG_HDR_PROC_TYPE(rs.getString("PROC_TYP_CD"));
-				temp.setORIG_HDR_LINE_CORR_ID(rs.getInt("LN_CORR_ID"));
-				temp.setUB92_RVNU_CD(rs.getString("UB92_RVNU_CD"));
-				temp.setUB92_CHRG_AMT(rs.getBigDecimal("UB92_CHRG_AMT"));
-				temp.setUB92_ALLW_AMT(rs.getBigDecimal("UB92_ALLW_AMT"));
+					Ub92_835AdjdSvc temp = new Ub92_835AdjdSvc(); 
+					temp.setUB92_835_ADJD_PAID_AMT(rs.getBigDecimal("RPT_835_PD_AMT"));
+					temp.setUB92_835_ADJD_REV_CD(rs.getString("RPT_835_RVNU_CD"));
+					temp.setUB92_835_ADJD_PROC_CD(rs.getString("RPT_835_PROC_CD"));
+					temp.setUB92_835_ADJD_PROC_MOD_1_CD(rs.getString("RPT_835_PROC_MOD_1_CD"));
+					temp.setUB92_835_ADJD_PROC_MOD_2_CD(rs.getString("RPT_835_PROC_MOD_2_CD"));
+					temp.setUB92_835_ADJD_PROC_MOD_3_CD(rs.getString("RPT_835_PROC_MOD_3_CD"));
+					temp.setUB92_835_ADJD_PROC_MOD_4_CD(rs.getString("RPT_835_PROC_MOD_4_CD"));
+					temp.setORIG_HDR_SEQ_NBR(rs.getInt("LN_NBR"));
+					temp.setORIG_HDR_PROC_TYPE(rs.getString("PROC_TYP_CD"));
+					temp.setORIG_HDR_LINE_CORR_ID(rs.getInt("LN_CORR_ID"));
+					temp.setUB92_RVNU_CD(rs.getString("UB92_RVNU_CD"));
+					temp.setUB92_CHRG_AMT(rs.getBigDecimal("UB92_CHRG_AMT"));
+					temp.setUB92_ALLW_AMT(rs.getBigDecimal("UB92_ALLW_AMT"));
 
-				retUB92_835_AdjdSvcInfo.add(temp);
+					retUB92_835_AdjdSvcInfo.add(temp);
 
-				counter++;
-			}			while(counter < 60 && rs.next());
+					counter++;
+				}			while(counter < 60 && rs.next());
 			}
 
 

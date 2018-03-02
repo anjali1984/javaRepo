@@ -80,7 +80,6 @@ String location="J5427HC1.services.LoadSumForReductService2170.do2170(V5427HC1, 
 					line_to_be_added.setHC1_COB_LN_835_MEDC_EST_AMT(each_line.getPR_MEDC_EST_AMT());
 					claimToBeSent.setHC1_COB_835_PAT_RESP_MCEST(claimToBeSent.getHC1_COB_835_PAT_RESP_MCEST().add(line_to_be_added.getHC1_COB_LN_835_MEDC_EST_AMT()));
 
-					/*setCOB_PRIM_IMPAC from LineReductionHold is never getting populated*/
 					line_to_be_added.setHC1_COB_LN_835_COB_PRIM_IMPAC(each_line.getCOB_PRIM_IMPAC());
 					claimToBeSent.setHC1_COB_835_COB_PRIM_IMPAC(claimToBeSent.getHC1_COB_835_COB_PRIM_IMPAC().add(line_to_be_added.getHC1_COB_LN_835_COB_PRIM_IMPAC()));
 
@@ -123,12 +122,13 @@ String location="J5427HC1.services.LoadSumForReductService2170.do2170(V5427HC1, 
 					}
 
 					line_to_be_added.setHC1_COB_LN_COB_PRV_WRT_OFF(each_line.getLN_PRV_WRT_OFF());
+					System.out.println("each_line.getLN_PRV_WRT_OFF() "+each_line.getLN_PRV_WRT_OFF());
 					claimToBeSent.setHC1_COB_PRV_WRT_OFF(claimToBeSent.getHC1_COB_PRV_WRT_OFF().add(line_to_be_added.getHC1_COB_LN_COB_PRV_WRT_OFF()));
-
+System.out.println("claimToBeSent.getHC1_COB_PRV_WRT_OFF "+claimToBeSent.getHC1_COB_PRV_WRT_OFF());
 					//All line fields that are not used to set the Claim level stuff
 					line_to_be_added.setHC1_COB_LINE_LN_ID(each_line.getLN_ID());
 					line_to_be_added.setHC1_COB_LINE_SRVC_CD(each_line.getLINE_SRVC_CD());
-					line_to_be_added.setHC1_COB_LINE_PMT_SVC_CD(each_line.getLINE_SRVC_CD());
+					line_to_be_added.setHC1_COB_LINE_PMT_SVC_CD(each_line.getLINE_PMT_SVC_CD());
 					line_to_be_added.setHC1_COB_LINE_AUTH_PROC_CD(each_line.getLINE_AUTH_PROC_CD());
 					line_to_be_added.setHC1_COB_LINE_FST_DT(each_line.getLINE_FST_DT());			
 					line_to_be_added.setHC1_COB_LINE_LST_SRVC_DT(each_line.getLINE_LST_SRVC_DT());

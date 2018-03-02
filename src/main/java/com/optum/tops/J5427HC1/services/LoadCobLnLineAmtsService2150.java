@@ -47,6 +47,7 @@ public class LoadCobLnLineAmtsService2150 {
 					}
 				}else{
 					claimToBeSent.setHC1_COB_OI_PAID_AMT(claimToBeSent.getHC1_COB_OI_PAID_AMT().add(each_line.getLN_OI_PAID_AMT()));
+				System.out.println("claimToBeSent.getHC1_COB_OI_PAID_AMT "+claimToBeSent.getHC1_COB_OI_PAID_AMT());
 				}
 				
 				line_to_be_added.setHC1_COB_LN_EOB_MEDC_PAID_AMT(each_line.getLN_MEDC_PAID_AMT());
@@ -60,6 +61,7 @@ public class LoadCobLnLineAmtsService2150 {
 				}
 				
 				line_to_be_added.setHC1_COB_LN_COB_PRV_WRT_OFF(each_line.getLN_PRV_WRT_OFF());
+				System.out.println("line_to_be_added.getHC1_COB_LN_COB_PRV_WRT_OFF() "+line_to_be_added.getHC1_COB_LN_COB_PRV_WRT_OFF());
 				if(individual_claim2.getReqClaimEntry().getHc1_REQ_CLM_TRANS_CD().trim().equals("00")){
 					if(claimToBeSent.getMy_indicator().getCXINT_CLAIM_INDICATOR().equals("Y")
 						|| (claimToBeSent.getMy_indicator().getNYSTATE_COB_CLAIM_PAIDTO().equals("S") && claimToBeSent.getMy_indicator().isNYS_SERV_LINE_SW() )){
@@ -67,6 +69,8 @@ public class LoadCobLnLineAmtsService2150 {
 					}else{
 						ClaimIndicatorValues ind = claimToBeSent.getMy_indicator(); 
 						claimToBeSent.setHC1_COB_PRV_WRT_OFF(ind.getDBKE2_SUFX_TOT_CHRG_AMT().subtract(ind.getLN_TOT_RPT_ALL_AMT()));
+						System.out.println(ind.getDBKE2_SUFX_TOT_CHRG_AMT()+" subtract "+ind.getLN_TOT_RPT_ALL_AMT());
+						System.out.println("claimToBeSent.getHC1_COB_PRV_WRT_OFF "+claimToBeSent.getHC1_COB_PRV_WRT_OFF());
 					}
 				}else{
 					claimToBeSent.setHC1_COB_PRV_WRT_OFF(claimToBeSent.getHC1_COB_PRV_WRT_OFF().add(each_line.getLN_PRV_WRT_OFF()));

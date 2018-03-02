@@ -64,6 +64,7 @@ String location="J5427HC1.dao.D54DAO.CheckCOBDao.am_i_COB_claim(ReqClaimEntryVO)
 				indicator_object.setDBKE2_COB_LOGC_CD(rs.getString("NEW_COB_LOGC_CD"));
 				indicator_object.setDBKE2_835_COB_PROC_IND(rs.getString("NEW_835_COB_PROC_IND"));
 				indicator_object.setDBKE2_SUFX_TOT_CHRG_AMT(rs.getBigDecimal("SUFX_TOT_CHRG_AMT"));
+				System.out.println("SUFX_TOT_CHRG_AMT "+indicator_object.getDBKE2_SUFX_TOT_CHRG_AMT());
 
 
 				//COB CLAIM setters.

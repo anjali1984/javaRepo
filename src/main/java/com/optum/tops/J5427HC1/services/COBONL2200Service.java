@@ -85,7 +85,11 @@ public class COBONL2200Service {
 				BigDecimal compute=((currentClaim.getHC1_COB_835_PRV_NC_AMT().add(currentClaim.getHC1_COB_835_COB_PRIM_IMPAC())).subtract(currentClaim.getHC1_COB_MEDC_PAID_AMT()))
 						.subtract(currentClaim.getHC1_COB_OI_PAID_AMT());
 				currentClaim.setHC1_COB_PRV_WRT_OFF(compute);
-
+System.out.println("currentClaim.getHC1_COB_835_PRV_NC_AMT() "+currentClaim.getHC1_COB_835_PRV_NC_AMT());
+System.out.println("currentClaim.getHC1_COB_835_COB_PRIM_IMPAC() "+currentClaim.getHC1_COB_835_COB_PRIM_IMPAC());
+System.out.println("currentClaim.getHC1_COB_MEDC_PAID_AMT() "+currentClaim.getHC1_COB_MEDC_PAID_AMT());
+System.out.println("currentClaim.getHC1_COB_OI_PAID_AMT() "+currentClaim.getHC1_COB_OI_PAID_AMT());
+				
 				for (int i=0;i<currentClaim.getHC1_COB_LNE_DATA_AREA().size();i++)
 					currentClaim.getHC1_COB_LNE_DATA_AREA().get(i).setHC1_COB_LN_COB_PRV_WRT_OFF(BigDecimal.ZERO);
 			}
