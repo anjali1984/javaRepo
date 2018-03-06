@@ -1,7 +1,9 @@
 package com.optum.tops.J5427HC1.models;
 
 import java.math.BigDecimal;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ReqClaimEntry {
 
 	// Fixed Area in the Request

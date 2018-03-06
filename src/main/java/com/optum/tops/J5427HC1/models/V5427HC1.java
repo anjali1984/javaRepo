@@ -4,7 +4,10 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 //Individual Claim to be appended to the response 
+@Component
 public class V5427HC1 {
 
 	private String HC1_COB_INVENTORY_CONTROL_DT;

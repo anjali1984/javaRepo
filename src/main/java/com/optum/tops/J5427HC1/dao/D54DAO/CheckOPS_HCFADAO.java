@@ -20,7 +20,7 @@ import com.optum.tops.J5427HC1.models.ReqClaimEntryVO;
 import com.optum.tops.J5427HC1.models.V5427HC1;
 
 @Repository
-@PropertySource("queries.properties")
+@PropertySource("classpath:queries.properties")
 public class CheckOPS_HCFADAO {
 
 	@Autowired
@@ -57,6 +57,7 @@ public class CheckOPS_HCFADAO {
 			// or if there are no rows in the ResultSet.
 			if(!rs.next()){
 				
+
 				claim.getMy_indicator().setOPS_HCFA_INDICATOR("N");
 				logger.info(location.concat(" Empty Resultset;Not a OPS_HCFA Claim").concat(" OPS_HCFA_INDICATOR:").concat("[").concat(claim.getMy_indicator().getOPS_HCFA_INDICATOR()).concat("]")
 						.concat(" LOGID:").concat("[").concat(individual_claim2.getLogId()).concat("]"));

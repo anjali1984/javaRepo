@@ -19,7 +19,7 @@ import org.springframework.stereotype.Repository;
 import com.optum.tops.J5427HC1.models.COBLN_2131;
 
 @Repository
-@PropertySource("queries.properties")
+@PropertySource("classpath:queries.properties")
 public class OIMC_CoblnAmtsDao {
 	@Autowired
 	private DataSource ds;
@@ -38,7 +38,7 @@ public class OIMC_CoblnAmtsDao {
 
 		try{
 			con = ds.getConnection();
-			ps = con.prepareStatement(OIMC_CoblnAmtsDao_Query);
+			ps = con.prepareStatement(OIMC_CoblnAmtsDao_Query.toString());
 			ps.setString(1, ICN);
 			ps.setString(2, Icn_Sufx_Cd);
 

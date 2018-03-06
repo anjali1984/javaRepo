@@ -19,7 +19,7 @@ import com.optum.tops.J5427HC1.models.ReqClaimEntryVO;
 import com.optum.tops.J5427HC1.models.V5427HC1;
 
 @Repository
-@PropertySource("queries.properties")
+@PropertySource("classpath:queries.properties")
 public class CheckCOBDao {
 
 	@Autowired

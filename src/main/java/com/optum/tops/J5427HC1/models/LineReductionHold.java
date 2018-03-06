@@ -185,6 +185,18 @@ public class LineReductionHold {
 	}
 	public void setLINE_NC_AMT(BigDecimal lINE_NC_AMT) {
 		LINE_NC_AMT = lINE_NC_AMT;
+	}
+	@Override
+	public String toString() {
+		return "LineReductionHold [CAT_ID=" + CAT_ID + ", \n SVC_LN_ID=" + SVC_LN_ID + ", \n COB_PRIM_IMPAC=" + COB_PRIM_IMPAC
+				+ ", \n PR_OVERC=" + PR_OVERC + ", \n PR_DEDUC=" + PR_DEDUC + ", \n PR_COPAY=" + PR_COPAY + ", \n PR_COINS="
+				+ PR_COINS + ", \n PR_NTCOV=" + PR_NTCOV + ", \n PR_MEDC_EST_AMT=" + PR_MEDC_EST_AMT + ", \n PR_TOTAL="
+				+ PR_TOTAL + ", \n PRV_NC_AMT=" + PRV_NC_AMT + ", \n PR_DENY_AMT=" + PR_DENY_AMT + ", \n LN_ALLW_AMT_IND="
+				+ LN_ALLW_AMT_IND + ", \n LN_RPT_ALLOW_AMT=" + LN_RPT_ALLOW_AMT + ", \n LN_OI_PAID_AMT=" + LN_OI_PAID_AMT
+				+ ", \n LN_MEDC_PAID_AMT=" + LN_MEDC_PAID_AMT + ", \n LN_PRV_WRT_OFF=" + LN_PRV_WRT_OFF + ", \n LN_ID=" + LN_ID
+				+ ", \n LINE_SRVC_CD=" + LINE_SRVC_CD + ", \n LINE_PMT_SVC_CD=" + LINE_PMT_SVC_CD + ", \n LINE_AUTH_PROC_CD="
+				+ LINE_AUTH_PROC_CD + ", \n LINE_FST_DT=" + LINE_FST_DT + ", \n LINE_LST_SRVC_DT=" + LINE_LST_SRVC_DT
+				+ ", \n LINE_CHRG_AMT=" + LINE_CHRG_AMT + ", \n LINE_NC_AMT=" + LINE_NC_AMT + "]";
 	} 
 	
 	

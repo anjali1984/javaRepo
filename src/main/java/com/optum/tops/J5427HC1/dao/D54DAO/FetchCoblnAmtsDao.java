@@ -21,7 +21,7 @@ import com.optum.tops.J5427HC1.models.ReqClaimEntry;
 import com.optum.tops.J5427HC1.models.ReqClaimEntryVO;
 
 @Repository
-@PropertySource("queries.properties")
+@PropertySource("classpath:queries.properties")
 public class FetchCoblnAmtsDao {
 
 	@Autowired

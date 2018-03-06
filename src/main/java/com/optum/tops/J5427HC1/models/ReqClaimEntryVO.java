@@ -1,5 +1,8 @@
 package com.optum.tops.J5427HC1.models;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class ReqClaimEntryVO {
 	
 	private ReqClaimEntry reqClaimEntry;

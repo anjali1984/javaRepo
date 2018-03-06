@@ -27,7 +27,7 @@ import com.optum.tops.JP835RED.models.Ret835Reduct;
 import com.optum.tops.JP835RED.models.Ub92_835AdjdSvc;
 
 @Repository
-@PropertySource("queries.properties")
+@PropertySource("classpath:queries.properties")
 public class processing7700 {
 
 	@Autowired

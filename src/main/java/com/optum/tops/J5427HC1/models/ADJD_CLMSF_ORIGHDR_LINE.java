@@ -112,6 +112,15 @@ public class ADJD_CLMSF_ORIGHDR_LINE {
 	public void setREV_LINE_PENNY_INDICATOR(String rEV_LINE_PENNY_INDICATOR) {
 		REV_LINE_PENNY_INDICATOR = rEV_LINE_PENNY_INDICATOR;
 	}
+	@Override
+	public String toString() {
+		return "ADJD_CLMSF_ORIGHDR_LINE [RVNU_CD=" + RVNU_CD + ", \n PROC_CD=" + PROC_CD + ", \n CHRG_AMT=" + CHRG_AMT
+				+ ", \n LN_CORR_ID=" + LN_CORR_ID + ", \n LN_NBR=" + LN_NBR + ", \n ORIG_PL_OF_SRVC_CD=" + ORIG_PL_OF_SRVC_CD
+				+ ", \n UB92_RVNU_CD=" + UB92_RVNU_CD + ", \n\n UB92_CHRG_AMT=" + UB92_CHRG_AMT + ", \n UB92_NOT_COV_AMT="
+				+ UB92_NOT_COV_AMT + ", \n UB92_PROC_CD=" + UB92_PROC_CD + ", \n HCFA_SRVC_PLC_CD=" + HCFA_SRVC_PLC_CD
+				+ ", \n UB92_OVR_CD=" + UB92_OVR_CD + ", \n UB92_RMK_CD=" + UB92_RMK_CD + ", \n ORIG_UB92_RMRK_CD="
+				+ ORIG_UB92_RMRK_CD + ", \n REV_LINE_PENNY_INDICATOR=" + REV_LINE_PENNY_INDICATOR + "]";
+	}
 	
 	
 	
