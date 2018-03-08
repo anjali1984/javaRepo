@@ -1,5 +1,7 @@
 package com.optum.tops.JP835RED.models;
 
+import org.springframework.stereotype.Component;
+
 /*
  *               15 :REQ:-835-INVN-CTL-NBR     PIC X(10).
                  15 :REQ:-835-ICN-SUFX-CD      PIC X(02).

@@ -2,12 +2,14 @@ package com.optum.tops.JP835RED.models;
 
 import java.math.BigDecimal;
 
+import org.springframework.stereotype.Component;
+
 /**
  * :RET:-835-REDUCT-AREA portion of cobol copybook,VY835RET
  * Model Class for the record returned by CURS-LN-PD-AMT-RDUC, a list of these objects is populated
  * by the 7704-GET-LNE-RDUC section.
  */
- 
+@Component
 public class Ret835Reduct {
 
 	private int RET_835_RD_SVC_ID;
@@ -80,6 +82,14 @@ public class Ret835Reduct {
 	}
 	public void setRET_835_RD_PD_AMT(BigDecimal rET_835_RD_PD_AMT) {
 		RET_835_RD_PD_AMT = rET_835_RD_PD_AMT;
+	}
+	@Override
+	public String toString() {
+		return "Ret835Reduct [RET_835_RD_SVC_ID=" + RET_835_RD_SVC_ID + ", \n RET_835_RD_REV_ID=" + RET_835_RD_REV_ID
+				+ ", \n RET_835_RD_REV_CD=" + RET_835_RD_REV_CD + ", \n RET_835_RD_PROC_CD=" + RET_835_RD_PROC_CD
+				+ ", \n RET_835_RD_PROC_TYP_CD=" + RET_835_RD_PROC_TYP_CD + ", \n RET_835_RD_CATGY_ID=" + RET_835_RD_CATGY_ID
+				+ ", \n RET_835_RD_GRP_ID=" + RET_835_RD_GRP_ID + ", \n RET_835_RD_CARC_CD=" + RET_835_RD_CARC_CD
+				+ ", \n RET_835_RD_RARC_CD=" + RET_835_RD_RARC_CD + ", \n RET_835_RD_PD_AMT=" + RET_835_RD_PD_AMT + "]";
 	}
 
 	

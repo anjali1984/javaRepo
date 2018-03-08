@@ -18,6 +18,7 @@ public class RedProcessor {
 	com.optum.tops.J5427HC1.JP835RED.processing7700 processing7700; //DAO
 	
 	
+	
 	public JP54RedReturn InstClaim2100(JP54RedRequest request_to_red, String logId){
 	     /*read data from adjudicated tables for Institutional Claims 
 		  *  It then calls the following sections:

@@ -53,6 +53,13 @@ public class Ret835PrcLvl {
 	}
 	public void setRET_835_ERR_TYP_CD(String rET_835_ERR_TYP_CD) {
 		RET_835_ERR_TYP_CD = rET_835_ERR_TYP_CD;
+	}
+	@Override
+	public String toString() {
+		return "Ret835PrcLvl [RET_835_ERR_SVC_ID=" + RET_835_ERR_SVC_ID + ", RET_835_ERR_REV_ID=" + RET_835_ERR_REV_ID
+				+ ", RET_835_ERR_REV_CD=" + RET_835_ERR_REV_CD + ", RET_835_ERR_PROC_CD=" + RET_835_ERR_PROC_CD
+				+ ", RET_835_ERR_PROC_TYP_CD=" + RET_835_ERR_PROC_TYP_CD + ", RET_835_ERR_CD=" + RET_835_ERR_CD
+				+ ", RET_835_ERR_TYP_CD=" + RET_835_ERR_TYP_CD + "]";
 	}     
 
 

@@ -22,6 +22,7 @@ public class InstlReduction2140Service {
 
 	@Autowired
 	RedProcessor red_Processor ; 
+	
 	Logger logger=Logger.getLogger("genLogger");
 
 	public V5427HC1 do2140Section(ReqClaimEntryVO individual_claim2, V5427HC1 claimToBeSent){
