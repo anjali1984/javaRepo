@@ -20,6 +20,9 @@ import com.optum.tops.J5427HC1.services.COBLN2121Service;
 import com.optum.tops.J5427HC1.services.COBLN2131Service;
 import com.optum.tops.J5427HC1.services.COBONL2200Service;
 import com.optum.tops.J5427HC1.services.CheckCOBClaim;
+import com.optum.tops.J5427HC1.services.InstlReduction2140Service;
+import com.optum.tops.J5427HC1.services.LoadCobLnLineAmtsService2150;
+import com.optum.tops.J5427HC1.services.LoadSumForReductService2170;
 import com.optum.tops.J5427HC1.services.OpsHcfaService;
 import com.optum.tops.J5427HC1.services.RequestProcessor;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
@@ -50,6 +53,12 @@ public class J5427Hc1ApplicationTests {
 	ReqClaimEntry claimReq;
 	@Autowired
 	V5427HC1 claimResp;
+	@Autowired
+	InstlReduction2140Service Inst2140;	
+	@Autowired
+	LoadCobLnLineAmtsService2150 Inst2150;
+	@Autowired
+	LoadSumForReductService2170 Inst2170;
 
 	@Test
 	public void contextLoads() {
@@ -194,7 +203,6 @@ public class J5427Hc1ApplicationTests {
 	}
 
 	// penny process needs to be  tested
-	
 	/*
 	 * need different claim to test OimcCobAmtsDao.getData
 	 */
@@ -233,5 +241,95 @@ public class J5427Hc1ApplicationTests {
 	/**
 	 * Institutional test cases can be added here
 	 */
+	@Test
+	public void do2140LogicTest()
+	{
+		try{
+			claimReq.setReqPolNbr("742846");
+			claimReq.setReqEEId("S994061000");
+			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1047907467");
+			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000007234");
+			claimReq.setHc1_REQ_CLM_PROC_DT("2017-10-26");
+			claimReq.setHc1_REQ_CLM_PROC_TM("14.03.23");
+			claimReq.setHc1_REQ_CLM_TRANS_CD("00");
+			claimReq.setHc1_REQ_CLM_COB_IND("");
+			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.ZERO);
+			claimReqVo.setReqClaimEntry(claimReq);
+			claimReqVo.setLogId("10479074670000007234");
+
+			claimResp.getMy_indicator().setPENNY_PROC_INDICATOR("Y");
+			claimResp.setHC1_COB_INST_OR_PROF("I");
+			claimResp.getMy_indicator().setOPS_HCFA_INDICATOR("Y");
+			claimResp.getMy_indicator().setDBKE2_ICN_SUFX_CD("01");
+			claimResp.getMy_indicator().setDBKE2_ICN_SUFX_VERS_NBR("1");
+
+			claimResp=Inst2140.do2140Section(claimReqVo, claimResp);
+			System.out.println("WS_LINE_REDUCTION_TABLE "+claimResp.getMy_indicator().getWS_LINE_REDUCTION_TABLE().toString());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	@Test
+	public void do2150LogicTest()
+	{
+		try{
+			claimReq.setReqPolNbr("742846");
+			claimReq.setReqEEId("S994061000");
+			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1047907467");
+			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000007234");
+			claimReq.setHc1_REQ_CLM_PROC_DT("2017-10-26");
+			claimReq.setHc1_REQ_CLM_PROC_TM("14.03.23");
+			claimReq.setHc1_REQ_CLM_TRANS_CD("00");
+			claimReq.setHc1_REQ_CLM_COB_IND("");
+			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.ZERO);
+			claimReqVo.setReqClaimEntry(claimReq);
+			claimReqVo.setLogId("10479074670000007234");
+
+			claimResp.getMy_indicator().setPENNY_PROC_INDICATOR("Y");
+			claimResp.setHC1_COB_INST_OR_PROF("I");
+			claimResp.getMy_indicator().setOPS_HCFA_INDICATOR("Y");
+			claimResp.getMy_indicator().setDBKE2_ICN_SUFX_CD("01");
+			claimResp.getMy_indicator().setDBKE2_ICN_SUFX_VERS_NBR("1");
+
+			claimResp=Inst2150.do2150Section(claimResp, claimReqVo);
+			System.out.println("WS_LINE_REDUCTION_TABLE "+claimResp.getMy_indicator().getWS_LINE_REDUCTION_TABLE().toString());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	@Test
+	public void do2170LogicTest()
+	{
+		try{
+			claimReq.setReqPolNbr("742846");
+			claimReq.setReqEEId("S994061000");
+			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1047907467");
+			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000007234");
+			claimReq.setHc1_REQ_CLM_PROC_DT("2017-10-26");
+			claimReq.setHc1_REQ_CLM_PROC_TM("14.03.23");
+			claimReq.setHc1_REQ_CLM_TRANS_CD("00");
+			claimReq.setHc1_REQ_CLM_COB_IND("");
+			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.ZERO);
+			claimReqVo.setReqClaimEntry(claimReq);
+			claimReqVo.setLogId("10479074670000007234");
+
+			claimResp.getMy_indicator().setPENNY_PROC_INDICATOR("Y");
+			claimResp.setHC1_COB_INST_OR_PROF("I");
+			claimResp.getMy_indicator().setOPS_HCFA_INDICATOR("Y");
+			claimResp.getMy_indicator().setDBKE2_ICN_SUFX_CD("01");
+			claimResp.getMy_indicator().setDBKE2_ICN_SUFX_VERS_NBR("1");
+
+			claimResp=Inst2170.do2170(claimResp, claimReqVo);
+			System.out.println("WS_LINE_REDUCTION_TABLE "+claimResp.getMy_indicator().getWS_LINE_REDUCTION_TABLE().toString());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 
 }
