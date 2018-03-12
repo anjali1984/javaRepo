@@ -22,23 +22,23 @@ import com.optum.tops.J5427HC1.services.ProfReduction2160Service;
 public class CallableClaimTask implements Callable<V5427HC1> {
 	ReqClaimEntryVO individual_claim;
 	HC1Response response_this_thread_will_add_to; // COMMON resource across all
-													// threads
+	// threads
 	int index_to_put; // The key for the Concurrent HashMap in which the
-						// returned claim object will be put to.
+	// returned claim object will be put to.
 
 	CheckCOBClaim cobclaimcheck; // Service that checks if a claim is a COB
-									// claim, NYSTATECOB, Penny Process claim
+	// claim, NYSTATECOB, Penny Process claim
 	OpsHcfaService opshcfacheck; // Service for checking OPS_HCFA
 	COBLN2121Service cobln2121;
 	COBLN2131Service cobln2131;
 	InstlReduction2140Service instlRed2140; // A Service that utilizes another
-											// service RedProcessor for getting
-											// DP835RED Data
+	// service RedProcessor for getting
+	// DP835RED Data
 	LoadCobLnLineAmtsService2150 instlLoad2150;
 	ProfReduction2160Service profRed2160;
 	LoadSumForReductService2170 profLoad2170;
-COBONL2200Service cOBONL2200Service;
-	
+	COBONL2200Service cOBONL2200Service;
+
 	Logger logger=Logger.getLogger("genLogger");
 
 	// Constructor for the Task,
@@ -77,15 +77,15 @@ COBONL2200Service cOBONL2200Service;
 		int position_of_claim_in_requestlist = index; // claims_to_be_serviced.indexOf(individual_claim);
 		V5427HC1 currentClaim; // Claim instance to be put in the return object
 		currentClaim = cobclaimcheck.COB_claim_check(individual_claim); // Sets
-																		// the
-																		// field
-																		// in
-																		// the
-																		// indicator
-																		// object
-																		// [corresponds
-																		// to
-																		// 1100-GET-SuFX-CD]
+		// the
+		// field
+		// in
+		// the
+		// indicator
+		// object
+		// [corresponds
+		// to
+		// 1100-GET-SuFX-CD]
 		if (currentClaim.getHC1_COB_COB_CLAIM_INDICATOR().equals("N")) {
 			// Doing this because these working storage fields are not required
 			// by the request
@@ -96,37 +96,37 @@ COBONL2200Service cOBONL2200Service;
 			return currentClaim; // Move onto the next claim
 		}
 		currentClaim = opshcfacheck.Ops_Hcfa_claim_check(individual_claim, currentClaim); // At
-																							// this
-																							// point
-																							// PENNY_PROCESS_IND
-																							// and
-																							// OPS_HCFA_IND
-																							// must
-																							// be
-																							// set
+		// this
+		// point
+		// PENNY_PROCESS_IND
+		// and
+		// OPS_HCFA_IND
+		// must
+		// be
+		// set
 		currentClaim = opshcfacheck.get_CSR_ORIGHDR_DATA(individual_claim, currentClaim); // ORIGHDR
-																							// details
-																							// retrieved
-																							// if
-																							// it
-																							// meets
-																							// the
-																							// condition
-																							// in
-																							// Ops_Hcfa
-																							// Service
+		// details
+		// retrieved
+		// if
+		// it
+		// meets
+		// the
+		// condition
+		// in
+		// Ops_Hcfa
+		// Service
 		currentClaim = cobln2121.getResultsCobln_Line_Flds(individual_claim, currentClaim); // 2121-FETCH-COBLN-LINE-AMTS
-																							// and
-																							// all
-																							// business
-																							// logic
-																							// for
-																							// this
-																							// claim,
-																							// CALL_OIMC_TBL_INDICATOR
-																							// must
-																							// be
-																							// set
+		// and
+		// all
+		// business
+		// logic
+		// for
+		// this
+		// claim,
+		// CALL_OIMC_TBL_INDICATOR
+		// must
+		// be
+		// set
 
 		if (currentClaim.getMy_indicator().getCALL_OIMC_TBL_INDICATOR().equals("Y")) {
 			// PERFORM 2130-GET-COB-SERV-CALC-DATA (2131-FETCH-COB-SERV-CALCS)
@@ -144,19 +144,19 @@ COBONL2200Service cOBONL2200Service;
 			logger.info(location.concat("Inside If- Institutional Claim before 2140/2150 ").concat("COB_INST_OR_PROF():").concat("[").concat(currentClaim.getHC1_COB_INST_OR_PROF()).concat("]").concat(" LOGID:").concat("[").concat(individual_claim.getLogId()).concat("]"));
 
 			if (currentClaim.getMy_indicator().getCXINT_CLAIM_INDICATOR().equals("N")) { // If
-																							// this
-																							// is
-																							// a
-																							// Yes
-																							// you
-																							// dont
-																							// have
-																							// to
-																							// do
-																							// 2140
-																							// and
-																							// 2141
-																							// sections
+				// this
+				// is
+				// a
+				// Yes
+				// you
+				// dont
+				// have
+				// to
+				// do
+				// 2140
+				// and
+				// 2141
+				// sections
 				// Perform 2140-GET-Instl-Reductions [i.e. Call DP835RED with
 				// func cd = 1]
 				logger.info(location.concat(" Start do2140Section as CXINT_CLAIM_INDICATOR is  ")
@@ -169,7 +169,7 @@ COBONL2200Service cOBONL2200Service;
 			// 2150-LOAD-COBLN-LINE-AMTS
 			logger.info(location.concat(" Start do2150Section ")
 					.concat(" LOGID:").concat("[").concat(individual_claim.getLogId()).concat("]"));
-		
+
 			currentClaim = instlLoad2150.do2150Section(currentClaim, individual_claim);
 			logger.info(location.concat(" do2150Section Completed  ").concat(" LOGID:").concat("[").concat(individual_claim.getLogId()).concat("]"));
 
@@ -179,8 +179,8 @@ COBONL2200Service cOBONL2200Service;
 
 			if ((currentClaim.getHC1_COB_INST_OR_PROF().equals("P")
 					|| currentClaim.getHC1_COB_INST_OR_PROF().trim().equals("")
-							&& (currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("Y")
-									|| currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("M")))
+					&& (currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("Y")
+							|| currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("M")))
 					|| (currentClaim.getHC1_COB_INST_OR_PROF().equals("I")
 							&& currentClaim.getMy_indicator().getDBKE2_835_COB_PROC_IND().equals("M"))) {
 				//System.out.println("In 2160, 2170 sections");
@@ -209,24 +209,24 @@ COBONL2200Service cOBONL2200Service;
 			logger.info(location.concat(" 2200-WRTOFF-CALC Completed ").concat(" LOGID:").concat("[").concat(individual_claim.getLogId()).concat("]"));
 
 		}
-		
+
 		// Doing this because these working storage fields are not required by
 		// the request
 		currentClaim.setMy_indicator(null);
-		
-		
+
+
 		//System.out.println("Thread " + Thread.currentThread() + " adding V5427HC1 object to ConcurrentMapofResponse");
-		
+
 		synchronized(response){
-		response.getResponse_map_all_claims().put(position_of_claim_in_requestlist, currentClaim);
+			response.getResponse_map_all_claims().put(position_of_claim_in_requestlist, currentClaim);
 		}
-		
+
 		//System.out.println("Thread " + Thread.currentThread() + " Added V5427HC1 object to ConcurrentMapofResponse");
-		
-		
+
+
 		return currentClaim;
 	}
 
-	
+
 }
 

@@ -3,6 +3,8 @@ package com.optum.tops.JP835RED.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 public class JP54RedReturn {
 
 	//Corresponds to :RET:-835-CLM-RED-TBL in the return copybook from RED, Populated by 7701 Section.

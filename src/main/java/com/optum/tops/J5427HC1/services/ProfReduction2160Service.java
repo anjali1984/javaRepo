@@ -22,6 +22,7 @@ public class ProfReduction2160Service {
 
 	@Autowired
 	RedProcessor red_Processor ;
+	
 	Logger logger=Logger.getLogger("genLogger");
 
 	public V5427HC1 do2160Section(ReqClaimEntryVO individual_claim2, V5427HC1 claimToBeSent)
@@ -163,11 +164,14 @@ public class ProfReduction2160Service {
 		int svc_sub=0;		
 		try {
 			boolean SVC_LINE_PENNY_IND_ENTRY[]=claimToBeSent.getMy_indicator().getSVC_LINE_PENNY_IND_ENTRY();
-			logger.info(location.concat(" size of Ret835PrcLvl :").concat("[").concat(Integer.toString(red_return.getRet835PrcLvl().size())).concat("]").concat(" LOGID:").concat("[").concat(logId).concat("]"));
+			logger.info(location.concat(" size of Ret835PrcLvl :").concat("[").concat(Integer.toString(red_return.getRet835PrcLvl().size()))
+					.concat("]").concat(" LOGID:").concat("[").concat(logId).concat("]"));
 
 			while(rev_sub < red_return.getRet835PrcLvl().size())
 				/*	anjali to be done:|| red_return.getRet835PrcLvl().get(rev_sub).getRET_835_ERR_SVC_ID()!=numeric)*/ 
 			{
+				logger.info(location.concat(" RET_835_ERR_CD :").concat("[").concat(red_return.getRet835PrcLvl().get(rev_sub).getRET_835_ERR_CD())
+						.concat("]").concat(" LOGID:").concat("[").concat(logId).concat("]"));
 				if(red_return.getRet835PrcLvl().get(rev_sub).getRET_835_ERR_CD().equals("H30211"))
 				{
 					svc_sub=red_return.getRet835PrcLvl().get(rev_sub).getRET_835_ERR_SVC_ID().intValue();

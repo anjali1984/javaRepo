@@ -52,5 +52,12 @@ public class Ret835LnRarcTbl {
 	public void setRET_835_LN_RARC_CD(String rET_835_LN_RARC_CD) {
 		RET_835_LN_RARC_CD = rET_835_LN_RARC_CD;
 	}
+	@Override
+	public String toString() {
+		return "Ret835LnRarcTbl [RET_835_LN_RARC_CD=" + RET_835_LN_RARC_CD + ", \n RET_835_LN_RMRK_CD="
+				+ RET_835_LN_RMRK_CD + ", \n RET_835_LN_REV_ID=" + RET_835_LN_REV_ID + ", \n RET_835_LN_REV_CD="
+				+ RET_835_LN_REV_CD + ", \n RET_835_LN_PROC_CD=" + RET_835_LN_PROC_CD + ", \n RET_835_LN_PROC_TYP_CD="
+				+ RET_835_LN_PROC_TYP_CD + "]";
+	}
 
 }
