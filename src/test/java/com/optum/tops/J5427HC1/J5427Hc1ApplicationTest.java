@@ -1,13 +1,11 @@
 package com.optum.tops.J5427HC1;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ContextConfiguration;
@@ -16,7 +14,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.optum.tops.J5427HC1.JP835RED.processing7700;
 import com.optum.tops.J5427HC1.concurrency.CallableClaimTask;
-import com.optum.tops.J5427HC1.dao.D54DAO.FetchCoblnAmtsDao;
 import com.optum.tops.J5427HC1.models.HC1Response;
 import com.optum.tops.J5427HC1.models.Hc1Request;
 import com.optum.tops.J5427HC1.models.ReqClaimEntry;
@@ -24,7 +21,6 @@ import com.optum.tops.J5427HC1.models.ReqClaimEntryVO;
 import com.optum.tops.J5427HC1.models.V5427HC1;
 import com.optum.tops.J5427HC1.services.COBLN2121Service;
 import com.optum.tops.J5427HC1.services.COBLN2131Service;
-import com.optum.tops.J5427HC1.services.COBONL2200Service;
 import com.optum.tops.J5427HC1.services.CheckCOBClaim;
 import com.optum.tops.J5427HC1.services.LoadSumForReductService2170;
 import com.optum.tops.J5427HC1.services.OpsHcfaService;
@@ -33,21 +29,14 @@ import com.optum.tops.J5427HC1.services.RequestProcessor;
 import com.optum.tops.JP835RED.models.JP54RedRequest;
 import com.optum.tops.JP835RED.models.JP54RedReturn;
 
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
-
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ContextConfiguration(classes = J5427Hc1Application.class)
 @TestPropertySource({"classpath:queries.properties","classpath:application.properties","classpath:log4j.properties"})
 
-@ComponentScan(basePackages =
-{
-		"com.optum.tops.J5427HC1.services.*",
-		"com.optum.tops.J5427HC1.dao.D54DAO.CheckCOBDao",
-		"com.optum.tops.J5427HC1.models",
-"com.optum.tops.JP835RED.models"})
-public class J5427Hc1ApplicationTests {
+@ComponentScan(basePackages ={"com.optum.tops.*"})
+
+public class J5427Hc1ApplicationTest{
 
 	@Autowired
 	CheckCOBClaim checkCOBClaim;
@@ -84,7 +73,6 @@ public class J5427Hc1ApplicationTests {
 	@Test
 	public void BigDecimalComputationTest()
 	{
-		RequestProcessor reqPrcr=new RequestProcessor();
 		V5427HC1 currentClaim =new V5427HC1();
 		currentClaim.setHC1_COB_INST_OR_PROF("I");
 		currentClaim.setHC1_COB_COB_835_PROC_IND("M");
@@ -94,8 +82,6 @@ public class J5427Hc1ApplicationTests {
 
 		BigDecimal compute=currentClaim.getHC1_COB_835_COB_PRIM_IMPAC().add(BigDecimal.TEN).subtract(BigDecimal.TEN);
 		System.out.println("BigDecimalComputationTest::"+"compute "+compute);
-
-
 	}
 
 	@Test
