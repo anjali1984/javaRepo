@@ -6,7 +6,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 //Individual Claim to be appended to the response 
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Component
 public class V5427HC1 {
 
@@ -239,5 +242,25 @@ public class V5427HC1 {
 	public void setError(String error) {
 		this.error = error;
 	}
+
+	@Override
+	public String toString() {
+		return "V5427HC1 [HC1_COB_INVENTORY_CONTROL_DT=" + HC1_COB_INVENTORY_CONTROL_DT
+				+ ", HC1_COB_COB_CLAIM_INDICATOR=" + HC1_COB_COB_CLAIM_INDICATOR + ", HC1_COB_COB_835_PROC_IND="
+				+ HC1_COB_COB_835_PROC_IND + ", HC1_COB_INST_OR_PROF=" + HC1_COB_INST_OR_PROF + ", error=" + error
+				+ ", HC1_COB_ALLOW_AMT_IND=" + HC1_COB_ALLOW_AMT_IND + ", HC1_COB_835_RPT_ALLOW_AMT="
+				+ HC1_COB_835_RPT_ALLOW_AMT + ", HC1_COB_OI_PAID_AMT=" + HC1_COB_OI_PAID_AMT
+				+ ", HC1_COB_MEDC_PAID_AMT=" + HC1_COB_MEDC_PAID_AMT + ", HC1_COB_PRV_WRT_OFF=" + HC1_COB_PRV_WRT_OFF
+				+ ", HC1_COB_835_COB_PRIM_IMPAC=" + HC1_COB_835_COB_PRIM_IMPAC + ", HC1_COB_835_PAT_RESP_OVERC="
+				+ HC1_COB_835_PAT_RESP_OVERC + ", HC1_COB_835_PAT_RESP_DEDUC=" + HC1_COB_835_PAT_RESP_DEDUC
+				+ ", HC1_COB_835_PAT_RESP_COPAY=" + HC1_COB_835_PAT_RESP_COPAY + ", HC1_COB_835_PAT_RESP_COINS="
+				+ HC1_COB_835_PAT_RESP_COINS + ", HC1_COB_835_PAT_RESP_NTCOV=" + HC1_COB_835_PAT_RESP_NTCOV
+				+ ", HC1_COB_835_PAT_RESP_MCEST=" + HC1_COB_835_PAT_RESP_MCEST + ", HC1_COB_835_PAT_RESP_TOTAL="
+				+ HC1_COB_835_PAT_RESP_TOTAL + ", HC1_COB_835_PRV_NC_AMT=" + HC1_COB_835_PRV_NC_AMT
+				+ ", HC1_COB_835_DENY_NC_AMT=" + HC1_COB_835_DENY_NC_AMT + ", my_indicator=" + my_indicator
+				+ ", HC1_COB_LINE_DATA_AREA=" + HC1_COB_LINE_DATA_AREA + ", HC1_COB_835_OOB_ERROR="
+				+ HC1_COB_835_OOB_ERROR + ", HC1_COB_NBR_LINES=" + HC1_COB_NBR_LINES + "]";
+	}
+	
 
 }

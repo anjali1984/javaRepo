@@ -62,23 +62,18 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
-
-		<!-- >dependency>
-			<groupId>org.webjars</groupId>
-			<artifactId>bootstrap</artifactId>
-			<version>3.3.5</version>
-		</dependency>
-
+		<!-- for testing rest API -->
 		<dependency>
-			<groupId>org.webjars</groupId>
-			<artifactId>jquery</artifactId>
-			<version>2.1.4</version>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<version>3.0.0</version>
+			<scope>test</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency-->
+		<!-- <dependency> <groupId>org.webjars</groupId> <artifactId>bootstrap</artifactId> 
+			<version>3.3.5</version> </dependency> <dependency> <groupId>org.webjars</groupId> 
+			<artifactId>jquery</artifactId> <version>2.1.4</version> </dependency> <dependency> 
+			<groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-web</artifactId> 
+			</dependency -->
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -90,7 +85,14 @@
 			<artifactId>apache-log4j-extras</artifactId>
 			<version>1.2.17</version>
 		</dependency>
-		
+		<!-- https://mvnrepository.com/artifact/org.json/json -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20180130</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<dependencyManagement>
@@ -107,6 +109,21 @@
 
 	<build>
 		<plugins>
+			<!-- surefire plugin can be used to include exclude junit tests -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.21.0</version>
+				<configuration>
+					<includes>
+						<include>J5427Hc1ApplicationTest.java</include>
+						<!-- <include>CallRestApiTest.java</include> -->
+					</includes>
+					<excludes>
+						<exclude>**/CallRestApiTest.java</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

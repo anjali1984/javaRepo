@@ -50,9 +50,13 @@ public class RequestProcessor{
 
 
 	public HC1Response process (Hc1Request request){
+		
 		boolean threadPool = true; 
 		Logger logger=Logger.getLogger("genLogger");
+		
 		String location="J5427HC1.services.RequestProcessor.process(Hc1Request)";
+		logger.info(location.concat("Recieved request:"+request));
+
 
 		if (!threadPool){ //Each claim in the incoming request will get a new thread of its own (Basic Design) 
 			logger.info(location.concat(" Not using thread Pool"));
@@ -90,8 +94,9 @@ public class RequestProcessor{
 		else{ //Design of Thread pools, So all the claims will be served from the threadPool of fixed size
 
 			logger.info(location.concat("Using thread Pool"));
+
 			HC1Response response = new HC1Response() ; //to be sent back to the HC1Controller
-			List<ReqClaimEntry> claims_to_be_serviced = request.getClaimEntries() ; 
+			List<ReqClaimEntry> claims_to_be_serviced = request.getClaimEntries() ;
 
 			ExecutorService executor = Executors.newFixedThreadPool(5);
 
