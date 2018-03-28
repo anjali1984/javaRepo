@@ -1,6 +1,7 @@
 package com.optum.tops.J5427HC1.controllers;
 
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
@@ -20,13 +21,16 @@ import com.optum.tops.J5427HC1.services.RequestProcessor;
 public class HC1Controller {
 
 	@Autowired
-	RequestProcessor requestProcessorService ; 
+	RequestProcessor requestProcessorService; 
+	Logger logger=Logger.getLogger("genLogger");
+
 	
-	
-	@RequestMapping(value = "/COB" , method = RequestMethod.POST)
+	@RequestMapping(value = "/COB" , method = RequestMethod.POST,
+			consumes="application/json",produces="application/json")
 	@ResponseBody
 	public ResponseEntity<HC1Response> getCOBDetails(@RequestBody Hc1Request request){
-		//System.out.println("URI "+httpReq.getURI());
+		
+		logger.info("request in controller:"+request);
 		HC1Response response = requestProcessorService.process(request) ; //to be sent back to the calling program as a Response
 		return new ResponseEntity<HC1Response>(response, HttpStatus.OK);
 	}

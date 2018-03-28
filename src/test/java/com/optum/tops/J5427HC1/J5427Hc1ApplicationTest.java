@@ -49,7 +49,7 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 		"com.optum.tops.J5427HC1.dao.D54DAO.CheckCOBDao",
 		"com.optum.tops.J5427HC1.models",
 "com.optum.tops.JP835RED.models"})
-public class J5427Hc1ApplicationTests {
+public class J5427Hc1ApplicationTest {
 
 	@Autowired
 	CheckCOBClaim checkCOBClaim;

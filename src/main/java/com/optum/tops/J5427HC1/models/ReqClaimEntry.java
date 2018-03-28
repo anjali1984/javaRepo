@@ -15,6 +15,7 @@ public class ReqClaimEntry {
 	private String hc1_REQ_CLM_INVN_CTL_NBR;
 	private String hc1_REQ_CLM_DRFT_NBR;
 	private String hc1_REQ_CLM_PROC_DT;
+	
 	private String hc1_REQ_CLM_PROC_TM;
 	private String hc1_REQ_CLM_TRANS_CD;
 	private String hc1_REQ_CLM_COB_IND;
@@ -74,7 +75,14 @@ public class ReqClaimEntry {
 		this.hc1_REQ_RESPONSE_CODE = hc1_REQ_RESPONSE_CODE;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return "ReqClaimEntry [reqPolNbr=" + reqPolNbr + ", reqEEId=" + reqEEId + ", hc1_REQ_CLM_INVN_CTL_NBR="
+				+ hc1_REQ_CLM_INVN_CTL_NBR + ", hc1_REQ_CLM_DRFT_NBR=" + hc1_REQ_CLM_DRFT_NBR + ", hc1_REQ_CLM_PROC_DT="
+				+ hc1_REQ_CLM_PROC_DT + ", hc1_REQ_CLM_PROC_TM=" + hc1_REQ_CLM_PROC_TM + ", hc1_REQ_CLM_TRANS_CD="
+				+ hc1_REQ_CLM_TRANS_CD + ", hc1_REQ_CLM_COB_IND=" + hc1_REQ_CLM_COB_IND + ", hc1_REQ_RESPONSE_CODE="
+				+ hc1_REQ_RESPONSE_CODE + "]";
+	}
 
 	/*public Hc1ReqServiceInfo getReqServiceView() {
 		return ReqServiceView;
