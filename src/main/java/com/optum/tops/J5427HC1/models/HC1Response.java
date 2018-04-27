@@ -21,6 +21,7 @@ public class HC1Response {
 	}
 	
 	*/
+	
 
 	public ConcurrentHashMap<Integer, V5427HC1> getResponse_map_all_claims() {
 		return response_map_all_claims;
@@ -34,5 +35,7 @@ public class HC1Response {
 	public String toString() {
 		return "HC1Response [response_map_all_claims=" + response_map_all_claims + "]";
 	}
+
+	
 
 }

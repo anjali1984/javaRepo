@@ -14,24 +14,25 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.optum.tops.J5427HC1.JP835RED.processing7700;
-import com.optum.tops.J5427HC1.concurrency.CallableClaimTask;
-import com.optum.tops.J5427HC1.dao.D54DAO.FetchCoblnAmtsDao;
+import com.optum.tops.J5427HC1.JP835RED.DAO.Iprocessing7700;
+import com.optum.tops.J5427HC1.concurrency.ICallableClaimTask;
+import com.optum.tops.J5427HC1.dao.D54DAO.Imp.FetchCoblnAmtsDao;
 import com.optum.tops.J5427HC1.models.HC1Response;
 import com.optum.tops.J5427HC1.models.Hc1Request;
 import com.optum.tops.J5427HC1.models.ReqClaimEntry;
 import com.optum.tops.J5427HC1.models.ReqClaimEntryVO;
 import com.optum.tops.J5427HC1.models.V5427HC1;
-import com.optum.tops.J5427HC1.services.COBLN2121Service;
-import com.optum.tops.J5427HC1.services.COBLN2131Service;
-import com.optum.tops.J5427HC1.services.COBONL2200Service;
-import com.optum.tops.J5427HC1.services.CheckCOBClaim;
-import com.optum.tops.J5427HC1.services.InstlReduction2140Service;
-import com.optum.tops.J5427HC1.services.LoadCobLnLineAmtsService2150;
-import com.optum.tops.J5427HC1.services.LoadSumForReductService2170;
-import com.optum.tops.J5427HC1.services.OpsHcfaService;
-import com.optum.tops.J5427HC1.services.ProfReduction2160Service;
-import com.optum.tops.J5427HC1.services.RequestProcessor;
+import com.optum.tops.J5427HC1.services.ICOBLN2121Service;
+import com.optum.tops.J5427HC1.services.ICOBLN2131Service;
+import com.optum.tops.J5427HC1.services.ICheckCOBClaim;
+import com.optum.tops.J5427HC1.services.IInstlReduction2140Service;
+import com.optum.tops.J5427HC1.services.ILoadCobLnLineAmtsService2150;
+import com.optum.tops.J5427HC1.services.ILoadSumForReductService2170;
+import com.optum.tops.J5427HC1.services.IOpsHcfaService;
+import com.optum.tops.J5427HC1.services.IProfReduction2160Service;
+import com.optum.tops.J5427HC1.services.IRequestProcessor;
+import com.optum.tops.J5427HC1.services.Imp.COBONL2200Service;
+import com.optum.tops.J5427HC1.services.Imp.RequestProcessor;
 import com.optum.tops.JP835RED.models.JP54RedRequest;
 import com.optum.tops.JP835RED.models.JP54RedReturn;
 
@@ -52,21 +53,21 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 public class J5427Hc1ApplicationTest {
 
 	@Autowired
-	CheckCOBClaim checkCOBClaim;
+	ICheckCOBClaim checkCOBClaim;
 	@Autowired
-	OpsHcfaService opshcfacheck;
+	IOpsHcfaService opshcfacheck;
 	@Autowired 
-	COBLN2121Service cobln2121;	
+	ICOBLN2121Service cobln2121;	
 	@Autowired 
-	COBLN2131Service cobln2131;
+	ICOBLN2131Service cobln2131;
 	@Autowired 
-	ProfReduction2160Service profRed2160;
+	IProfReduction2160Service profRed2160;
 	@Autowired 
-	processing7700 process7700;
+	Iprocessing7700 process7700;
 	@Autowired
-	LoadSumForReductService2170 loadSumForReductService2170;
-	RequestProcessor requestProcessor;
-	CallableClaimTask callableClaimTask;
+	ILoadSumForReductService2170 loadSumForReductService2170;
+	IRequestProcessor requestProcessor;
+	ICallableClaimTask callableClaimTask;
 	Hc1Request hc1Req;
 	HC1Response hc1Resp;
 	JP54RedRequest requestToRed;
@@ -78,11 +79,11 @@ public class J5427Hc1ApplicationTest {
 	@Autowired
 	V5427HC1 claimResp;
 	@Autowired
-	InstlReduction2140Service Inst2140;	
+	IInstlReduction2140Service Inst2140;	
 	@Autowired
-	LoadCobLnLineAmtsService2150 Inst2150;
+	ILoadCobLnLineAmtsService2150 Inst2150;
 	@Autowired
-	LoadSumForReductService2170 Inst2170;
+	ILoadSumForReductService2170 Inst2170;
 
 	@Test
 	public void contextLoads() {
@@ -92,7 +93,7 @@ public class J5427Hc1ApplicationTest {
 	@Test
 	public void BigDecimalComputationTest()
 	{
-		RequestProcessor reqPrcr=new RequestProcessor();
+		IRequestProcessor reqPrcr=new RequestProcessor();
 		V5427HC1 currentClaim =new V5427HC1();
 		currentClaim.setHC1_COB_INST_OR_PROF("I");
 		currentClaim.setHC1_COB_COB_835_PROC_IND("M");
