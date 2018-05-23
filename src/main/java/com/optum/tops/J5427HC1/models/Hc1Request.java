@@ -6,6 +6,8 @@ import java.util.List;
 public class Hc1Request {
 
 	private int hc1_REQ_NBR_CLAIMS ; 
+	private String reqPolNbr;
+	private String reqEEId;
 	
 	//Variable Area
 	private List<ReqClaimEntry> claimEntries ; //Size of this can be 100 at max, depends on HC1_REQ_NBR_CLAIMS
@@ -24,6 +26,18 @@ public class Hc1Request {
 
 	public void setClaimEntries(List<ReqClaimEntry> claimEntries) {
 		this.claimEntries = claimEntries;
+	}
+	public String getReqPolNbr() {
+		return reqPolNbr;
+	}
+	public void setReqPolNbr(String reqPolNbr) {
+		this.reqPolNbr = reqPolNbr;
+	}
+	public String getReqEEId() {
+		return reqEEId;
+	}
+	public void setReqEEId(String reqEEId) {
+		this.reqEEId = reqEEId;
 	}
 
 	@Override

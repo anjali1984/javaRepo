@@ -49,7 +49,7 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 		"com.optum.tops.J5427HC1.services.*",
 		"com.optum.tops.J5427HC1.dao.D54DAO.CheckCOBDao",
 		"com.optum.tops.J5427HC1.models",
-"com.optum.tops.JP835RED.models"})
+        "com.optum.tops.JP835RED.models"})
 public class J5427Hc1ApplicationTest {
 
 	@Autowired
@@ -112,8 +112,7 @@ public class J5427Hc1ApplicationTest {
 
 	{
 		try {
-			claimReq.setReqPolNbr("742846");
-			claimReq.setReqEEId("S994061000");
+
 			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1047907467");
 			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000007234");
 			claimReq.setHc1_REQ_CLM_PROC_DT("2017-10-26");
@@ -140,8 +139,7 @@ public class J5427Hc1ApplicationTest {
 
 	{
 		try {
-			claimReq.setReqPolNbr("742846");
-			claimReq.setReqEEId("S994061000");
+
 			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1047907467");
 			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000007234");
 			claimReq.setHc1_REQ_CLM_PROC_DT("2017-10-26");
@@ -170,8 +168,7 @@ public class J5427Hc1ApplicationTest {
 
 	{
 		try {
-			claimReq.setReqPolNbr("742846");
-			claimReq.setReqEEId("S994061000");
+
 			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1047907467");
 			//claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("0000000000");
 			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000007234");
@@ -201,8 +198,7 @@ public class J5427Hc1ApplicationTest {
 	public void getResultsCoblnLineFldsTest()
 	{
 		try{
-			claimReq.setReqPolNbr("742846");
-			claimReq.setReqEEId("S994061000");
+
 			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1047907467");
 			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000007234");
 			claimReq.setHc1_REQ_CLM_PROC_DT("2017-10-26");
@@ -260,8 +256,7 @@ public class J5427Hc1ApplicationTest {
 	public void do2131LogicTest()
 	{
 		try{
-			claimReq.setReqPolNbr("742846");
-			claimReq.setReqEEId("S994061000");
+
 			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1047907467");
 			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000007234");
 			claimReq.setHc1_REQ_CLM_PROC_DT("2017-10-26");
@@ -370,8 +365,7 @@ public class J5427Hc1ApplicationTest {
 		try{
 
 
-			claimReq.setReqPolNbr("742846");
-			claimReq.setReqEEId("S994061000");
+
 			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1047907467");
 			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000007234");
 			claimReq.setHc1_REQ_CLM_PROC_DT("2017-10-26");
@@ -406,8 +400,6 @@ public class J5427Hc1ApplicationTest {
 	{
 		try{
 
-			claimReq.setReqPolNbr("710711");
-			claimReq.setReqEEId("S071240969");
 			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("5949529216");
 			claimReq.setHc1_REQ_CLM_DRFT_NBR("0133928370");
 			claimReq.setHc1_REQ_CLM_PROC_DT("2016-04-29");
@@ -447,8 +439,7 @@ public class J5427Hc1ApplicationTest {
 	public void do2140LogicTest()
 	{
 		try{
-			claimReq.setReqPolNbr("742846");
-			claimReq.setReqEEId("S994061000");
+
 			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1047907467");
 			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000007234");
 			claimReq.setHc1_REQ_CLM_PROC_DT("2017-10-26");
@@ -477,8 +468,7 @@ public class J5427Hc1ApplicationTest {
 	public void do2150LogicTest()
 	{
 		try{
-			claimReq.setReqPolNbr("742846");
-			claimReq.setReqEEId("S994061000");
+
 			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1047907467");
 			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000007234");
 			claimReq.setHc1_REQ_CLM_PROC_DT("2017-10-26");
@@ -507,8 +497,7 @@ public class J5427Hc1ApplicationTest {
 	public void do2170LogicTest()
 	{
 		try{
-			claimReq.setReqPolNbr("742846");
-			claimReq.setReqEEId("S994061000");
+
 			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1047907467");
 			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000007234");
 			claimReq.setHc1_REQ_CLM_PROC_DT("2017-10-26");
