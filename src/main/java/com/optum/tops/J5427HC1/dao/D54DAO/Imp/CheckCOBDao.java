@@ -100,6 +100,7 @@ public class CheckCOBDao implements ICheckCOBDao {
 
 				}//Not a COB Claim  
 				else {
+					individual_claim_response.setError("Not a COB claim");
 					individual_claim_response.setHC1_COB_COB_CLAIM_INDICATOR("N");
 					individual_claim_response.setHC1_COB_NBR_LINES(0);
 					individual_claim_response.setHC1_COB_NEW_COB_CALC_IND(rs.getString("NEW_COB_LOGC_CD"));
