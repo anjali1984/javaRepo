@@ -118,7 +118,7 @@ public class ProfReduction2160Service implements IProfReduction2160Service {
 					{
 						LINE_REDUCTION_HOLD.getPR_DENY_AMT().add(ret835Reduct.get(clm_sub).getRET_835_RD_PD_AMT());
 					}else{
-						if (claimToBeSent.getHC1_COB_COB_835_PROC_IND().equals("M") && ws_rarc_Cd.equals("N12"))
+						if (claimToBeSent.getHC1_COB_NEW_COB_835_PROC_IND().equals("M") && ws_rarc_Cd.equals("N12"))
 						{
 
 							LINE_REDUCTION_HOLD.setPR_MEDC_EST_AMT(LINE_REDUCTION_HOLD.getPR_MEDC_EST_AMT().add(ret835Reduct.get(clm_sub).getRET_835_RD_PD_AMT()));

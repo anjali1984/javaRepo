@@ -55,7 +55,7 @@ public class LoadSumForReductService2170 implements ILoadSumForReductService2170
 						||(each_line.getCAT_ID().compareTo(BigDecimal.ZERO)>0)
 						||(each_line.getLN_ID()>0))
 				{
-					line_to_be_added.setHC1_COB_LN_SRV_ID(each_line.getSVC_LN_ID().toString());
+					line_to_be_added.setHC1_COB_LN_SRV_IND(each_line.getSVC_LN_ID().toString());
 
 					line_to_be_added.setHC1_COB_LN_835_PAT_RESP_OVERC(each_line.getPR_OVERC());//sets the line level
 					claimToBeSent.setHC1_COB_835_PAT_RESP_OVERC(claimToBeSent.getHC1_COB_835_PAT_RESP_OVERC().add(line_to_be_added.getHC1_COB_LN_835_PAT_RESP_OVERC()));//adds line level to the claim level

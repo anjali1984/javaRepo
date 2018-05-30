@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public class HC1_COB_LINE_ENTRY {
 	
-	private String HC1_COB_LN_SRV_ID;             
+	private String HC1_COB_LN_SRV_IND;             
 	private String HC1_COB_LN_ALLOW_AMT_IND;      
 	private BigDecimal HC1_COB_LN_835_RPT_ALLOW_AMT=BigDecimal.ZERO;  
 	private BigDecimal HC1_COB_LN_EOB_OI_PAID_AMT=BigDecimal.ZERO;    
@@ -29,11 +29,11 @@ public class HC1_COB_LINE_ENTRY {
 	private String HC1_COB_LINE_LST_SRVC_DT; 
 	private BigDecimal HC1_COB_LINE_CHRG_AMT=BigDecimal.ZERO;
 	
-	public String getHC1_COB_LN_SRV_ID() {
-		return HC1_COB_LN_SRV_ID;
+	public String getHC1_COB_LN_SRV_IND() {
+		return HC1_COB_LN_SRV_IND;
 	}
-	public void setHC1_COB_LN_SRV_ID(String hC1_COB_LN_SRV_ID) {
-		HC1_COB_LN_SRV_ID = hC1_COB_LN_SRV_ID;
+	public void setHC1_COB_LN_SRV_IND(String hC1_COB_LN_SRV_ID) {
+		HC1_COB_LN_SRV_IND = hC1_COB_LN_SRV_ID;
 	}
 	public String getHC1_COB_LN_ALLOW_AMT_IND() {
 		return HC1_COB_LN_ALLOW_AMT_IND;
@@ -169,7 +169,7 @@ public class HC1_COB_LINE_ENTRY {
 	}
 	@Override
 	public String toString() {
-		return "HC1_COB_LINE_ENTRY [HC1_COB_LN_SRV_ID=" + HC1_COB_LN_SRV_ID + ", HC1_COB_LN_ALLOW_AMT_IND="
+		return "HC1_COB_LINE_ENTRY [HC1_COB_LN_SRV_ID=" + HC1_COB_LN_SRV_IND + ", HC1_COB_LN_ALLOW_AMT_IND="
 				+ HC1_COB_LN_ALLOW_AMT_IND + ", HC1_COB_LN_835_RPT_ALLOW_AMT=" + HC1_COB_LN_835_RPT_ALLOW_AMT
 				+ ", HC1_COB_LN_EOB_OI_PAID_AMT=" + HC1_COB_LN_EOB_OI_PAID_AMT + ", HC1_COB_LN_EOB_MEDC_PAID_AMT="
 				+ HC1_COB_LN_EOB_MEDC_PAID_AMT + ", HC1_COB_LN_COB_PRV_WRT_OFF=" + HC1_COB_LN_COB_PRV_WRT_OFF

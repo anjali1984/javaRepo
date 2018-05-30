@@ -96,7 +96,7 @@ public class J5427Hc1ApplicationTest {
 		IRequestProcessor reqPrcr=new RequestProcessor();
 		V5427HC1 currentClaim =new V5427HC1();
 		currentClaim.setHC1_COB_INST_OR_PROF("I");
-		currentClaim.setHC1_COB_COB_835_PROC_IND("M");
+		currentClaim.setHC1_COB_NEW_COB_835_PROC_IND("M");
 		currentClaim.setHC1_COB_NBR_LINES(1);
 		currentClaim.setHC1_COB_835_COB_PRIM_IMPAC(BigDecimal.ZERO);
 		System.out.println("BigDecimalComputationTest::"+"ten "+currentClaim.getHC1_COB_835_COB_PRIM_IMPAC());
@@ -382,7 +382,7 @@ public class J5427Hc1ApplicationTest {
 			claimResp.getMy_indicator().setOPS_HCFA_INDICATOR("Y");
 			claimResp.getMy_indicator().setDBKE2_ICN_SUFX_CD("01");
 			claimResp.getMy_indicator().setDBKE2_ICN_SUFX_VERS_NBR("1");
-			claimResp.setHC1_COB_COB_835_PROC_IND("M");
+			claimResp.setHC1_COB_NEW_COB_835_PROC_IND("M");
 
 			claimResp=cobln2121.getResultsCobln_Line_Flds(claimReqVo, claimResp);
 
@@ -415,7 +415,7 @@ public class J5427Hc1ApplicationTest {
 			claimResp.getMy_indicator().setOPS_HCFA_INDICATOR("Y");
 			claimResp.getMy_indicator().setDBKE2_ICN_SUFX_CD("01");
 			claimResp.getMy_indicator().setDBKE2_ICN_SUFX_VERS_NBR("1");
-			claimResp.setHC1_COB_COB_835_PROC_IND("M");
+			claimResp.setHC1_COB_NEW_COB_835_PROC_IND("M");
 
 			claimResp=cobln2121.getResultsCobln_Line_Flds(claimReqVo, claimResp);
 

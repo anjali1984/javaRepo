@@ -76,8 +76,8 @@ public class CheckCOBDao implements ICheckCOBDao {
 								|| indicator_object.getDBKE2_835_COB_PROC_IND().trim().equals("M"))) {
 
 					individual_claim_response.setHC1_COB_COB_CLAIM_INDICATOR("Y"); 
-					individual_claim_response.setHC1_COB_COB_CALC_IND(rs.getString("NEW_COB_LOGC_CD"));
-					individual_claim_response.setHC1_COB_COB_835_PROC_IND(rs.getString("NEW_835_COB_PROC_IND"));
+					individual_claim_response.setHC1_COB_NEW_COB_CALC_IND(rs.getString("NEW_COB_LOGC_CD"));
+					individual_claim_response.setHC1_COB_NEW_COB_835_PROC_IND(rs.getString("NEW_835_COB_PROC_IND"));
 					individual_claim_response.setHC1_COB_INST_OR_PROF(rs.getString("FACL_OR_PROF_CD"));
 					individual_claim_response.setHC1_COB_ALLOW_AMT_IND(rs.getString("ALLW_AMT_DTRM_CD"));
 
@@ -102,8 +102,8 @@ public class CheckCOBDao implements ICheckCOBDao {
 				else {
 					individual_claim_response.setHC1_COB_COB_CLAIM_INDICATOR("N");
 					individual_claim_response.setHC1_COB_NBR_LINES(0);
-					individual_claim_response.setHC1_COB_COB_CALC_IND(rs.getString("NEW_COB_LOGC_CD"));
-					individual_claim_response.setHC1_COB_COB_835_PROC_IND(rs.getString("NEW_835_COB_PROC_IND"));
+					individual_claim_response.setHC1_COB_NEW_COB_CALC_IND(rs.getString("NEW_COB_LOGC_CD"));
+					individual_claim_response.setHC1_COB_NEW_COB_835_PROC_IND(rs.getString("NEW_835_COB_PROC_IND"));
 					individual_claim_response.setHC1_COB_INST_OR_PROF(rs.getString("FACL_OR_PROF_CD"));
 				}
 			}
