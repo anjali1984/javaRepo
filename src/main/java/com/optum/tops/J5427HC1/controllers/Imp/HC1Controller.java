@@ -3,6 +3,9 @@ package com.optum.tops.J5427HC1.controllers.Imp;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -50,16 +53,20 @@ public class HC1Controller implements IHC1Controller{
 		System.out.println("requestProcessorServic:"+requestProcessorService);
 		HC1Response response = requestProcessorService.process(request); //to be sent back to the calling program as a Response
 		int noCobLnRequest=0;
+		List respArray=new ArrayList();
+		HashMap<String,List> RespClaimsToBeSent=new HashMap<String,List>();
+		
 		for (V5427HC1 res:response.getResponse_map_all_claims().values())
 		{
+			respArray.add(res);
 			if (res.getHC1_COB_NBR_LINES()==0)
 			{
 				noCobLnRequest++;
 			}
 
-			else			
-				break;
+			
 		}
+		RespClaimsToBeSent.put("response_map_all_claims",respArray);
 		if(response.getResponse_map_all_claims().size()==noCobLnRequest && noCobLnRequest!=0)
 
 		{
@@ -79,7 +86,7 @@ public class HC1Controller implements IHC1Controller{
 		}
 		else
 		{
-			return new ResponseEntity<HC1Response>(response, HttpStatus.OK);//http 200
+			return new ResponseEntity<HashMap>(RespClaimsToBeSent, HttpStatus.OK);//http 200
 		}
 	}
 
