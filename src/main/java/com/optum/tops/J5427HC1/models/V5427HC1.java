@@ -1,6 +1,7 @@
 package com.optum.tops.J5427HC1.models;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,28 +14,28 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Component
 public class V5427HC1 {
 
-	private String HC1_COB_INVENTORY_CONTROL_DT;
+	private String HC1_COB_INVENTORY_CONTROL_DT="";
 	private String HC1_COB_COB_CLAIM_INDICATOR="N";    //Cob claim indicator
-	private String HC1_COB_NEW_COB_CALC_IND;
-	private String HC1_COB_NEW_COB_835_PROC_IND;
-	private String HC1_COB_INST_OR_PROF;        
+	private String HC1_COB_NEW_COB_CALC_IND="";
+	private String HC1_COB_NEW_COB_835_PROC_IND="";
+	private String HC1_COB_INST_OR_PROF="";        
 	private String error="";   
-	private String HC1_COB_ALLOW_AMT_IND;       
-	private BigDecimal HC1_COB_835_RPT_ALLOW_AMT=BigDecimal.ZERO;   
-	private BigDecimal HC1_COB_OI_PAID_AMT=BigDecimal.ZERO;         
-	private BigDecimal HC1_COB_MEDC_PAID_AMT=BigDecimal.ZERO;      
-	private BigDecimal HC1_COB_PRV_WRT_OFF=BigDecimal.ZERO;         
+	private String HC1_COB_ALLOW_AMT_IND="";      
+	private BigDecimal HC1_COB_835_RPT_ALLOW_AMT=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);   
+	private BigDecimal HC1_COB_OI_PAID_AMT=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);         
+	private BigDecimal HC1_COB_MEDC_PAID_AMT=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);      
+	private BigDecimal HC1_COB_PRV_WRT_OFF=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);         
 	
-	private BigDecimal HC1_COB_835_COB_PRIM_IMPAC =BigDecimal.ZERO;
-	private BigDecimal HC1_COB_835_PAT_RESP_OVERC=BigDecimal.ZERO;
-	private BigDecimal HC1_COB_835_PAT_RESP_DEDUC=BigDecimal.ZERO;
-	private BigDecimal HC1_COB_835_PAT_RESP_COPAY=BigDecimal.ZERO;
-	private BigDecimal HC1_COB_835_PAT_RESP_COINS=BigDecimal.ZERO;
-	private BigDecimal HC1_COB_835_PAT_RESP_NTCOV=BigDecimal.ZERO;
-	private BigDecimal HC1_COB_835_PAT_RESP_MCEST=BigDecimal.ZERO;
-	private BigDecimal HC1_COB_835_PAT_RESP_TOTAL=BigDecimal.ZERO;
-	private BigDecimal HC1_COB_835_PRV_NC_AMT=BigDecimal.ZERO;    
-	private BigDecimal HC1_COB_835_DENY_NC_AMT=BigDecimal.ZERO;
+	private BigDecimal HC1_COB_835_COB_PRIM_IMPAC =BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal HC1_COB_835_PAT_RESP_OVERC=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal HC1_COB_835_PAT_RESP_DEDUC=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal HC1_COB_835_PAT_RESP_COPAY=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal HC1_COB_835_PAT_RESP_COINS=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal HC1_COB_835_PAT_RESP_NTCOV=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal HC1_COB_835_PAT_RESP_MCEST=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal HC1_COB_835_PAT_RESP_TOTAL=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal HC1_COB_835_PRV_NC_AMT=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);    
+	private BigDecimal HC1_COB_835_DENY_NC_AMT=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
 	
 	private ClaimIndicatorValues my_indicator = new ClaimIndicatorValues();
 	private List<HC1_COB_LINE_ENTRY> HC1_COB_LINE_DATA_AREA = new ArrayList<HC1_COB_LINE_ENTRY>(); //Various Line level data for this Claim to be returned  

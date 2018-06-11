@@ -25,7 +25,7 @@ public class COBONL2200Service implements ICOBONL2200Service {
 		  /*anjali:sysout and compute can be removed once tested.*/
 		 
 		try {
-			currentClaim.setHC1_COB_PRV_WRT_OFF(BigDecimal.ZERO);
+			currentClaim.setHC1_COB_PRV_WRT_OFF(BigDecimal.valueOf(0.00));
 			/*
 			 * Recalculation for professional or medicare estimated   service lines
 			 */
@@ -39,26 +39,26 @@ public class COBONL2200Service implements ICOBONL2200Service {
 					(currentClaim.getHC1_COB_INST_OR_PROF().equals("I") && currentClaim.getHC1_COB_NEW_COB_835_PROC_IND().equals("M")))
 			{
 				/*
-				 * BigDecimal.ZEROing out medicare paid on claim leve  for institutional and professional medicare claims  
+				 * BigDecimal.valueOf(0.00)ing out medicare paid on claim leve  for institutional and professional medicare claims  
 				 */
 				if((currentClaim.getHC1_COB_INST_OR_PROF().equals("I") || currentClaim.getHC1_COB_INST_OR_PROF().equals("P"))
 						&&
 						currentClaim.getHC1_COB_NEW_COB_835_PROC_IND().equals("M"))
 				{
-					currentClaim.setHC1_COB_MEDC_PAID_AMT(BigDecimal.ZERO);
+					currentClaim.setHC1_COB_MEDC_PAID_AMT(BigDecimal.valueOf(0.00));
 					System.out.println("in 2200 med amnt "+currentClaim.getHC1_COB_MEDC_PAID_AMT());
 				}
 				int cobDxCnt=0;
 				
 				while(cobDxCnt < currentClaim.getHC1_COB_NBR_LINES()){
 					/*
-					 * For inst. and prof medicare claims BigDecimal.ZEROes to medicare paid amount on all line levels   
+					 * For inst. and prof medicare claims BigDecimal.valueOf(0.00)es to medicare paid amount on all line levels   
 					 */
 					if((currentClaim.getHC1_COB_INST_OR_PROF().equals("I") || currentClaim.getHC1_COB_INST_OR_PROF().equals("P"))
 							&&
 							currentClaim.getHC1_COB_NEW_COB_835_PROC_IND().equals("M"))
 					{
-						currentClaim.getHC1_COB_LNE_DATA_AREA().get(cobDxCnt).setHC1_COB_LN_EOB_MEDC_PAID_AMT(BigDecimal.ZERO);
+						currentClaim.getHC1_COB_LNE_DATA_AREA().get(cobDxCnt).setHC1_COB_LN_EOB_MEDC_PAID_AMT(BigDecimal.valueOf(0.00));
 					}
 					BigDecimal compute=currentClaim.getHC1_COB_LNE_DATA_AREA().get(cobDxCnt).getHC1_COB_LN_835_PRV_NC_AMT()
 							.add(currentClaim.getHC1_COB_LNE_DATA_AREA().get(cobDxCnt).getHC1_COB_LN_835_COB_PRIM_IMPAC())
@@ -67,11 +67,11 @@ public class COBONL2200Service implements ICOBONL2200Service {
 					System.out.println("In 2200, modifying the prv_wrt_off amount of the line, based on the 4 other line level amounts:  " + compute);
 					currentClaim.getHC1_COB_LNE_DATA_AREA().get(cobDxCnt).setHC1_COB_LN_COB_PRV_WRT_OFF(compute);
 					/*
-					 * Provider write-off changed to BigDecimal.ZERO at line   level for inst. medicare estimated claims
+					 * Provider write-off changed to BigDecimal.valueOf(0.00) at line   level for inst. medicare estimated claims
 					 */
 					if(currentClaim.getHC1_COB_NEW_COB_835_PROC_IND().equals("M") && currentClaim.getHC1_COB_INST_OR_PROF().equals("I"))
 					{
-						currentClaim.getHC1_COB_LNE_DATA_AREA().get(cobDxCnt).setHC1_COB_LN_COB_PRV_WRT_OFF(BigDecimal.ZERO);
+						currentClaim.getHC1_COB_LNE_DATA_AREA().get(cobDxCnt).setHC1_COB_LN_COB_PRV_WRT_OFF(BigDecimal.valueOf(0.00));
 					}
 					currentClaim.setHC1_COB_PRV_WRT_OFF(currentClaim.getHC1_COB_LNE_DATA_AREA().get(cobDxCnt).getHC1_COB_LN_COB_PRV_WRT_OFF().add(currentClaim.getHC1_COB_PRV_WRT_OFF()));
 					cobDxCnt++;
@@ -79,6 +79,8 @@ public class COBONL2200Service implements ICOBONL2200Service {
 			}
 			if(currentClaim.getHC1_COB_INST_OR_PROF().equals("I") && currentClaim.getHC1_COB_NEW_COB_835_PROC_IND().equals("Y"))
 			{
+				System.out.println("currentClaim.getHC1_COB_835_PRV_NC_AMT() "+currentClaim.getHC1_COB_835_PRV_NC_AMT());
+
 				BigDecimal compute=((currentClaim.getHC1_COB_835_PRV_NC_AMT().add(currentClaim.getHC1_COB_835_COB_PRIM_IMPAC())).subtract(currentClaim.getHC1_COB_MEDC_PAID_AMT()))
 						.subtract(currentClaim.getHC1_COB_OI_PAID_AMT());
 				currentClaim.setHC1_COB_PRV_WRT_OFF(compute);
@@ -88,7 +90,7 @@ System.out.println("currentClaim.getHC1_COB_MEDC_PAID_AMT() "+currentClaim.getHC
 System.out.println("currentClaim.getHC1_COB_OI_PAID_AMT() "+currentClaim.getHC1_COB_OI_PAID_AMT());
 				
 				for (int i=0;i<currentClaim.getHC1_COB_LNE_DATA_AREA().size();i++)
-					currentClaim.getHC1_COB_LNE_DATA_AREA().get(i).setHC1_COB_LN_COB_PRV_WRT_OFF(BigDecimal.ZERO);
+					currentClaim.getHC1_COB_LNE_DATA_AREA().get(i).setHC1_COB_LN_COB_PRV_WRT_OFF(BigDecimal.valueOf(0.00));
 			}
 			return currentClaim;
 		} catch (Exception e) {

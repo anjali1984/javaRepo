@@ -1,6 +1,7 @@
 package com.optum.tops.JP835RED.models;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * :RET:-835-LN-RARC-TBL portion of cobol copybook,VY835RET
@@ -10,8 +11,8 @@ import java.math.BigDecimal;
 public class Ret835LnRarcTbl {
 	private String RET_835_LN_RARC_CD;
 	private String RET_835_LN_RMRK_CD;
-	private BigDecimal RET_835_LN_REV_ID=BigDecimal.ZERO;
-	private BigDecimal RET_835_LN_REV_CD=BigDecimal.ZERO;
+	private BigDecimal RET_835_LN_REV_ID=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal RET_835_LN_REV_CD=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
 	private String RET_835_LN_PROC_CD;
 	private String RET_835_LN_PROC_TYP_CD;
 	

@@ -1,6 +1,8 @@
 package com.optum.tops.J5427HC1.models;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,7 +15,7 @@ public class ReqClaimEntry {
 	private String hc1_REQ_CLM_PROC_TM;
 	private String hc1_REQ_CLM_TRANS_CD;
 	private String hc1_REQ_CLM_COB_IND;
-	private BigDecimal hc1_REQ_RESPONSE_CODE=BigDecimal.ZERO;
+	private BigDecimal hc1_REQ_RESPONSE_CODE=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
 	
 	public String getHc1_REQ_CLM_INVN_CTL_NBR() {
 		return hc1_REQ_CLM_INVN_CTL_NBR;

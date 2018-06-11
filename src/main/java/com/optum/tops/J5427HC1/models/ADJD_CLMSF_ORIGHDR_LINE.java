@@ -1,6 +1,7 @@
 package com.optum.tops.J5427HC1.models;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 //A list of these lines is present in the ClaimIndicatorValues object
 public class ADJD_CLMSF_ORIGHDR_LINE {
@@ -12,8 +13,8 @@ public class ADJD_CLMSF_ORIGHDR_LINE {
 	private int LN_NBR ; 
 	private String ORIG_PL_OF_SRVC_CD ; 
 	private String UB92_RVNU_CD ; 
-	private BigDecimal UB92_CHRG_AMT=BigDecimal.ZERO; 
-	private BigDecimal UB92_NOT_COV_AMT=BigDecimal.ZERO; 
+	private BigDecimal UB92_CHRG_AMT=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY); 
+	private BigDecimal UB92_NOT_COV_AMT=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY); 
 	private String  UB92_PROC_CD  ;
 	private String HCFA_SRVC_PLC_CD ; 
 	private String UB92_OVR_CD ; 

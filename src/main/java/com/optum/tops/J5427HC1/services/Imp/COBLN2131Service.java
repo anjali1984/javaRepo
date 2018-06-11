@@ -51,7 +51,7 @@ public class COBLN2131Service implements ICOBLN2131Service {
 
 				ln_chrg_amt = lineRedDataTable.get(index).getLINE_CHRG_AMT() ;
 				ln_nc_amt = lineRedDataTable.get(index).getLINE_NC_AMT(); 
-				if(ln_chrg_amt.compareTo(ln_nc_amt) == 0 && ln_chrg_amt.compareTo(BigDecimal.ZERO) > 0){
+				if(ln_chrg_amt.compareTo(ln_nc_amt) == 0 && ln_chrg_amt.compareTo(BigDecimal.valueOf(0.00)) > 0){
 					ln_medc_paid_amt = lineRedDataTable.get(index).getLN_MEDC_PAID_AMT(); 
 					BigDecimal temp = ln_medc_paid_amt.add(each_record.getMedcr_Pd_Amt()); 
 					lineRedDataTable.get(index).setLN_MEDC_PAID_AMT(temp);

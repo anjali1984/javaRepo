@@ -1,6 +1,7 @@
 package com.optum.tops.J5427HC1;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,14 +96,19 @@ public class J5427Hc1ApplicationTest {
 	{
 		IRequestProcessor reqPrcr=new RequestProcessor();
 		V5427HC1 currentClaim =new V5427HC1();
+		System.out.println("test bigdecimal HC1_COB_835_DENY_NC_AMT:"+currentClaim.getHC1_COB_835_DENY_NC_AMT());
+
 		currentClaim.setHC1_COB_INST_OR_PROF("I");
 		currentClaim.setHC1_COB_NEW_COB_835_PROC_IND("M");
 		currentClaim.setHC1_COB_NBR_LINES(1);
-		currentClaim.setHC1_COB_835_COB_PRIM_IMPAC(BigDecimal.ZERO);
+		currentClaim.setHC1_COB_835_COB_PRIM_IMPAC(BigDecimal.valueOf(0.00));
 		System.out.println("BigDecimalComputationTest::"+"ten "+currentClaim.getHC1_COB_835_COB_PRIM_IMPAC());
 
 		BigDecimal compute=currentClaim.getHC1_COB_835_COB_PRIM_IMPAC().add(BigDecimal.TEN).subtract(BigDecimal.TEN);
 		System.out.println("BigDecimalComputationTest::"+"compute "+compute);
+		System.out.println("BigDecimalComputationSum::"+BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY).add(new BigDecimal(0)));
+
+		
 
 
 	}
@@ -119,7 +125,7 @@ public class J5427Hc1ApplicationTest {
 			claimReq.setHc1_REQ_CLM_PROC_TM("14.03.23");
 			claimReq.setHc1_REQ_CLM_TRANS_CD("00");
 			claimReq.setHc1_REQ_CLM_COB_IND("");
-			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.ZERO);
+			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.valueOf(0.00));
 			claimReqVo.setReqClaimEntry(claimReq);
 			claimReqVo.setLogId("10479074670000007234");
 			claimResp=checkCOBClaim.COB_claim_check(claimReqVo);
@@ -176,7 +182,7 @@ public class J5427Hc1ApplicationTest {
 			claimReq.setHc1_REQ_CLM_PROC_TM("14.03.23");
 			claimReq.setHc1_REQ_CLM_TRANS_CD("00");
 			claimReq.setHc1_REQ_CLM_COB_IND("");
-			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.ZERO);
+			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.valueOf(0.00));
 			claimReqVo.setReqClaimEntry(claimReq);
 			claimReqVo.setLogId("10479074670000007234");
 
@@ -205,7 +211,7 @@ public class J5427Hc1ApplicationTest {
 			claimReq.setHc1_REQ_CLM_PROC_TM("14.03.23");
 			claimReq.setHc1_REQ_CLM_TRANS_CD("00");
 			claimReq.setHc1_REQ_CLM_COB_IND("");
-			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.ZERO);
+			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.valueOf(0.00));
 			claimReqVo.setReqClaimEntry(claimReq);
 			claimReqVo.setLogId("10479074670000007234");
 
@@ -263,7 +269,7 @@ public class J5427Hc1ApplicationTest {
 			claimReq.setHc1_REQ_CLM_PROC_TM("14.03.23");
 			claimReq.setHc1_REQ_CLM_TRANS_CD("00");
 			claimReq.setHc1_REQ_CLM_COB_IND("");
-			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.ZERO);
+			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.valueOf(0.00));
 			claimReqVo.setReqClaimEntry(claimReq);
 			claimReqVo.setLogId("10479074670000007234");
 
@@ -372,7 +378,7 @@ public class J5427Hc1ApplicationTest {
 			claimReq.setHc1_REQ_CLM_PROC_TM("14.03.23");
 			claimReq.setHc1_REQ_CLM_TRANS_CD("00");
 			claimReq.setHc1_REQ_CLM_COB_IND("");
-			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.ZERO);
+			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.valueOf(0.00));
 
 			claimReqVo.setReqClaimEntry(claimReq);
 			claimReqVo.setLogId("10479074670000007234");
@@ -406,7 +412,7 @@ public class J5427Hc1ApplicationTest {
 			claimReq.setHc1_REQ_CLM_PROC_TM("21.09.31");
 			claimReq.setHc1_REQ_CLM_TRANS_CD("00");
 			claimReq.setHc1_REQ_CLM_COB_IND("M");
-			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.ZERO);
+			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.valueOf(0.00));
 			claimReqVo.setReqClaimEntry(claimReq);
 			claimReqVo.setLogId("10479074670000007234");
 
@@ -446,7 +452,7 @@ public class J5427Hc1ApplicationTest {
 			claimReq.setHc1_REQ_CLM_PROC_TM("14.03.23");
 			claimReq.setHc1_REQ_CLM_TRANS_CD("00");
 			claimReq.setHc1_REQ_CLM_COB_IND("");
-			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.ZERO);
+			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.valueOf(0.00));
 			claimReqVo.setReqClaimEntry(claimReq);
 			claimReqVo.setLogId("10479074670000007234");
 
@@ -475,7 +481,7 @@ public class J5427Hc1ApplicationTest {
 			claimReq.setHc1_REQ_CLM_PROC_TM("14.03.23");
 			claimReq.setHc1_REQ_CLM_TRANS_CD("00");
 			claimReq.setHc1_REQ_CLM_COB_IND("");
-			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.ZERO);
+			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.valueOf(0.00));
 			claimReqVo.setReqClaimEntry(claimReq);
 			claimReqVo.setLogId("10479074670000007234");
 
@@ -504,7 +510,7 @@ public class J5427Hc1ApplicationTest {
 			claimReq.setHc1_REQ_CLM_PROC_TM("14.03.23");
 			claimReq.setHc1_REQ_CLM_TRANS_CD("00");
 			claimReq.setHc1_REQ_CLM_COB_IND("");
-			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.ZERO);
+			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.valueOf(0.00));
 			claimReqVo.setReqClaimEntry(claimReq);
 			claimReqVo.setLogId("10479074670000007234");
 

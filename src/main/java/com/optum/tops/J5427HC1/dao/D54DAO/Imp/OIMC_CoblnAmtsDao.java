@@ -61,12 +61,12 @@ public class OIMC_CoblnAmtsDao implements IOIMC_CoblnAmtsDao {
 					record.setIcn_Sufx_Cd(rs.getString("ICN_SUFX_CD"));
 					record.setOrig_Ln_Corr_Id(rs.getInt("ORIG_LN_CORR_ID"));
 					if(rs.getBigDecimal("MEDCR_PD_AMT").compareTo(new BigDecimal(-1)) == 0) // if it is -1 then set the amount to 0 
-						record.setMedcr_Pd_Amt(new BigDecimal(0));
+						record.setMedcr_Pd_Amt(BigDecimal.valueOf(0.00));
 					else{
 						record.setMedcr_Pd_Amt(rs.getBigDecimal("MEDCR_PD_AMT"));
 					}
 					if(rs.getBigDecimal("OI_PD_LN_AMT").compareTo(new BigDecimal(-1)) == 0) // if it is -1 then set the amount to 0 
-						record.setOi_Pd_Ln_Amt(new BigDecimal(0));
+						record.setOi_Pd_Ln_Amt(BigDecimal.valueOf(0.00));
 					else{
 						record.setOi_Pd_Ln_Amt(rs.getBigDecimal("OI_PD_LN_AMT"));
 					}

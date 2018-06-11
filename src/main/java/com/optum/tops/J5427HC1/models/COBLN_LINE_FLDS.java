@@ -1,32 +1,33 @@
 package com.optum.tops.J5427HC1.models;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 //Model class representing each record retrieved by the COBLN-LINE-FLDS CURSOR in D5427HC1 DSM 
 public class COBLN_LINE_FLDS {
 
 	private int LN_ID; 
 	
-	private BigDecimal RPTG_LN_ALLW_AMT=BigDecimal.ZERO ; //DEfault Value for Null from the database is  0 , set in the DAO query
+	private BigDecimal RPTG_LN_ALLW_AMT=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY) ; //DEfault Value for Null from the database is  0 , set in the DAO query
 	private String LN_SRVC_CD  ; 
 	private String LN_PMT_SVC_CD;
 	private String LN_RMRK_CD   ; 
 	private String LN_OVR_CD;
 	private String LN_AUTH_PROC_CD; 
 	
-	private BigDecimal LN_CHRG_AMT =BigDecimal.ZERO; 
-	private BigDecimal LN_NC_AMT=BigDecimal.ZERO; 
+	private BigDecimal LN_CHRG_AMT =BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY); 
+	private BigDecimal LN_NC_AMT=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY); 
 	private String LN_FST_DT;
 	private String LN_LST_SRVC_DT;
-	private BigDecimal LN_OI_PD_LN_AMT=BigDecimal.ZERO; 
-	private BigDecimal LN_MEDC_L04_AMT=BigDecimal.ZERO; 
+	private BigDecimal LN_OI_PD_LN_AMT=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY); 
+	private BigDecimal LN_MEDC_L04_AMT=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY); 
 	
 	private String LN_ALLW_AMT_DTRM_CD; 
-	private BigDecimal LN_LN_PROV_WRITE_OFF=BigDecimal.ZERO; 
-	private BigDecimal LN_MM_DED_AMT=BigDecimal.ZERO; 
-	private BigDecimal LN_NYSCHG_DED_MM_AMT=BigDecimal.ZERO; 
+	private BigDecimal LN_LN_PROV_WRITE_OFF=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY); 
+	private BigDecimal LN_MM_DED_AMT=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY); 
+	private BigDecimal LN_NYSCHG_DED_MM_AMT=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY); 
 	private int LN_ORIG_LN_CORR_ID   ;
-	private BigDecimal LN_ORIG_LN_CHRG_AMT=BigDecimal.ZERO ;
+	private BigDecimal LN_ORIG_LN_CHRG_AMT=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY) ;
 	
 	private boolean NYS_SERV_LINE ; // Corresponds to WS-NYS-SERV-LINE-SW variable in original program
 	

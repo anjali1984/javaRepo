@@ -1,14 +1,15 @@
 package com.optum.tops.J5427HC1.models;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 //Model Class representing each record that's returned by the COB-SERV-CALC cursor
 public class COBLN_2131 {
 	
 	private String Invn_Ctl_Nbr; 
 	private String Icn_Sufx_Cd; 
 	private int Orig_Ln_Corr_Id; 
-	private BigDecimal Medcr_Pd_Amt=BigDecimal.ZERO; 
-	private BigDecimal Oi_Pd_Ln_Amt=BigDecimal.ZERO;
+	private BigDecimal Medcr_Pd_Amt=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY); 
+	private BigDecimal Oi_Pd_Ln_Amt=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
 	public String getInvn_Ctl_Nbr() {
 		return Invn_Ctl_Nbr;
 	}

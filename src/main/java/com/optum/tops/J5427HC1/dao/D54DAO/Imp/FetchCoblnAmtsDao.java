@@ -77,8 +77,8 @@ public class FetchCoblnAmtsDao implements IFetchCoblnAmtsDao {
 				returned_record.setLN_LST_SRVC_DT(rs.getString("LST_SRVC_DT"));
 				returned_record.setLN_OI_PD_LN_AMT(rs.getBigDecimal("OI_PD_LN_AMT"));
 				
-				if(rs.getBigDecimal("MEDC_L04_AMT").compareTo(BigDecimal.ZERO) < 0){
-					returned_record.setLN_MEDC_L04_AMT(BigDecimal.ZERO);
+				if(rs.getBigDecimal("MEDC_L04_AMT").compareTo(BigDecimal.valueOf(0.00)) < 0){
+					returned_record.setLN_MEDC_L04_AMT(BigDecimal.valueOf(0.00));
 				}else{
 					returned_record.setLN_MEDC_L04_AMT(rs.getBigDecimal("MEDC_L04_AMT"));
 				}

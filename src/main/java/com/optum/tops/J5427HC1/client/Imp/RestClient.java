@@ -31,7 +31,7 @@ public class RestClient {
 		clmEntry.setHc1_REQ_CLM_PROC_DT("2016-04-29");
 		clmEntry.setHc1_REQ_CLM_PROC_TM("21.09.31");
 		clmEntry.setHc1_REQ_CLM_TRANS_CD("00");
-		clmEntry.setHc1_REQ_RESPONSE_CODE(BigDecimal.ZERO);
+		clmEntry.setHc1_REQ_RESPONSE_CODE(BigDecimal.valueOf(0.00));
 		List <ReqClaimEntry> clmEntryList=new ArrayList<ReqClaimEntry>();
 		clmEntryList.add(clmEntry);
 		req.setClaimEntries(clmEntryList);

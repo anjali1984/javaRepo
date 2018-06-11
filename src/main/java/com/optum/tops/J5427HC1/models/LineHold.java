@@ -1,6 +1,7 @@
 package com.optum.tops.J5427HC1.models;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 //Class representing the  WS_LINE_HOLD_TBL in D5427HC1
 //EAch line can have either a WS_LN_NY_DED_MM_AMT field filled 
@@ -8,8 +9,8 @@ import java.math.BigDecimal;
 //An array/list of size 7 of these fields should be in the IndicatorObject of the Claim 
 public class LineHold {
 	
-	private BigDecimal LN_NY_DED_MM_AMT = new BigDecimal(0); 
-	private BigDecimal LN_MM_DED_AMT = new BigDecimal(0);
+	private BigDecimal LN_NY_DED_MM_AMT = BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY); 
+	private BigDecimal LN_MM_DED_AMT = BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
 	
 	public BigDecimal getLN_NY_DED_MM_AMT() {
 		return LN_NY_DED_MM_AMT;

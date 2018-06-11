@@ -1,30 +1,31 @@
 package com.optum.tops.J5427HC1.models;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 //Model class for each line of the Claim corresponds to WS_LINE_REDUCTION_HOLD_TBL in D5427HC1
 //An array of Size 7 of this class, will be present as a field in the Claim's Indicator Object.
 
 public class LineReductionHold {
 	
-	private BigDecimal CAT_ID = new BigDecimal(0) ;
-	private BigDecimal SVC_LN_ID = new BigDecimal(0) ;
-	private BigDecimal COB_PRIM_IMPAC = new BigDecimal(0);
-	private BigDecimal PR_OVERC = new BigDecimal(0);
-	private BigDecimal PR_DEDUC = new BigDecimal(0);
-	private BigDecimal PR_COPAY = new BigDecimal(0);
-	private BigDecimal PR_COINS = new BigDecimal(0);
-	private BigDecimal PR_NTCOV = new BigDecimal(0);
-	private BigDecimal PR_MEDC_EST_AMT = new BigDecimal(0);
-	private BigDecimal PR_TOTAL= new BigDecimal(0);
-	private BigDecimal PRV_NC_AMT= new BigDecimal(0);
-	private BigDecimal PR_DENY_AMT= new BigDecimal(0); 
+	private BigDecimal CAT_ID = BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY) ;
+	private BigDecimal SVC_LN_ID = BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY) ;
+	private BigDecimal COB_PRIM_IMPAC = BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal PR_OVERC = BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal PR_DEDUC = BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal PR_COPAY = BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal PR_COINS = BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal PR_NTCOV = BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal PR_MEDC_EST_AMT = BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal PR_TOTAL= BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal PRV_NC_AMT= BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal PR_DENY_AMT= BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY); 
 	
 	private String LN_ALLW_AMT_IND = "" ; 
-	private BigDecimal LN_RPT_ALLOW_AMT = new BigDecimal(0); 
-	private BigDecimal LN_OI_PAID_AMT = new BigDecimal(0);
-	private BigDecimal LN_MEDC_PAID_AMT = new BigDecimal(0);
-	private BigDecimal LN_PRV_WRT_OFF = new BigDecimal(0);
+	private BigDecimal LN_RPT_ALLOW_AMT = BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY); 
+	private BigDecimal LN_OI_PAID_AMT = BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal LN_MEDC_PAID_AMT = BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal LN_PRV_WRT_OFF = BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
 	
 	private int LN_ID ; 
 	private String LINE_SRVC_CD ; 
@@ -33,8 +34,8 @@ public class LineReductionHold {
 	private String LINE_FST_DT; 
 	private String LINE_LST_SRVC_DT;
 	
-	private BigDecimal LINE_CHRG_AMT = new BigDecimal(0); 
-	private BigDecimal LINE_NC_AMT = new BigDecimal(0);
+	private BigDecimal LINE_CHRG_AMT = BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY); 
+	private BigDecimal LINE_NC_AMT = BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
 	
 	public BigDecimal getCAT_ID() {
 		return CAT_ID;

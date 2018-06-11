@@ -1,11 +1,12 @@
 package com.optum.tops.JP835RED.models;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class Ret835PrcLvl {
-	private BigDecimal RET_835_ERR_SVC_ID =BigDecimal.ZERO;
-	private BigDecimal RET_835_ERR_REV_ID  =BigDecimal.ZERO;
-	private BigDecimal RET_835_ERR_REV_CD  =BigDecimal.ZERO;
+	private BigDecimal RET_835_ERR_SVC_ID =BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal RET_835_ERR_REV_ID  =BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal RET_835_ERR_REV_CD  =BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
 	private String RET_835_ERR_PROC_CD;    
 	private String RET_835_ERR_PROC_TYP_CD;
 	private String RET_835_ERR_CD;         

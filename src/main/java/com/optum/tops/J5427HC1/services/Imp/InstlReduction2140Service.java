@@ -168,6 +168,7 @@ public class InstlReduction2140Service implements IInstlReduction2140Service {
 					claimToBeSent.setHC1_COB_835_PAT_RESP_COINS(claimToBeSent.getHC1_COB_835_PAT_RESP_COINS().add(ret835ClmRedTbl.get(clm_sub).getCLM_RD_PD_AMT()));	
 				}else if(ws_carc_cd.equalsIgnoreCase("96")){//PR-MEDC-EST-OR-DENY
 					if(ws_rarc_cd.equalsIgnoreCase("N536")){//DENY-RARC
+						System.out.println("HC1_COB_835_DENY_NC_AMT:"+claimToBeSent.getHC1_COB_835_DENY_NC_AMT());
 						claimToBeSent.setHC1_COB_835_DENY_NC_AMT(claimToBeSent.getHC1_COB_835_DENY_NC_AMT().add(ret835ClmRedTbl.get(clm_sub).getCLM_RD_PD_AMT()));
 					}
 				}else{//OTHER
@@ -181,7 +182,10 @@ public class InstlReduction2140Service implements IInstlReduction2140Service {
 						if(ws_carc_cd.equalsIgnoreCase("94") || ws_carc_cd.equalsIgnoreCase("97")){
 							//Do nothing
 						}else{
+							System.out.println(" bfr if claimToBeSent.setHC1_COB_835_PRV_NC_AMT"+claimToBeSent.getHC1_COB_835_PRV_NC_AMT());
 							claimToBeSent.setHC1_COB_835_PRV_NC_AMT(claimToBeSent.getHC1_COB_835_PRV_NC_AMT().add(ret835ClmRedTbl.get(clm_sub).getCLM_RD_PD_AMT()));
+							System.out.println(" aftr if claimToBeSent.setHC1_COB_835_PRV_NC_AMT"+claimToBeSent.getHC1_COB_835_PRV_NC_AMT());
+
 						}
 					}
 

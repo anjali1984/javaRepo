@@ -92,7 +92,7 @@
 			<!-- <version>20180130</version> -->
 			<version>20160810</version>
 		</dependency>
-
+		
 
 	</dependencies>
 
@@ -226,7 +226,7 @@
 			<id>repo1.uhc.com</id>
 			<url>http://repo1.uhc.com/artifactory/repo</url>
 		</repository>
-		
+
 		<repository>
 			<id>spring-snapshots</id>
 			<name>Spring Snapshots</name>

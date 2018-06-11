@@ -1,6 +1,7 @@
 package com.optum.tops.JP835RED.models;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class Ub92_835AdjdSvc {
 					/*
@@ -36,7 +37,7 @@ public class Ub92_835AdjdSvc {
 				61812B             15 :RET:_UB92_BLNCE_REV_LVL PIC X(01).
 				A61812             15 :RET:_UB92_835_BAL_NYSPD PIC S9(09)V99 COMP_3.
 					 */
-	private BigDecimal UB92_835_ADJD_PAID_AMT = BigDecimal.ZERO;
+	private BigDecimal UB92_835_ADJD_PAID_AMT = BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
 	private String UB92_835_ADJD_REV_CD ; 
 	private String UB92_835_ADJD_PROC_CD ; 
 	private String UB92_835_ADJD_PROC_MOD_1_CD ; 
@@ -44,24 +45,24 @@ public class Ub92_835AdjdSvc {
 	private String UB92_835_ADJD_PROC_MOD_3_CD ; 
 	private String UB92_835_ADJD_PROC_MOD_4_CD ; 
 	private int ORIG_HDR_SEQ_NBR; 
-	private BigDecimal UB92_835_CHRG= BigDecimal.ZERO;
-	private BigDecimal UB92_835_COINS= BigDecimal.ZERO;
-	private BigDecimal UB92_835_DED= BigDecimal.ZERO;
-	private BigDecimal UB92_835_COPAY= BigDecimal.ZERO;
-	private BigDecimal UB92_835_PW= BigDecimal.ZERO;
-	private BigDecimal UB92_835_NC= BigDecimal.ZERO;
-	private BigDecimal UB92_835_BL= BigDecimal.ZERO;
-	private BigDecimal UB92_835_PD_TO_EMP= BigDecimal.ZERO;
-	private BigDecimal UB92_835_PNLTY_AMT= BigDecimal.ZERO;
-	private BigDecimal UB92_835_SANC_AMT= BigDecimal.ZERO;
-	private BigDecimal UB92_835_CAP_AMT= BigDecimal.ZERO;
+	private BigDecimal UB92_835_CHRG= BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal UB92_835_COINS= BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal UB92_835_DED= BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal UB92_835_COPAY= BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal UB92_835_PW= BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal UB92_835_NC= BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal UB92_835_BL= BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal UB92_835_PD_TO_EMP= BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal UB92_835_PNLTY_AMT= BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal UB92_835_SANC_AMT= BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal UB92_835_CAP_AMT= BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
 	private int ORIG_HDR_LINE_CORR_ID;
 	private String UB92_RVNU_CD;
-	private BigDecimal UB92_CHRG_AMT= BigDecimal.ZERO;
-	private BigDecimal UB92_ALLW_AMT= BigDecimal.ZERO;
-	private BigDecimal UB92_835_BL_AMT= BigDecimal.ZERO;
-	private BigDecimal UB92_835_CO_OTHER= BigDecimal.ZERO;
-	private BigDecimal UB92_835_BAL_NYSPD= BigDecimal.ZERO;
+	private BigDecimal UB92_CHRG_AMT= BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal UB92_ALLW_AMT= BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal UB92_835_BL_AMT= BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal UB92_835_CO_OTHER= BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal UB92_835_BAL_NYSPD= BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
 	private String ORIG_HDR_PROC_TYPE;
 	private String UB92_BLNCE_REV_LVL;
 	

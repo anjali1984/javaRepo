@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.optum.tops.J5427HC1.models.HC1_COB_LINE_ENTRY;
 import com.optum.tops.J5427HC1.models.LineReductionHold;
 import com.optum.tops.J5427HC1.models.ReqClaimEntryVO;
@@ -28,6 +29,7 @@ public class LoadSumForReductService2170 implements ILoadSumForReductService2170
 		try {
 			List<LineReductionHold> reductLines = claimToBeSent.getMy_indicator().getWS_LINE_REDUCTION_TABLE(); //WS table for all line amounts 0 to 6 index
 			List<HC1_COB_LINE_ENTRY> lines_in_return = claimToBeSent.getHC1_COB_LNE_DATA_AREA(); 
+
 			logger.info(location.concat(" Size of the Reduction table is:").concat("[").
 					concat(Integer.toString(reductLines.size())).concat("]").concat(" LOGID:").concat("[")
 					.concat(individual_claim.getLogId()).concat("]"));
@@ -68,8 +70,12 @@ public class LoadSumForReductService2170 implements ILoadSumForReductService2170
 
 					line_to_be_added.setHC1_COB_LN_835_PAT_RESP_COINS(each_line.getPR_COINS());
 					claimToBeSent.setHC1_COB_835_PAT_RESP_COINS(claimToBeSent.getHC1_COB_835_PAT_RESP_COINS().add(line_to_be_added.getHC1_COB_LN_835_PAT_RESP_COINS()));
+					
+					System.out.println("line HC1_COB_835_DENY_NC_AMT:"+line_to_be_added.getHC1_COB_LN_835_DENY_NC_AMT());
 
 					line_to_be_added.setHC1_COB_LN_835_DENY_NC_AMT(each_line.getPR_DENY_AMT());
+					System.out.println("HC1_COB_835_DENY_NC_AMT:"+claimToBeSent.getHC1_COB_835_DENY_NC_AMT());
+
 					claimToBeSent.setHC1_COB_835_DENY_NC_AMT(claimToBeSent.getHC1_COB_835_DENY_NC_AMT().add(line_to_be_added.getHC1_COB_LN_835_DENY_NC_AMT()));
 
 					line_to_be_added.setHC1_COB_LN_835_MEDC_EST_AMT(each_line.getPR_MEDC_EST_AMT());

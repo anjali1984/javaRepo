@@ -7,6 +7,7 @@ import java.util.concurrent.Callable;
 import org.apache.log4j.Logger;
 
 import com.optum.tops.J5427HC1.concurrency.ICallableClaimTask;
+import com.optum.tops.J5427HC1.models.ClaimIndicatorValues;
 import com.optum.tops.J5427HC1.models.HC1Response;
 import com.optum.tops.J5427HC1.models.HC1Response;
 import com.optum.tops.J5427HC1.models.ReqClaimEntry;

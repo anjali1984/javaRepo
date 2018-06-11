@@ -1,6 +1,7 @@
 package com.optum.tops.JP835RED.models;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 
 /**
@@ -12,12 +13,12 @@ import java.util.Arrays;
  */
 public class Ret835LineLvl {
 	
-	private BigDecimal RET_835_LN_SVC_ID=BigDecimal.ZERO;
+	private BigDecimal RET_835_LN_SVC_ID=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
 	private  Ret835LnRarcTbl[] ret835LnRarcTbl=new Ret835LnRarcTbl[3];
 	
-	private BigDecimal RET_835_20_LN_PD_AMT =BigDecimal.ZERO; 
-	private BigDecimal RET_835_20LN_SVC_ID =BigDecimal.ZERO;  
-	private BigDecimal RET_835_SUPL_PRI_PD_AMT=BigDecimal.ZERO;
+	private BigDecimal RET_835_20_LN_PD_AMT =BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY); 
+	private BigDecimal RET_835_20LN_SVC_ID =BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);  
+	private BigDecimal RET_835_SUPL_PRI_PD_AMT=BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
 	
 	//getters and setters
 	public Ret835LnRarcTbl[] getRet835LnRarcTbl() {

@@ -1,6 +1,7 @@
 package com.optum.tops.JP835RED.models;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 //Model Class representing record from CURS-FACL-PD-RDUC cursor in RED. Populated by 7701 section
 public class Ret835ClmRed {
@@ -8,7 +9,7 @@ public class Ret835ClmRed {
 	private String CLM_RD_GRP_CD ; 
 	private String CLM_RD_CARC_CD; 
 	private String CLM_RD_RARC_CD; 
-	private BigDecimal CLM_RD_PD_AMT = new BigDecimal(0);
+	private BigDecimal CLM_RD_PD_AMT = BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
 	
 	public String getCLM_RD_CATGY_ID() {
 		return CLM_RD_CATGY_ID;

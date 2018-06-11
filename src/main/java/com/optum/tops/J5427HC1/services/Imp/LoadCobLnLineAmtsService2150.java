@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.optum.tops.J5427HC1.models.ClaimIndicatorValues;
 import com.optum.tops.J5427HC1.models.HC1_COB_LINE_ENTRY;
 import com.optum.tops.J5427HC1.models.LineReductionHold;
@@ -26,9 +27,10 @@ public class LoadCobLnLineAmtsService2150 implements ILoadCobLnLineAmtsService21
 		String location="J5427HC1.services.LoadCobLnLineAmtsService2150.do2150Section(V5427HC1, String)";
 		
 		try {
+			
 			List<LineReductionHold> lines = claimToBeSent.getMy_indicator().getWS_LINE_REDUCTION_TABLE(); 
 			List<HC1_COB_LINE_ENTRY> lines_in_return = claimToBeSent.getHC1_COB_LNE_DATA_AREA(); 
-			
+
 			logger.info(location.concat(" Size of the Reduction table is:").concat(Integer.toString(lines.size())).concat("]").concat(" LOGID:").concat("[").concat(individual_claim2.getLogId()).concat("]"));
 
 			for (LineReductionHold each_line : lines){
@@ -46,7 +48,7 @@ public class LoadCobLnLineAmtsService2150 implements ILoadCobLnLineAmtsService21
 				
 				line_to_be_added.setHC1_COB_LN_EOB_OI_PAID_AMT(each_line.getLN_OI_PAID_AMT());
 				if(individual_claim2.getReqClaimEntry().getHc1_REQ_CLM_TRANS_CD().trim().equals("69")){
-					if(each_line.getLN_OI_PAID_AMT().compareTo(BigDecimal.ZERO) > 0 ){
+					if(each_line.getLN_OI_PAID_AMT().compareTo(BigDecimal.valueOf(0.00)) > 0 ){
 						each_line.setLN_OI_PAID_AMT(each_line.getLN_OI_PAID_AMT().multiply(new BigDecimal(-1)));
 						claimToBeSent.setHC1_COB_OI_PAID_AMT(claimToBeSent.getHC1_COB_OI_PAID_AMT().add(each_line.getLN_OI_PAID_AMT()));
 					}
@@ -57,7 +59,7 @@ public class LoadCobLnLineAmtsService2150 implements ILoadCobLnLineAmtsService21
 				
 				line_to_be_added.setHC1_COB_LN_EOB_MEDC_PAID_AMT(each_line.getLN_MEDC_PAID_AMT());
 				if(individual_claim2.getReqClaimEntry().getHc1_REQ_CLM_TRANS_CD().trim().equals("69")){
-					if(each_line.getLN_MEDC_PAID_AMT().compareTo(BigDecimal.ZERO) > 0 ){
+					if(each_line.getLN_MEDC_PAID_AMT().compareTo(BigDecimal.valueOf(0.00)) > 0 ){
 						each_line.setLN_MEDC_PAID_AMT(each_line.getLN_MEDC_PAID_AMT().multiply(new BigDecimal(-1)));
 						claimToBeSent.setHC1_COB_MEDC_PAID_AMT(claimToBeSent.getHC1_COB_MEDC_PAID_AMT().add(each_line.getLN_MEDC_PAID_AMT()));
 					}

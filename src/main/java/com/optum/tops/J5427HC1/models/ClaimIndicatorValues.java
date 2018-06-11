@@ -1,6 +1,7 @@
 package com.optum.tops.J5427HC1.models;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +31,8 @@ public class ClaimIndicatorValues{
 	
 	private boolean SVC_LINE_PENNY_IND_ENTRY[] = new boolean[7]; 
 	
-	private BigDecimal DBKE2_SUFX_TOT_CHRG_AMT = new BigDecimal(0);
-	private BigDecimal LN_TOT_RPT_ALL_AMT = new BigDecimal(0); //Corresponds to the WS-LN-TOT-RPT-ALL-AMT filed used as an sum variable for all lines when requested TransCd == "00" 
+	private BigDecimal DBKE2_SUFX_TOT_CHRG_AMT = BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY);
+	private BigDecimal LN_TOT_RPT_ALL_AMT = BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY); //Corresponds to the WS-LN-TOT-RPT-ALL-AMT filed used as an sum variable for all lines when requested TransCd == "00" 
 	
 	private List<ADJD_CLMSF_ORIGHDR_LINE> HC1_ADJD_CLMSF_ORIGHDR_DATAAREA = new ArrayList<ADJD_CLMSF_ORIGHDR_LINE>(7); //ADJD_CLMSF_ORIGHDR Lines for the claim IF ANY, Max SIZE can be 150  
 	private List<LineReductionHold> WS_LINE_REDUCTION_TABLE = new ArrayList<LineReductionHold>(7); //Indices 0 through 6 will be for each reduction line of this claim, i.e. from ln_id 1 to 7 

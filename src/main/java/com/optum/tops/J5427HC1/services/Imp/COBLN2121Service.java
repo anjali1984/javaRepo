@@ -128,7 +128,7 @@ public class COBLN2121Service implements ICOBLN2121Service {
 					
 					//Checks if the RPTG_LN_ALLW_AMT == -1 
 					if(line.getRPTG_LN_ALLW_AMT().compareTo( new BigDecimal(-1)) == 0 ){
-						line.setRPTG_LN_ALLW_AMT(BigDecimal.ZERO);
+						line.setRPTG_LN_ALLW_AMT(BigDecimal.valueOf(0.00));
 					}
 					line_reduction_data.setLN_RPT_ALLOW_AMT(line.getRPTG_LN_ALLW_AMT());
 					indicatorObject.getWS_LINE_REDUCTION_TABLE().add(index, line_reduction_data);
@@ -151,21 +151,21 @@ public class COBLN2121Service implements ICOBLN2121Service {
 					indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).setLN_ALLW_AMT_IND(line.getLN_ALLW_AMT_DTRM_CD());
 					
 					if(line.getLN_OI_PD_LN_AMT().compareTo(new BigDecimal(-1)) == 0 ){
-						line.setLN_OI_PD_LN_AMT(BigDecimal.ZERO);
+						line.setLN_OI_PD_LN_AMT(BigDecimal.valueOf(0.00));
 					}
 					indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).setLN_OI_PAID_AMT(line.getLN_OI_PD_LN_AMT());
 					
 					if(line.getLN_MEDC_L04_AMT().compareTo(new BigDecimal(-1)) < 0){
-						line.setLN_MEDC_L04_AMT(BigDecimal.ZERO);
+						line.setLN_MEDC_L04_AMT(BigDecimal.valueOf(0.00));
 					}
 					indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).setLN_MEDC_PAID_AMT(line.getLN_MEDC_L04_AMT());
 					
 					if(line.getLN_PMT_SVC_CD().trim().equals("CXINT")){
-						indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).setLN_PRV_WRT_OFF(BigDecimal.ZERO);
+						indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).setLN_PRV_WRT_OFF(BigDecimal.valueOf(0.00));
 					}else{
 						if(indicatorObject.getNYSTATE_COB_CLAIM().equals("Y")){
 							if(nyTax_serve_values.contains("NYTAX_SERV."+line_pmt_svc_cd)){
-								indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).setLN_PRV_WRT_OFF(BigDecimal.ZERO);
+								indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).setLN_PRV_WRT_OFF(BigDecimal.valueOf(0.00));
 							}else{
 								BigDecimal temp = line.getLN_CHRG_AMT().subtract(indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).getLN_RPT_ALLOW_AMT()); 
 								indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).setLN_PRV_WRT_OFF(temp);
@@ -186,7 +186,7 @@ public class COBLN2121Service implements ICOBLN2121Service {
 						
 						if(individual_claim2.getReqClaimEntry().getHc1_REQ_CLM_TRANS_CD().trim().equals("00") && 
 							(line.getLN_OVR_CD().trim().equals("20") || line.getLN_OVR_CD().trim().equals("30") || line.getLN_OVR_CD().trim().equals("X0") || line.getLN_OVR_CD().trim().equals("Y0") )	){
-							indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).setLN_PRV_WRT_OFF(BigDecimal.ZERO);
+							indicatorObject.getWS_LINE_REDUCTION_TABLE().get(index).setLN_PRV_WRT_OFF(BigDecimal.valueOf(0.00));
 						}
 					}
 					
@@ -200,7 +200,7 @@ public class COBLN2121Service implements ICOBLN2121Service {
 					line_reduction_data.setLINE_LST_SRVC_DT(line.getLN_LST_SRVC_DT());
 					line_reduction_data.setLINE_CHRG_AMT(line.getLN_CHRG_AMT());
 					line_reduction_data.setLINE_NC_AMT(line.getLN_NC_AMT());
-					if(line.getLN_CHRG_AMT().compareTo(line.getLN_NC_AMT()) == 0 && line.getLN_CHRG_AMT().compareTo(BigDecimal.ZERO) > 0 ){
+					if(line.getLN_CHRG_AMT().compareTo(line.getLN_NC_AMT()) == 0 && line.getLN_CHRG_AMT().compareTo(BigDecimal.valueOf(0.00)) > 0 ){
 						indicatorObject.setCALL_OIMC_TBL_INDICATOR("Y"); // This will determine that the claim should go through 2130-GET-COB-SERV-CALC-DATA
 					}
 				}
@@ -255,9 +255,9 @@ public class COBLN2121Service implements ICOBLN2121Service {
 					if(a_hdr_line.getLN_CORR_ID() == line.getLN_ORIG_LN_CORR_ID()){
 						 //FOR MATCHED ENTRIES -------*            
 						//-- CHECK FOR $0 ISSUE  ----*   
-						if(a_hdr_line.getCHRG_AMT() == BigDecimal.ZERO  && a_hdr_line.getUB92_CHRG_AMT() != BigDecimal.ZERO){
-							a_hdr_line.setUB92_CHRG_AMT(BigDecimal.ZERO);
-							a_hdr_line.setUB92_NOT_COV_AMT(BigDecimal.ZERO);
+						if(a_hdr_line.getCHRG_AMT() == BigDecimal.valueOf(0.00)  && a_hdr_line.getUB92_CHRG_AMT() != BigDecimal.valueOf(0.00)){
+							a_hdr_line.setUB92_CHRG_AMT(BigDecimal.valueOf(0.00));
+							a_hdr_line.setUB92_NOT_COV_AMT(BigDecimal.valueOf(0.00));
 							a_hdr_line.setREV_LINE_PENNY_INDICATOR("Y");
 							my_indicator.getSVC_LINE_PENNY_IND_ENTRY()[svc_sub] = true;
 						}
@@ -269,8 +269,8 @@ public class COBLN2121Service implements ICOBLN2121Service {
 					// THE
 					// * SERVICE LINE CHARGE AND NCOV AMOUNTS AMTS AS SUM OF
 					// REV-LEVEL AMOUNTS
-					line.setLN_CHRG_AMT(BigDecimal.ZERO);
-					line.setLN_NC_AMT(BigDecimal.ZERO);
+					line.setLN_CHRG_AMT(BigDecimal.valueOf(0.00));
+					line.setLN_NC_AMT(BigDecimal.valueOf(0.00));
 
 					// RE-CALCULATE SVC-LEVEL AMTS AS SUM OF REV-LEVEL AMOUNTS
 					for (ADJD_CLMSF_ORIGHDR_LINE hrd_line_iterator : orig_HDR_DATA) {
@@ -283,9 +283,9 @@ public class COBLN2121Service implements ICOBLN2121Service {
 			}
 			
 			//For Professional Claims check the $0 issue
-			if(line.getLN_ORIG_LN_CHRG_AMT() == BigDecimal.ZERO && line.getLN_CHRG_AMT() != BigDecimal.ZERO){
-				line.setLN_CHRG_AMT(BigDecimal.ZERO);
-				line.setLN_NC_AMT(BigDecimal.ZERO);
+			if(line.getLN_ORIG_LN_CHRG_AMT() == BigDecimal.valueOf(0.00) && line.getLN_CHRG_AMT() != BigDecimal.valueOf(0.00)){
+				line.setLN_CHRG_AMT(BigDecimal.valueOf(0.00));
+				line.setLN_NC_AMT(BigDecimal.valueOf(0.00));
 				
 				/*-	SET SVC LINE LVL FLAG --* 
 			 	 	MOVE DCLNE-LN-ID TO SVC-SUB  

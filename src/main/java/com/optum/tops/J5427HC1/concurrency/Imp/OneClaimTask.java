@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.optum.tops.J5427HC1.concurrency.IOneClaimTask;
+import com.optum.tops.J5427HC1.models.ClaimIndicatorValues;
 import com.optum.tops.J5427HC1.models.HC1Response;
 import com.optum.tops.J5427HC1.models.ReqClaimEntry;
 import com.optum.tops.J5427HC1.models.ReqClaimEntryVO;
