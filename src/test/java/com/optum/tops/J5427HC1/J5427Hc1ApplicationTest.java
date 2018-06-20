@@ -108,9 +108,6 @@ public class J5427Hc1ApplicationTest {
 		System.out.println("BigDecimalComputationTest::"+"compute "+compute);
 		System.out.println("BigDecimalComputationSum::"+BigDecimal.valueOf(0.00).setScale(2, RoundingMode.UNNECESSARY).add(new BigDecimal(0)));
 
-		
-
-
 	}
 
 	@Test
@@ -119,15 +116,15 @@ public class J5427Hc1ApplicationTest {
 	{
 		try {
 
-			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1047907467");
-			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000007234");
-			claimReq.setHc1_REQ_CLM_PROC_DT("2017-10-26");
-			claimReq.setHc1_REQ_CLM_PROC_TM("14.03.23");
+			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1023929340");
+			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000002614");
+			claimReq.setHc1_REQ_CLM_PROC_DT("2018-03-02");
+			claimReq.setHc1_REQ_CLM_PROC_TM("12.04.55");
 			claimReq.setHc1_REQ_CLM_TRANS_CD("00");
 			claimReq.setHc1_REQ_CLM_COB_IND("");
 			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.valueOf(0.00));
 			claimReqVo.setReqClaimEntry(claimReq);
-			claimReqVo.setLogId("10479074670000007234");
+			claimReqVo.setLogId("10239293400000002614");
 			claimResp=checkCOBClaim.COB_claim_check(claimReqVo);
 			System.out.println("COBClaimTest::"+"COB_CLAIM_INDICATOR "+claimResp.getHC1_COB_COB_CLAIM_INDICATOR());
 			System.out.println("COBClaimTest::"+"DBKE2_ICN_SUFX_CD "+claimResp.getMy_indicator().getDBKE2_ICN_SUFX_CD());
@@ -140,21 +137,49 @@ public class J5427Hc1ApplicationTest {
 		}
 	}
 
+	/*@Test
+	public void opshcClaimTest()
+
+	{
+		try {
+
+			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1023929340");
+			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000002614");
+			claimReq.setHc1_REQ_CLM_PROC_DT("2018-03-02");
+			claimReq.setHc1_REQ_CLM_PROC_TM("12.04.55");
+			claimReq.setHc1_REQ_CLM_TRANS_CD("00");
+			claimReq.setHc1_REQ_CLM_COB_IND("");
+			claimReq.setHc1_REQ_RESPONSE_CODE(new BigDecimal(0));
+			claimReqVo.setReqClaimEntry(claimReq);
+			claimReqVo.setLogId("10239293400000002614");
+
+			claimResp.getMy_indicator().setPENNY_PROC_INDICATOR("Y");
+			claimResp.setHC1_COB_INST_OR_PROF("P");
+			claimResp.getMy_indicator().setDBKE2_ICN_SUFX_CD("01");
+			claimResp.getMy_indicator().setDBKE2_ICN_SUFX_VERS_NBR("1");
+
+			claimResp=opshcfacheck.Ops_Hcfa_claim_check(claimReqVo,claimResp);
+			System.out.println("opshcClaimTest::"+"OPS_HCFA_INDICATOR "+claimResp.getMy_indicator().getOPS_HCFA_INDICATOR());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}*/
 	@Test
 	public void opshcClaimTest()
 
 	{
 		try {
 
-			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1047907467");
-			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000007234");
-			claimReq.setHc1_REQ_CLM_PROC_DT("2017-10-26");
-			claimReq.setHc1_REQ_CLM_PROC_TM("14.03.23");
+			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1023929340");
+			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000002614");
+			claimReq.setHc1_REQ_CLM_PROC_DT("2018-03-02");
+			claimReq.setHc1_REQ_CLM_PROC_TM("12.04.55");
 			claimReq.setHc1_REQ_CLM_TRANS_CD("00");
 			claimReq.setHc1_REQ_CLM_COB_IND("");
 			claimReq.setHc1_REQ_RESPONSE_CODE(new BigDecimal(0));
 			claimReqVo.setReqClaimEntry(claimReq);
-			claimReqVo.setLogId("10479074670000007234");
+			claimReqVo.setLogId("10239293400000002614");
 
 			claimResp.getMy_indicator().setPENNY_PROC_INDICATOR("Y");
 			claimResp.setHC1_COB_INST_OR_PROF("P");
@@ -175,16 +200,16 @@ public class J5427Hc1ApplicationTest {
 	{
 		try {
 
-			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1047907467");
+			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1023929340");
 			//claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("0000000000");
-			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000007234");
-			claimReq.setHc1_REQ_CLM_PROC_DT("2017-10-26");
-			claimReq.setHc1_REQ_CLM_PROC_TM("14.03.23");
+			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000002614");
+			claimReq.setHc1_REQ_CLM_PROC_DT("2018-03-02");
+			claimReq.setHc1_REQ_CLM_PROC_TM("12.04.55");
 			claimReq.setHc1_REQ_CLM_TRANS_CD("00");
 			claimReq.setHc1_REQ_CLM_COB_IND("");
 			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.valueOf(0.00));
 			claimReqVo.setReqClaimEntry(claimReq);
-			claimReqVo.setLogId("10479074670000007234");
+			claimReqVo.setLogId("10239293400000002614");
 
 			claimResp.getMy_indicator().setPENNY_PROC_INDICATOR("Y");
 			claimResp.setHC1_COB_INST_OR_PROF("I");
@@ -205,15 +230,15 @@ public class J5427Hc1ApplicationTest {
 	{
 		try{
 
-			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1047907467");
-			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000007234");
-			claimReq.setHc1_REQ_CLM_PROC_DT("2017-10-26");
-			claimReq.setHc1_REQ_CLM_PROC_TM("14.03.23");
+			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1023929340");
+			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000002614");
+			claimReq.setHc1_REQ_CLM_PROC_DT("2018-03-02");
+			claimReq.setHc1_REQ_CLM_PROC_TM("12.04.55");
 			claimReq.setHc1_REQ_CLM_TRANS_CD("00");
 			claimReq.setHc1_REQ_CLM_COB_IND("");
 			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.valueOf(0.00));
 			claimReqVo.setReqClaimEntry(claimReq);
-			claimReqVo.setLogId("10479074670000007234");
+			claimReqVo.setLogId("10239293400000002614");
 
 			claimResp.getMy_indicator().setPENNY_PROC_INDICATOR("Y");
 			claimResp.setHC1_COB_INST_OR_PROF("I");
@@ -239,10 +264,10 @@ public class J5427Hc1ApplicationTest {
 			requestToRed=new JP54RedRequest();
 			respFromRed=new JP54RedReturn();
 
-			requestToRed.setRED_INV_CTL_NBR("1047907467");
+			requestToRed.setRED_INV_CTL_NBR("1023929340");
 			requestToRed.setRED_ICN_SUFX_CD("01");
-			requestToRed.setRED_PROC_DT("2017-10-26");
-			requestToRed.setRED_PROC_TM("14.03.23");
+			requestToRed.setRED_PROC_DT("2018-03-02");
+			requestToRed.setRED_PROC_TM("12.04.55");
 			respFromRed.setRet835PrcLvl(process7700.do7706(requestToRed, "1000199084"));
 			claimResp=profRed2160.do2003PennySection(claimResp, respFromRed, "1000199084");
 			for( int i=0;i<claimResp.getMy_indicator().getSVC_LINE_PENNY_IND_ENTRY().length;i++)
@@ -263,15 +288,15 @@ public class J5427Hc1ApplicationTest {
 	{
 		try{
 
-			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1047907467");
-			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000007234");
-			claimReq.setHc1_REQ_CLM_PROC_DT("2017-10-26");
-			claimReq.setHc1_REQ_CLM_PROC_TM("14.03.23");
+			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1023929340");
+			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000002614");
+			claimReq.setHc1_REQ_CLM_PROC_DT("2018-03-02");
+			claimReq.setHc1_REQ_CLM_PROC_TM("12.04.55");
 			claimReq.setHc1_REQ_CLM_TRANS_CD("00");
 			claimReq.setHc1_REQ_CLM_COB_IND("");
 			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.valueOf(0.00));
 			claimReqVo.setReqClaimEntry(claimReq);
-			claimReqVo.setLogId("10479074670000007234");
+			claimReqVo.setLogId("10239293400000002614");
 
 			claimResp.getMy_indicator().setPENNY_PROC_INDICATOR("Y");
 			claimResp.setHC1_COB_INST_OR_PROF("I");
@@ -295,11 +320,11 @@ public class J5427Hc1ApplicationTest {
 		try{
 			requestToRed=new JP54RedRequest();
 			respFromRed=new JP54RedReturn();
-			requestToRed.setRED_INV_CTL_NBR("1047907467");
+			requestToRed.setRED_INV_CTL_NBR("1023929340");
 			requestToRed.setRED_ICN_SUFX_CD("01");
-			requestToRed.setRED_PROC_DT("2017-10-26");
-			requestToRed.setRED_PROC_TM("14.03.23");
-			respFromRed.setRet835ReductArea(process7700.do7704(requestToRed, "10479074670000007234"));
+			requestToRed.setRED_PROC_DT("2018-03-02");
+			requestToRed.setRED_PROC_TM("12.04.55");
+			respFromRed.setRet835ReductArea(process7700.do7704(requestToRed, "10239293400000002614"));
 			System.out.println("do7704Test:: Ret835ReductArea "+respFromRed.getRet835ReductArea());
 
 		}catch(Exception e)
@@ -313,11 +338,11 @@ public class J5427Hc1ApplicationTest {
 		try{
 			requestToRed=new JP54RedRequest();
 			respFromRed=new JP54RedReturn();
-			requestToRed.setRED_INV_CTL_NBR("1047907467");
+			requestToRed.setRED_INV_CTL_NBR("1023929340");
 			requestToRed.setRED_ICN_SUFX_CD("01");
-			requestToRed.setRED_PROC_DT("2017-10-26");
-			requestToRed.setRED_PROC_TM("14.03.23");
-			respFromRed.setRet835LineLvl(process7700.do7705(requestToRed, "10479074670000007234"));
+			requestToRed.setRED_PROC_DT("2018-03-02");
+			requestToRed.setRED_PROC_TM("12.04.55");
+			respFromRed.setRet835LineLvl(process7700.do7705(requestToRed, "10239293400000002614"));
 			System.out.println("do7705Test:: Ret835LineLvl "+respFromRed.getRet835LineLvl());
 
 
@@ -332,10 +357,10 @@ public class J5427Hc1ApplicationTest {
 		try{
 			requestToRed=new JP54RedRequest();
 			respFromRed=new JP54RedReturn();
-			requestToRed.setRED_INV_CTL_NBR("1047907467");
+			requestToRed.setRED_INV_CTL_NBR("1023929340");
 			requestToRed.setRED_ICN_SUFX_CD("01");
-			requestToRed.setRED_PROC_DT("2017-10-26");
-			requestToRed.setRED_PROC_TM("14.03.23");
+			requestToRed.setRED_PROC_DT("2018-03-02");
+			requestToRed.setRED_PROC_TM("12.04.55");
 			respFromRed.setRet835PrcLvl(process7700.do7706(requestToRed, "1000199084"));
 			System.out.println("do7706Test:: Ret835PrcLvl "+respFromRed.getRet835PrcLvl());
 
@@ -351,11 +376,11 @@ public class J5427Hc1ApplicationTest {
 		try{
 			requestToRed=new JP54RedRequest();
 			respFromRed=new JP54RedReturn();
-			requestToRed.setRED_INV_CTL_NBR("1047907467");
+			requestToRed.setRED_INV_CTL_NBR("1023929340");
 			requestToRed.setRED_ICN_SUFX_CD("01");
-			requestToRed.setRED_PROC_DT("2017-10-26");
-			requestToRed.setRED_PROC_TM("14.03.23");
-			respFromRed.setRetUB92_835_AdjdSvcInfo(process7700.do7708(requestToRed, "10479074670000007234"));
+			requestToRed.setRED_PROC_DT("2018-03-02");
+			requestToRed.setRED_PROC_TM("12.04.55");
+			respFromRed.setRetUB92_835_AdjdSvcInfo(process7700.do7708(requestToRed, "10239293400000002614"));
 			System.out.println("do7708Test:: RetUB92_835_AdjdSvcInfo "+respFromRed.getRetUB92_835_AdjdSvcInfo());
 
 
@@ -372,16 +397,16 @@ public class J5427Hc1ApplicationTest {
 
 
 
-			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1047907467");
-			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000007234");
-			claimReq.setHc1_REQ_CLM_PROC_DT("2017-10-26");
-			claimReq.setHc1_REQ_CLM_PROC_TM("14.03.23");
+			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1023929340");
+			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000002614");
+			claimReq.setHc1_REQ_CLM_PROC_DT("2018-03-02");
+			claimReq.setHc1_REQ_CLM_PROC_TM("12.04.55");
 			claimReq.setHc1_REQ_CLM_TRANS_CD("00");
 			claimReq.setHc1_REQ_CLM_COB_IND("");
 			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.valueOf(0.00));
 
 			claimReqVo.setReqClaimEntry(claimReq);
-			claimReqVo.setLogId("10479074670000007234");
+			claimReqVo.setLogId("10239293400000002614");
 
 			claimResp.getMy_indicator().setPENNY_PROC_INDICATOR("Y");
 			claimResp.setHC1_COB_INST_OR_PROF("I");
@@ -414,7 +439,7 @@ public class J5427Hc1ApplicationTest {
 			claimReq.setHc1_REQ_CLM_COB_IND("M");
 			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.valueOf(0.00));
 			claimReqVo.setReqClaimEntry(claimReq);
-			claimReqVo.setLogId("10479074670000007234");
+			claimReqVo.setLogId("10239293400000002614");
 
 			claimResp.getMy_indicator().setPENNY_PROC_INDICATOR("Y");
 			claimResp.setHC1_COB_INST_OR_PROF("I");
@@ -446,15 +471,15 @@ public class J5427Hc1ApplicationTest {
 	{
 		try{
 
-			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1047907467");
-			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000007234");
-			claimReq.setHc1_REQ_CLM_PROC_DT("2017-10-26");
-			claimReq.setHc1_REQ_CLM_PROC_TM("14.03.23");
+			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1023929340");
+			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000002614");
+			claimReq.setHc1_REQ_CLM_PROC_DT("2018-03-02");
+			claimReq.setHc1_REQ_CLM_PROC_TM("12.04.55");
 			claimReq.setHc1_REQ_CLM_TRANS_CD("00");
 			claimReq.setHc1_REQ_CLM_COB_IND("");
 			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.valueOf(0.00));
 			claimReqVo.setReqClaimEntry(claimReq);
-			claimReqVo.setLogId("10479074670000007234");
+			claimReqVo.setLogId("10239293400000002614");
 
 			claimResp.getMy_indicator().setPENNY_PROC_INDICATOR("Y");
 			claimResp.setHC1_COB_INST_OR_PROF("I");
@@ -475,15 +500,15 @@ public class J5427Hc1ApplicationTest {
 	{
 		try{
 
-			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1047907467");
-			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000007234");
-			claimReq.setHc1_REQ_CLM_PROC_DT("2017-10-26");
-			claimReq.setHc1_REQ_CLM_PROC_TM("14.03.23");
+			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1023929340");
+			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000002614");
+			claimReq.setHc1_REQ_CLM_PROC_DT("2018-03-02");
+			claimReq.setHc1_REQ_CLM_PROC_TM("12.04.55");
 			claimReq.setHc1_REQ_CLM_TRANS_CD("00");
 			claimReq.setHc1_REQ_CLM_COB_IND("");
 			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.valueOf(0.00));
 			claimReqVo.setReqClaimEntry(claimReq);
-			claimReqVo.setLogId("10479074670000007234");
+			claimReqVo.setLogId("10239293400000002614");
 
 			claimResp.getMy_indicator().setPENNY_PROC_INDICATOR("Y");
 			claimResp.setHC1_COB_INST_OR_PROF("I");
@@ -504,15 +529,15 @@ public class J5427Hc1ApplicationTest {
 	{
 		try{
 
-			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1047907467");
-			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000007234");
-			claimReq.setHc1_REQ_CLM_PROC_DT("2017-10-26");
-			claimReq.setHc1_REQ_CLM_PROC_TM("14.03.23");
+			claimReq.setHc1_REQ_CLM_INVN_CTL_NBR("1023929340");
+			claimReq.setHc1_REQ_CLM_DRFT_NBR("0000002614");
+			claimReq.setHc1_REQ_CLM_PROC_DT("2018-03-02");
+			claimReq.setHc1_REQ_CLM_PROC_TM("12.04.55");
 			claimReq.setHc1_REQ_CLM_TRANS_CD("00");
 			claimReq.setHc1_REQ_CLM_COB_IND("");
 			claimReq.setHc1_REQ_RESPONSE_CODE(BigDecimal.valueOf(0.00));
 			claimReqVo.setReqClaimEntry(claimReq);
-			claimReqVo.setLogId("10479074670000007234");
+			claimReqVo.setLogId("10239293400000002614");
 
 			claimResp.getMy_indicator().setPENNY_PROC_INDICATOR("Y");
 			claimResp.setHC1_COB_INST_OR_PROF("I");
